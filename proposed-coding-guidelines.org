@@ -1,6 +1,6 @@
 * Proposed Coding Guidelines
-- Avoid singletons, global variables, and shared mutable state where possible
-- Avoid deep inheritance hierarchies where possible
+- Avoid singletons, global variables, and shared mutable state
+- Prefer composition over inheritance and avoid deep inheritance hierarchies
 - Prefer ~Option~ over ~null~ (though use of ~null~ may be necessary when interfacing with Java)
 - Prefer immutable data structures and collections (Scala's default collections)
 - Prefer immutable case-classes over mutable classes
