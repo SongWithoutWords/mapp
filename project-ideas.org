@@ -1,0 +1,8 @@
+* Project Ideas:
+- Should have an appropriate scope
+- Should be useful
+- Will ideally be interesting or novel
+
+* Specific project ideas
+- A multiplayer game maybe? worms/spaceships
+- A password manager
