@@ -1,0 +1,7 @@
+* Proposed Coding Guidelines
+- Avoid singletons, global variables, and shared mutable state where possible
+- Avoid deep inheritance hierarchies where possible
+- Prefer ~Option~ over ~null~ (though use of ~null~ may be necessary when interfacing with Java)
+- Prefer immutable data structures and collections (Scala's default collections)
+- Prefer immutable case-classes over mutable classes
+- Use automatic code formatting for consistent project style (likely ScalaFmt)
