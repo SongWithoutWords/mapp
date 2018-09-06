@@ -6,3 +6,4 @@
 * Specific project ideas
 - A multiplayer game maybe? worms/spaceships
 - A password manager
+- Equation solver (what would we use the server for?)
