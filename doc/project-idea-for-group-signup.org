@@ -1,0 +1,13 @@
+* Project Description for Group Signup
+
+Our project idea is a medical prescription management application. Doctors can create prescriptions for their patients within the app. When a doctor creates a prescription, they can choose whether it is a one-time prescription, or whether they would like to be notified to renew the prescription when it is running low. Patients are notified by the app when they need to take their medication. In the simplest use case, patients whose doctors do not use the app can use it to remind themselves to take their medication.
+
+The initial scope of this project seems to be manageable, and the project could be extended in a number of ways:
+- The app could create a pdf prescription which the doctor can print and sign.
+- The app could draw on a database of medications to provide auto-completion or fuzzy find to the physician, and warn the doctor when the dosage selected is unusual (or when medications interact badly).
+- The app could be used by patients to record their symptoms, which could be reported to their doctor.
+- The app could be used by physicians to notify patients of their test results.
+- The app could be used for general communication between physicians and their patients.
+- The app could be used to make appointments.
+
+Because there are many legal restrictions concerning the use of medical data in Canada, this app will be a proof of concept.
