@@ -6,12 +6,21 @@ data Doctor = Doctor
   , patients :: [Patient]
   }
 
+data DoctorWithPatients = DoctorWithPatients
+  { doctor :: Doctor
+  , patients :: [Patient]
+  }
+
 data Patient = Patient
   { patientId :: Int
   , name :: String
   , age :: Int
-  , doctors :: [Doctor]
   , prescriptions :: [Prescription]
+  }
+
+data PatientWithDoctors = PatientWithDoctors
+  { patient :: Patient
+  , doctors :: [Doctor]
   }
 
 data Prescription = Prescription
