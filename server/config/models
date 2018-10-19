@@ -16,3 +16,28 @@ Comment json -- Adding "json" causes ToJSON and FromJSON instances to be derived
     userId UserId Maybe
     deriving Eq
     deriving Show
+
+
+-- Not from template
+-------------------
+
+XUser
+    email Text
+    passwordHash Text
+    salt Text
+    data (Either (Key Doctor) (Key Patient))
+    UniqueXUser email
+
+Doctor json
+    firstName Text
+    lastName Text
+    patients [Patient]
+
+Patient json
+    firstName Text
+    lastName Text
+    dateOfBirth Day
+
+Prescription
+    medication Text
+
