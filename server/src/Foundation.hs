@@ -11,7 +11,7 @@
 module Foundation where
 
 import Import.NoFoundation
-import Database.Persist.Sql (ConnectionPool, runSqlPool)
+import Database.Persist.Sql (ConnectionPool, runSqlPool, toSqlKey)
 import Text.Hamlet          (hamletFile)
 import Text.Jasmine         (minifym)
 import Control.Monad.Logger (LogSource)
@@ -166,6 +166,9 @@ instance Yesod App where
     isAuthorized FaviconR _ = return Authorized
     isAuthorized RobotsR _ = return Authorized
     isAuthorized (StaticR _) _ = return Authorized
+    isAuthorized (EchoR _) _ = return Authorized
+    isAuthorized (DoctorGet _) _ = return Authorized
+    isAuthorized Doctors _ = return Authorized
 
     -- the profile route requires that the user is authenticated, so we
     -- delegate to that function
