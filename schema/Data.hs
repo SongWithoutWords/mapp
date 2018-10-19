@@ -3,7 +3,6 @@ module Data where
 data Doctor = Doctor
   { doctorId :: Int
   , name :: String
-  , patients :: [Patient]
   }
 
 data DoctorWithPatients = DoctorWithPatients
