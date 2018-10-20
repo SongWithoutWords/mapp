@@ -38,13 +38,17 @@ postPatientsR =  do
   patientInserted <- runDB $ insertEntity patient
   returnJson patientInserted
 
+postRequestsR :: Handler Value
+postRequestsR =  do
+  request :: PatientRequestForDoctor <- requireJsonBody
+  requestInserted <- runDB $ insertEntity request
+  returnJson requestInserted
+
 getDoctorsR :: Handler Value
 getDoctorsR = do
   docs :: [Entity Doctor] <- runDB $ selectList [] []
   returnJson docs
 
-postRequestsR :: Handler Value
-postRequestsR = undefined
 
 postDoctorPatientsR :: Int -> Handler Value
 postDoctorPatientsR = undefined
