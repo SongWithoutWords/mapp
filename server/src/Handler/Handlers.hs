@@ -1,16 +1,26 @@
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE ScopedTypeVariables #-}
+{-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE TypeFamilies #-}
 
 module Handler.Handlers where
 
 import Import
 
+dbLookup key = runDB $ getEntity key
+
+dbLookup404 key = do
+  maybeValue <- dbLookup key
+  case maybeValue of
+    Just value -> pure value
+    Nothing -> notFound
+
+
 getDoctorR :: Int -> Handler Value
-getDoctorR id = do
-  mdoc <- runDB $ getEntity $ DoctorKey $ fromIntegral id
-  case mdoc of
-    Nothing -> returnJson mdoc
-    Just doctor' ->  returnJson doctor'
+getDoctorR id = (dbLookup404 $ DoctorKey $ fromIntegral id) >>= returnJson
+
+getPatientR :: Int -> Handler Value
+getPatientR id = (dbLookup404 $ PatientKey $ fromIntegral id) >>= returnJson
 
 postDoctorsR :: Handler Value
 postDoctorsR = do
@@ -25,9 +35,6 @@ getDoctorsR :: Handler Value
 getDoctorsR = do
   docs :: [Entity Doctor] <- runDB $ selectList [] []
   returnJson docs
-
-getPatientR :: Int -> Handler Value
-getPatientR = undefined
 
 postPatientsR :: Handler Value
 postPatientsR = undefined
