@@ -33,11 +33,15 @@ Doctor json
     firstName Text
     lastName Text
     patients [PatientId]
+    deriving Eq
+    deriving Show
 
 Patient json
     firstName Text
     lastName Text
     dateOfBirth Day
+    deriving Eq
+    deriving Show
 
 RequestForDoctor json
     patientFrom PatientId
