@@ -1,9 +1,9 @@
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE OverloadedStrings #-}
-module Handler.DoctorGet(spec) where
+module Handler.GetDoctorSpec (spec) where
 
 import TestImport
-import Data.Aeson
+-- import Data.Aeson
 
 spec :: Spec
 spec = withApp $ do
@@ -11,27 +11,24 @@ spec = withApp $ do
   describe "valid request" $ do
     it "returns a 200 when the doctor exists" $ do
 
-      runDB $ do
-        _ <- insert $ Doctor "James" "Hill" []
-        _ <- insert $ Doctor "Adam" "Smith" []
-        _ <- insert $ Doctor "Johan" "Von-Doyle" []
-        _ <- insert $ Doctor "Alfred" "Hitchcock" []
-        pure ()
+      james <- runDB $ insertEntity $ Doctor "James" "Hill" []
+      adam <- runDB $ insertEntity $ Doctor "Adam" "Smith" []
+      johan <- runDB $ insertEntity $ Doctor "Johan" "Von-Doyle" []
+      alfred <- runDB $ insertEntity $ Doctor "Alfred" "Hitchcock" []
 
       -- Actual http get request
+      get $ DoctorR 1
+      jsonResponseIs james
+
       get $ DoctorR 2
-      statusIs 200
-      bodyContains "Adam"
-      bodyContains "Smith"
-      bodyNotContains "Alfred"
-      bodyNotContains "Hitchcock"
+      jsonResponseIs adam
 
       get $ DoctorR 3
-      statusIs 200
-      bodyContains "Johan"
-      bodyContains "Von-Doyle"
-      bodyNotContains "James"
-      bodyNotContains "Hill"
+      jsonResponseIs johan
+
+      get $ DoctorR 4
+      jsonResponseIs alfred
+
 
   describe "invalid requests" $ do
     it "it returns a 404 when the doctor does not exist" $ do

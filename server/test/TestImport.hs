@@ -23,7 +23,13 @@ import Database.Persist.Sqlite              (sqlDatabase, mkSqliteConnectionInfo
 import Control.Monad.Logger                 (runLoggingT)
 import Lens.Micro                           (set)
 import Settings (appDatabaseConf)
-import Yesod.Core (messageLoggerSource)
+import Yesod.Core (messageLoggerSource, Value)
+
+-- For jsonResponseIs
+import Network.Wai.Test(SResponse(..))
+import Data.Aeson(FromJSON, decode)
+import qualified Network.HTTP.Types as H
+
 
 runDB :: SqlPersistM a -> YesodExample App a
 runDB query = do
@@ -101,3 +107,10 @@ createUser ident = runDB $ do
         , emailVerkey = Nothing
         }
     return user
+
+jsonResponseIs :: (Show a, Eq a, FromJSON a) => a -> YesodExample App ()
+jsonResponseIs val = do
+  withResponse $ \ (SResponse status _ body) -> do
+    assertEq "status" status $ H.ok200
+    assertEq "body" (decode body) $ Just val
+
