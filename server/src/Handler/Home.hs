@@ -8,7 +8,7 @@ module Handler.Home where
 
 import Import
 import Yesod.Form.Bootstrap3 (BootstrapFormLayout (..), renderBootstrap3)
-import Database.Persist.Sql(toSqlKey)
+-- import Database.Persist.Sql(toSqlKey)
 import Text.Julius (RawJS (..))
 
 -- Define our data that will be used for creating the form.
@@ -80,24 +80,3 @@ getEchoR theText = do
     setTitle "My brilliant echo page!"
     $(widgetFile "echo")
 
-getDoctorGet :: Int -> Handler Value
-getDoctorGet id = do
-  mdoc <- runDB $ getEntity $ DoctorKey $ fromIntegral id
-  case mdoc of
-    Nothing -> returnJson mdoc
-    Just doctor' ->  returnJson doctor'
-
-
-postDoctors :: Handler Value
-postDoctors = do
-    -- requireJsonBody will parse the request body into the appropriate type, or return a 400 status code if the request JSON is invalid.
-    doctor <- (requireJsonBody :: Handler Doctor)
-
-    insertedDoctor <- runDB $ insertEntity doctor
-    returnJson insertedDoctor
-
-getDoctors :: Handler Value
-getDoctors = do
-  -- docs <- ((runDB $ selectList [] [Asc DoctorId]) :: Handler [Doctor])
-  docs :: [Entity Doctor] <- runDB $ selectList [] []
-  returnJson docs
