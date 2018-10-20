@@ -23,6 +23,11 @@ getDoctorR id = (dbLookup404 $ DoctorKey $ fromIntegral id) >>= returnJson
 getPatientR :: Int -> Handler Value
 getPatientR id = (dbLookup404 $ PatientKey $ fromIntegral id) >>= returnJson
 
+getDoctorsR :: Handler Value
+getDoctorsR = do
+  docs :: [Entity Doctor] <- runDB $ selectList [] []
+  returnJson docs
+
 
 -- requireJsonBody (used in post functions) parses the request body into the appropriate type,
 -- or return a 400 status code if the request JSON is invalid.
@@ -44,12 +49,6 @@ postRequestsR =  do
   request :: RequestForDoctor <- requireJsonBody
   requestInserted <- runDB $ insertEntity request
   returnJson requestInserted
-
-getDoctorsR :: Handler Value
-getDoctorsR = do
-  docs :: [Entity Doctor] <- runDB $ selectList [] []
-  returnJson docs
-
 
 postDoctorPatientsR :: Int -> Handler Value
 postDoctorPatientsR doctorId = do
