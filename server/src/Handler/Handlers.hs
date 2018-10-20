@@ -34,3 +34,6 @@ postPatientsR = undefined
 
 postRequestsR :: Handler Value
 postRequestsR = undefined
+
+postDoctorPatientsR :: Int -> Handler Value
+postDoctorPatientsR = undefined
