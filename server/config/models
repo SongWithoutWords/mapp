@@ -41,6 +41,8 @@ Patient json
 PatientRequestForDoctor json
     patientId PatientId
     doctorId DoctorId
+    UniqueRequestFrom patientId
+    UniqueRequestTo doctorId
 
 Prescription
     medication Text
