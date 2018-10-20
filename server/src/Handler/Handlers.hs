@@ -34,7 +34,8 @@ getDoctorsR = do
 
 postDoctorsR :: Handler Value
 postDoctorsR = do
-  doctor :: Doctor <- requireJsonBody
+  PostDoctor _ _ fn ln <- requireJsonBody
+  let doctor = Doctor fn ln []
   doctorInserted <- runDB $ insertEntity doctor
   returnJson doctorInserted
 

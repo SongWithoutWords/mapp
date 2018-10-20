@@ -18,6 +18,16 @@ import Database.Persist.Types
 
 import Text.Read(read)
 
+-- Information required to create a new doctor account
+data PostDoctor = PostDoctor
+  { email :: Text
+  , password :: Text
+  , firstName :: Text
+  , lastName :: Text
+  } deriving(Generic, Show)
+instance FromJSON PostDoctor
+instance ToJSON PostDoctor
+
 
 -- You can define all of your database entities in the entities file.
 -- You can find more information on persistent and how to declare entities
