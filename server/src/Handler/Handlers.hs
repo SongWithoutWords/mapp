@@ -40,7 +40,7 @@ postPatientsR =  do
 
 postRequestsR :: Handler Value
 postRequestsR =  do
-  request :: PatientRequestForDoctor <- requireJsonBody
+  request :: RequestForDoctor <- requireJsonBody
   requestInserted <- runDB $ insertEntity request
   returnJson requestInserted
 

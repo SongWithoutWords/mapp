@@ -38,11 +38,11 @@ Patient json
     lastName Text
     dateOfBirth Day
 
-PatientRequestForDoctor json
     patientId PatientId
     doctorId DoctorId
     UniqueRequestFrom patientId
     UniqueRequestTo doctorId
+RequestForDoctor json
 
 Prescription
     medication Text
