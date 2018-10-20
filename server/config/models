@@ -38,6 +38,10 @@ Patient json
     lastName Text
     dateOfBirth Day
 
+Request json
+    patientId PatiendId
+    doctorId DoctorId
+
 Prescription
     medication Text
 
