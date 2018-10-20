@@ -39,7 +39,7 @@ Patient json
     dateOfBirth Day
 
 Request json
-    patientId PatiendId
+    patientId PatientId
     doctorId DoctorId
 
 Prescription
