@@ -6,7 +6,7 @@
 
 module Handler.Handlers where
 
-import Import
+import Import hiding(id)
 
 dbLookup key = runDB $ getEntity key
 
