@@ -19,6 +19,9 @@
 -- Not from template
 -------------------
 
+-- GET: a doctor's information (with patient info)
 /doctors/#Int DoctorGet GET
 
+-- GET: get a list of doctors (without patient info)
+-- POST: add a new doctor
 /doctors Doctors GET POST
