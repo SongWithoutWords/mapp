@@ -28,13 +28,13 @@ getPatientR id = (dbLookup404 $ PatientKey $ fromIntegral id) >>= returnJson
 
 postDoctorsR :: Handler Value
 postDoctorsR = do
-  doctor <- (requireJsonBody :: Handler Doctor)
+  doctor :: Doctor <- requireJsonBody
   doctorInserted <- runDB $ insertEntity doctor
   returnJson doctorInserted
 
 postPatientsR :: Handler Value
 postPatientsR =  do
-  patient <- (requireJsonBody :: Handler Patient)
+  patient :: Patient <- requireJsonBody
   patientInserted <- runDB $ insertEntity patient
   returnJson patientInserted
 
