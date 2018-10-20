@@ -22,22 +22,26 @@ getDoctorR id = (dbLookup404 $ DoctorKey $ fromIntegral id) >>= returnJson
 getPatientR :: Int -> Handler Value
 getPatientR id = (dbLookup404 $ PatientKey $ fromIntegral id) >>= returnJson
 
+
+-- requireJsonBody (used in post functions) parses the request body into the appropriate type,
+-- or return a 400 status code if the request JSON is invalid.
+
 postDoctorsR :: Handler Value
 postDoctorsR = do
-    -- requireJsonBody will parse the request body into the appropriate type,
-    -- or return a 400 status code if the request JSON is invalid.
-    doctor <- (requireJsonBody :: Handler Doctor)
+  doctor <- (requireJsonBody :: Handler Doctor)
+  doctorInserted <- runDB $ insertEntity doctor
+  returnJson doctorInserted
 
-    insertedDoctor <- runDB $ insertEntity doctor
-    returnJson insertedDoctor
+postPatientsR :: Handler Value
+postPatientsR =  do
+  patient <- (requireJsonBody :: Handler Patient)
+  patientInserted <- runDB $ insertEntity patient
+  returnJson patientInserted
 
 getDoctorsR :: Handler Value
 getDoctorsR = do
   docs :: [Entity Doctor] <- runDB $ selectList [] []
   returnJson docs
-
-postPatientsR :: Handler Value
-postPatientsR = undefined
 
 postRequestsR :: Handler Value
 postRequestsR = undefined
