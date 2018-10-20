@@ -167,8 +167,8 @@ instance Yesod App where
     isAuthorized RobotsR _ = return Authorized
     isAuthorized (StaticR _) _ = return Authorized
     isAuthorized (EchoR _) _ = return Authorized
-    isAuthorized (DoctorGet _) _ = return Authorized
-    isAuthorized Doctors _ = return Authorized
+    isAuthorized (DoctorR _) _ = return Authorized
+    isAuthorized DoctorsR _ = return Authorized
 
     -- the profile route requires that the user is authenticated, so we
     -- delegate to that function

@@ -20,16 +20,14 @@
 -------------------
 
 -- GET: a doctor's information (with patient info)
-/doctors/#Int DoctorGet GET
+/doctors/#Int DoctorR GET
 
 -- GET: get a list of doctors (without patient info)
 -- POST: add a new doctor
-/doctors Doctors GET POST
+/doctors DoctorsR GET POST
 
-/doctors/#Int/ Doctors GET
+/patients/#Int PatientR GET
 
-/patients/#Int Patient GET
+/patients PatientsR POST
 
-/patients Patients POST
-
-/requests POST
+/requests RequestsR POST
