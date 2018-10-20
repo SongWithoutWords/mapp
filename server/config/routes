@@ -25,3 +25,11 @@
 -- GET: get a list of doctors (without patient info)
 -- POST: add a new doctor
 /doctors Doctors GET POST
+
+/doctors/#Int/ Doctors GET
+
+/patients/#Int Patient GET
+
+/patients Patients POST
+
+/requests POST
