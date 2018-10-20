@@ -11,7 +11,7 @@
 {-# LANGUAGE StandaloneDeriving         #-}
 module Model where
 
-import ClassyPrelude.Yesod
+import ClassyPrelude.Yesod hiding(id)
 import Database.Persist.Quasi
 
 import Database.Persist.Types
