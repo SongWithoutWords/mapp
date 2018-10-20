@@ -1,3 +1,4 @@
+{-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 
 module Handler.Handlers where
@@ -25,3 +26,11 @@ getDoctors = do
   docs :: [Entity Doctor] <- runDB $ selectList [] []
   returnJson docs
 
+getPatientR :: Int -> Handler Value
+getPatientR = undefined
+
+postPatients :: Handler Value
+postPatients = undefined
+
+postRequests :: Handler Value
+postRequests = undefined
