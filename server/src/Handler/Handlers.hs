@@ -14,7 +14,8 @@ getDoctorR id = do
 
 postDoctorsR :: Handler Value
 postDoctorsR = do
-    -- requireJsonBody will parse the request body into the appropriate type, or return a 400 status code if the request JSON is invalid.
+    -- requireJsonBody will parse the request body into the appropriate type,
+    -- or return a 400 status code if the request JSON is invalid.
     doctor <- (requireJsonBody :: Handler Doctor)
 
     insertedDoctor <- runDB $ insertEntity doctor
@@ -22,7 +23,6 @@ postDoctorsR = do
 
 getDoctorsR :: Handler Value
 getDoctorsR = do
-  -- docs <- ((runDB $ selectList [] [Asc DoctorId]) :: Handler [Doctor])
   docs :: [Entity Doctor] <- runDB $ selectList [] []
   returnJson docs
 
