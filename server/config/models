@@ -31,18 +31,18 @@ XUser
 Doctor json
     firstName Text
     lastName Text
-    patients [Patient]
+    patients [PatientId]
 
 Patient json
     firstName Text
     lastName Text
     dateOfBirth Day
 
-    patientId PatientId
-    doctorId DoctorId
-    UniqueRequestFrom patientId
-    UniqueRequestTo doctorId
 RequestForDoctor json
+    patientFrom PatientId
+    doctorTo DoctorId
+    UniqueRequestFrom patientFrom
+    UniqueRequestTo doctorTo
 
 Prescription
     medication Text

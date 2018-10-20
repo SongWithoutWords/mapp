@@ -1,4 +1,5 @@
 {-# LANGUAGE NoImplicitPrelude #-}
+{-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE TypeFamilies #-}
@@ -51,4 +52,20 @@ getDoctorsR = do
 
 
 postDoctorPatientsR :: Int -> Handler Value
-postDoctorPatientsR = undefined
+postDoctorPatientsR doctorId = do
+  let doctorKey = DoctorKey $ fromIntegral doctorId
+
+  doctor <- entityVal <$> (dbLookup404 $ DoctorKey $ fromIntegral doctorId)
+
+  patientIdToAdd :: PatientId <- requireJsonBody
+
+  pendingRequests <- runDB $ selectList
+    [ RequestForDoctorPatientFrom ==. patientIdToAdd
+    , RequestForDoctorDoctorTo ==. doctorKey] []
+
+  if null pendingRequests
+    then invalidArgs ["No pending request from this patient to this doctor"]
+    else do
+      let doctor' = doctor {doctorPatients = patientIdToAdd : doctorPatients doctor}
+      runDB $ replace doctorKey doctor'
+      returnJson doctor'
