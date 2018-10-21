@@ -19,4 +19,4 @@ spec = withApp $ do
         , email = "james@hill.com"
         , password = "jhill"
         }
-      statusIs 200
+      jsonResponseIs $ Entity (DoctorKey $ fromIntegral 1) $ Doctor "James" "Hill" []
