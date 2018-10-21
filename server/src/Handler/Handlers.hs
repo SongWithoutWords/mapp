@@ -50,8 +50,13 @@ postDoctorsR = do
     , doctorPatients = []
     }
   let user = XUser email' password' "" (Left $ entityKey doctorInserted)
-  _ <- runDB $ insertEntity user
-  returnJson doctorInserted
+  userInserted <- runDB $ insertUniqueEntity user
+
+  -- There is a not so subtle bug here:
+  -- if the email is already in use, a new doctor is created without a corresponding user
+  case userInserted of
+    Nothing -> invalidArgs ["Email already in use"]
+    Just _ -> returnJson doctorInserted
 
 postPatientsR :: Handler Value
 postPatientsR =  do
