@@ -1,3 +1,4 @@
+{-# LANGUAGE DuplicateRecordFields #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE FlexibleContexts #-}
@@ -6,6 +7,7 @@
 module Handler.Handlers where
 
 import Import hiding(id)
+import Control.Monad.Extra(mapMaybeM)
 
 dbLookup key = runDB $ getEntity key
 
@@ -17,7 +19,15 @@ dbLookup404 key = do
 
 
 getDoctorR :: Int -> Handler Value
-getDoctorR id = dbLookup404 (doctorKey id) >>= returnJson
+getDoctorR id = do
+  Entity id' (Doctor fn ln pids') <- dbLookup404 (doctorKey id)
+  patients' <- runDB $ mapMaybeM getEntity pids'
+  returnJson DoctorWithPatients
+    { id = id'
+    , firstName = fn
+    , lastName = ln
+    , patients = patients'
+    }
 
 getPatientR :: Int -> Handler Value
 getPatientR id = dbLookup404 (patientKey id) >>= returnJson
