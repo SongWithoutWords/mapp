@@ -112,6 +112,9 @@ createUser ident = runDB $ do
         }
     return user
 
+failTest :: String -> YesodExample App ()
+failTest = liftIO . H.assertFailure
+
 jsonResponseIs :: (Show a, Eq a, FromJSON a, ToJSON a) => a -> YesodExample App ()
 jsonResponseIs expected = withResponse $ \ (SResponse status _ bodyText) -> do
   statusIs 200

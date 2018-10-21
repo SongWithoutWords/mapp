@@ -10,7 +10,7 @@ spec :: Spec
 spec = withApp $ do
 
   describe "valid request" $ do
-    it "returns a 200 when the json is correct" $ do
+    it "returns and stores the correct information after POST" $ do
 
       postJson DoctorsR $ PostDoctor
         { firstName = "James"
@@ -19,3 +19,12 @@ spec = withApp $ do
         , password = "jhill"
         }
       jsonResponseIs $ Entity (doctorKey 1) $ Doctor "James" "Hill" []
+
+      muser <- runDB $ getBy (UserEmail "james@hill.com")
+
+      case muser of
+        Nothing -> failTest "Doctor's user credentials not correctly stored after post"
+        (Just (Entity id user)) -> do
+          assertEq "Email" (xUserEmail user) "james@hill.com"
+          assertEq "Data" (xUserData user) (Left $ doctorKey 1)
+
