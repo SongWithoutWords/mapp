@@ -38,7 +38,7 @@ Doctor json
 Patient json
     firstName Text
     lastName Text
-    dateOfBirth Day
+    dateOfBirth Day Maybe
     deriving Eq
     deriving Show
 

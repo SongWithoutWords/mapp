@@ -43,7 +43,7 @@ data PostPatient = PostPatient
   , password :: Text
   , firstName :: Text
   , lastName :: Text
-  , dateOfBirth :: Day
+  , dateOfBirth :: Maybe Day
   } deriving(Generic, Show)
 instance FromJSON PostPatient
 instance ToJSON PostPatient

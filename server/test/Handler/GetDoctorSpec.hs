@@ -13,16 +13,16 @@ spec = withApp $ do
 
       -- Patients
       tom <- runDB $ insertEntity $
-        Patient "Tom" "Cruise" $ fromGregorian 1960 1 2
+        Patient "Tom" "Cruise" $ Just $ fromGregorian 1960 1 2
 
       may <- runDB $ insertEntity
-        $ Patient "May" "West" $ fromGregorian 1961 2 3
+        $ Patient "May" "West" $ Just $ fromGregorian 1961 2 3
 
       spike <- runDB $ insertEntity $
-        Patient "Spike" "Lee" $ fromGregorian 1963 4 5
+        Patient "Spike" "Lee" $ Just $ fromGregorian 1963 4 5
 
       mel <- runDB $ insertEntity $
-        Patient "Mel" "Brooks" $ fromGregorian 1964 5 6
+        Patient "Mel" "Brooks" $ Just $ fromGregorian 1964 5 6
 
       -- Doctors
       _ <- runDB $ mapM insert_
