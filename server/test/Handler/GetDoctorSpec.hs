@@ -3,7 +3,6 @@
 module Handler.GetDoctorSpec (spec) where
 
 import TestImport
--- import Data.Aeson
 
 spec :: Spec
 spec = withApp $ do

@@ -5,7 +5,6 @@
 module Handler.PostDoctorsSpec(spec) where
 
 import TestImport
-import Data.Aeson
 
 spec :: Spec
 spec = withApp $ do
