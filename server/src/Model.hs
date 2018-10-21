@@ -50,15 +50,15 @@ share [mkPersist sqlSettings, mkMigrate "migrateAll"]
 
 -- Utility functions for database keys
 doctorKey :: Int -> DoctorId
-doctorKey id = DoctorKey $ fromIntegral id
+doctorKey = DoctorKey . fromIntegral
 
 patientKey :: Int -> PatientId
-patientKey id = PatientKey $ fromIntegral id
+patientKey = PatientKey . fromIntegral
 
 instance PersistField (Either DoctorId PatientId) where
 
   toPersistValue :: Either DoctorId PatientId -> PersistValue
-  toPersistValue id = PersistText $ tshow id
+  toPersistValue = PersistText . tshow
 
   fromPersistValue :: PersistValue -> Either Text (Either DoctorId PatientId)
   fromPersistValue pval = case pval of
