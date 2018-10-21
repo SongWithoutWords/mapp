@@ -1,9 +1,6 @@
 import React, { Component } from "react";
-import { SafeAreaView } from "react-navigation";
-
-import { Text, View, ScrollView } from "react-native";
 import { List, ListItem } from "react-native-elements";
-import { Container, Header, Content, Card, CardItem, Body } from "native-base";
+import { View, StyleSheet } from "react-native";
 
 const fake_prescriptions = [
   {
@@ -20,7 +17,7 @@ const fake_prescriptions = [
 class PrescriptionListScreen extends Component {
   render() {
     return (
-      <SafeAreaView>
+      <View>
         <List>
           {fake_prescriptions.map((prescription, i) => (
             <ListItem
@@ -32,9 +29,18 @@ class PrescriptionListScreen extends Component {
             />
           ))}
         </List>
-      </SafeAreaView>
+      </View>
     );
   }
 }
+
+// styles for this screen
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center"
+  }
+});
 
 export default PrescriptionListScreen;

@@ -1,29 +1,28 @@
-import React, { Component } from 'react';
-import { SafeAreaView } from 'react-navigation'; 
+import React, { Component } from "react";
+import { StyleSheet } from "react-native";
 
-import {
-  Text,
-  View,
-  ScrollView
-} from 'react-native';
-import { List, ListItem } from 'react-native-elements';
+import { Text, View, ScrollView } from "react-native";
+import { List, ListItem } from "react-native-elements";
 
 const fake_doctors = [
   {
-    name: 'Hot dog',
-    avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
-    subtitle: 'Vice President'
+    name: "Hot dog",
+    avatar_url:
+      "https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg",
+    subtitle: "Vice President"
   },
   {
-    name: 'Not Hot Dog',
-    avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg',
-    subtitle: 'Vice Vice President'
-  },
-]
+    name: "Not Hot Dog",
+    avatar_url:
+      "https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg",
+    subtitle: "Vice Vice President"
+  }
+];
 
 class DoctorListScreen extends Component {
-  render(){return(
-    <SafeAreaView>
+  render() {
+    return (
+      <View>
         <ScrollView>
           <List>
             {fake_doctors.map((doctor, i) => (
@@ -37,8 +36,18 @@ class DoctorListScreen extends Component {
             ))}
           </List>
         </ScrollView>
-    </SafeAreaView>
-  )}
+      </View>
+    );
   }
-  
-  export default DoctorListScreen;
+}
+
+// styles for this screen
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center"
+  }
+});
+
+export default DoctorListScreen;

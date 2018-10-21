@@ -20,6 +20,7 @@ For both:
 - profile/settings screen
 
 #### Core Functinalities 
+- authentication
 - scheduling timers/notifications for prescriptions
 - creating patient-doctor relationship
 - communication/sync with server (how? when? how often?)
