@@ -89,6 +89,8 @@ tests:
     dependencies:
     - server
     - hspec >=2.0.0
+    - HUnit
+    - pretty-show
     - yesod-test
     - microlens
 

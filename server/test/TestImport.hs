@@ -23,12 +23,15 @@ import Database.Persist.Sqlite              (sqlDatabase, mkSqliteConnectionInfo
 import Control.Monad.Logger                 (runLoggingT)
 import Lens.Micro                           (set)
 import Settings (appDatabaseConf)
-import Yesod.Core (messageLoggerSource, Value)
+import Yesod.Core (messageLoggerSource)
 
--- For jsonResponseIs
+-- For JSON test functions
 import Network.Wai.Test(SResponse(..))
-import Data.Aeson(FromJSON, decode)
+import Data.Aeson
 import qualified Network.HTTP.Types as H
+import qualified Test.HUnit as H
+import Text.Show.Pretty(ppShow)
+import Yesod.Core (Value, Yesod, RedirectUrl)
 
 
 runDB :: SqlPersistM a -> YesodExample App a
@@ -108,9 +111,19 @@ createUser ident = runDB $ do
         }
     return user
 
-jsonResponseIs :: (Show a, Eq a, FromJSON a) => a -> YesodExample App ()
-jsonResponseIs val = do
-  withResponse $ \ (SResponse status _ body) -> do
-    assertEq "status" status $ H.ok200
-    assertEq "body" (decode body) $ Just val
+jsonResponseIs :: (Show a, Eq a, FromJSON a, ToJSON a) => a -> YesodExample App ()
+jsonResponseIs expected = withResponse $ \ (SResponse status _ bodyText) -> do
+  statusIs 200
+  liftIO $ case decode bodyText of
+    Nothing -> H.assertFailure $ "Could not parse JSON response:\n" -- ++ asString bodyText
+    Just (bodyJson :: Value) -> case fromJSON bodyJson of
+      Error message ->
+        H.assertFailure $ "Could not parse JSON response as correct type:\n" ++ message
+      Success result ->
+        if result == expected
+          then pure ()
+          else H.assertFailure $
+               "Expected:" ++ ppShow expected ++
+               "\nFound:" ++ ppShow result
+
 
