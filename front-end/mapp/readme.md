@@ -18,13 +18,12 @@
     - all the screens (views)
 - /App.js
     - root component
-    
+
 #### Troubleshooting
 ```
 java.lang.string cannot be cast to com.facebook.react.uimanager.accessibility DelegateUtil$accessibilityRole
 ```
 - [I have Some Error when add Button to my React Native App?](https://stackoverflow.com/questions/52784633/i-have-some-error-when-add-button-to-my-react-native-app?noredirect=1#comment92491686_52784633)
-
 
 
 #### UI  
