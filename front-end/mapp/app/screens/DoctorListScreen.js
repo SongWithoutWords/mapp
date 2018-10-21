@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { SafeAreaView } from 'react-navigation'; // for iphonex
+import { SafeAreaView } from 'react-navigation'; 
 
 import {
   Text,
@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import { List, ListItem } from 'react-native-elements';
 
-const fake_physicians = [
+const fake_doctors = [
   {
     name: 'Hot dog',
     avatar_url: 'https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg',
@@ -21,18 +21,18 @@ const fake_physicians = [
   },
 ]
 
-class PhysicianList extends Component {
+class DoctorListScreen extends Component {
   render(){return(
     <SafeAreaView>
         <ScrollView>
           <List>
-            {fake_physicians.map((physician, i) => (
+            {fake_doctors.map((doctor, i) => (
               <ListItem
                 key={i}
                 roundAvatar
-                avatar={{ uri: physician.avatar_url }}
-                title={physician.name}
-                subtitle={physician.subtitle}
+                avatar={{ uri: doctor.avatar_url }}
+                title={doctor.name}
+                subtitle={doctor.subtitle}
               />
             ))}
           </List>
@@ -41,4 +41,4 @@ class PhysicianList extends Component {
   )}
   }
   
-  export default PhysicianList;
+  export default DoctorListScreen;

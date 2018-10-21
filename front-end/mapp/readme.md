@@ -19,11 +19,6 @@ For both:
 - Search bar component
 - profile/settings screen
 
-##### libraries 
-- Native Base
-- react-native-material-ui
-
-
 #### Core Functinalities 
 - scheduling timers/notifications for prescriptions
 - creating patient-doctor relationship
@@ -36,3 +31,12 @@ For both:
 - How do we integrate fuzzy find algorithm (on-device? server-side?)
 - Google sign-in integration
 - Integrate chat feature + sharing medical document?
+
+
+#### Libraries 
+- UI components:
+    - React Native Elements 
+    - Native Base
+    - react-native-material-ui
+- Navigation:
+    - react navigation

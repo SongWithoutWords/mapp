@@ -1,30 +1,36 @@
 import React from 'react';
 import { createBottomTabNavigator} from 'react-navigation';
 import { createMaterialBottomTabNavigator } from 'react-navigation-material-bottom-tabs';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import { Icon } from 'react-native-elements';
+import  Ionicons  from 'react-native-vector-icons/Ionicons';
+import  MaterialCommunityIcons  from 'react-native-vector-icons/MaterialCommunityIcons';
+import  AntDesign  from 'react-native-vector-icons/AntDesign';
 
-import PhysicianList from '../screens/PhysiciansList';
-import PrescriptionList from '../screens/PrescriptionList';
+import DoctorListScreen from '../screens/DoctorListScreen';
+import PrescriptionListScreen from '../screens/PrescriptionListScreen';
 
-// TabNavigator takes the configuration and render tabs
-// each key represents a tab (it is actually the default title of that tab)
-// screen is the component that actually gets rendered for that tab
-// we need to export this as a const and put it in the app.js
-export const Tabs = createBottomTabNavigator(
+export const Tabs = createMaterialBottomTabNavigator(
     {
-      PrescriptionList: PrescriptionList,
-      PhysicianList: PhysicianList,
-    },
-    {
-      navigationOptions:
-      { 
-        tabBarIcon: ({ tintColor }) => <Icon name="account-circle" size={25} color={tintColor} />,
-        tabBarOptions: {
-            activeTintColor: 'tomato',
-            inactiveTintColor: 'gray',
-        },
+      // screens and their navigation options
+      PrescriptionList: { 
+        screen: PrescriptionListScreen,
+        navigationOptions: {
+          tabBarLabel: 'Prescriptions',
+          tabBarIcon: ({ tintColor }) => (
+            <MaterialCommunityIcons name="pill" size={25} color={tintColor} />
+          )
+        }
+      },
+      DoctorList: {
+        screen: DoctorListScreen,
+        navigationOptions: {
+          tabBarLabel: 'Doctors',
+          tabBarIcon: ({ tintColor }) => (
+            <MaterialCommunityIcons name="doctor" size={25} color={tintColor} />
+          )
+        }
       }
-    }
-  );
+    }, {
+      initialRouteName: 'PrescriptionList',
+      shifting: true
+    })
 
