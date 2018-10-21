@@ -27,7 +27,7 @@ XUser
     passwordHash Text
     salt Text
     data (Either (Key Doctor) (Key Patient))
-    UniqueXUser email
+    UserEmail email
 
 Doctor json
     firstName Text
