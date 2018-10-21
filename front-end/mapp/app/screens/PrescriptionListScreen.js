@@ -14,7 +14,13 @@ const fake_prescriptions = [
     subtitle: ".."
   }
 ];
+
 class PrescriptionListScreen extends Component {
+
+  onPress = () => {
+    this.props.navigation.navigate("PrescriptionInfo");
+  };
+
   render() {
     return (
       <View>
@@ -26,6 +32,7 @@ class PrescriptionListScreen extends Component {
               avatar={{ uri: prescription.avatar_url }}
               title={prescription.name}
               subtitle={prescription.subtitle}
+              onPress={this.onPress}
             />
           ))}
         </List>

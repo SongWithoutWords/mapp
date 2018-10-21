@@ -1,37 +1,67 @@
 import React, { Component } from "react";
-import { Text, View, StyleSheet } from "react-native";
-
-const fake_prescriptions = [
-  {
-    name: "divalproex",
-    avatar_url: "https://bit.ly/2yhPJY0",
-    subtitle: ".."
-  },
-  {
-    name: "divalproex",
-    avatar_url: "https://bit.ly/2yhPJY0",
-    subtitle: ".."
-  }
-];
+import { StyleSheet, ActivityIndicator, Text, View } from "react-native";
+import { Button } from "react-native-elements";
 
 class TestScreen extends Component {
   constructor(props) {
     super(props);
-    this.state = { isLoading: true };
+    this.state = {
+      isLoading: true,
+      isPressed: false
+    };
   }
 
+  // more info about fetch and promise:
+  // https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
+  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises
+  onPress = () => {
+    return fetch("https://facebook.github.io/react-native/movies.json")
+      .then(response => response.json())
+      .then(responseJson => {
+        this.setState(
+          {
+            isLoading: false,
+            dataSource: responseJson
+          },
+          function() {}
+        );
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  };
+
   render() {
-    return <View />;
+    if (this.state.isLoading && this.state.isPressed) {
+      return (
+        <View style={{ flex: 1, padding: 20 }}>
+          <ActivityIndicator />
+        </View>
+      );
+    }
+    return (
+      <View style={styles.button}>
+        <Text style={styles.text}>{JSON.stringify(this.state.dataSource)}</Text>
+        <Button title="Make a request" onPress={this.onPress} />
+      </View>
+    );
   }
 }
 
-// styles for this screen
 const styles = StyleSheet.create({
-  container: {
+  button: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center"
+    flexDirection: "column",
+    alignItems: "stretch",
+    justifyContent: "flex-end",
+    marginTop: 10,
+    marginBottom: 10
+  },
+  text: {
+    backgroundColor: "whitesmoke",
+    color: "#4A90E2",
+    fontSize: 24,
+    padding: 10
   }
 });
-
 export default TestScreen;

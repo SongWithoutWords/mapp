@@ -1,11 +1,30 @@
 import React from "react";
 import { createMaterialBottomTabNavigator } from "react-navigation-material-bottom-tabs";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import { createStackNavigator } from "react-navigation";
 
 import DoctorListScreen from "../screens/DoctorListScreen";
-import PrescriptionListScreen from "../screens/PrescriptionListScreen";
 import TestScreen from "../screens/TestScreen";
 import InboxScreen from "../screens/InboxScreen";
+
+import PrescriptionInfoScreen from "../screens/PrescriptionInfoScreen";
+import PrescriptionListScreen from "../screens/PrescriptionListScreen";
+
+const PrescriptionStackNavigator = createStackNavigator({
+  PrescriptionList: {
+    screen: PrescriptionListScreen,
+    navigationOptions: {
+      header: null,
+      headerForceInset: { top: 'never', bottom: 'never' }
+    }
+  },
+  PrescriptionInfo: {
+    screen: PrescriptionInfoScreen,
+    navigationOptions: {
+      headerForceInset: { top: "never", bottom: "never" }
+    }
+  }
+});
 
 export const Tabs = createMaterialBottomTabNavigator(
   {
@@ -20,7 +39,7 @@ export const Tabs = createMaterialBottomTabNavigator(
       }
     },
     PrescriptionList: {
-      screen: PrescriptionListScreen,
+      screen: PrescriptionStackNavigator,
       navigationOptions: {
         tabBarLabel: "Prescriptions",
         tabBarIcon: ({ tintColor }) => (
@@ -50,9 +69,9 @@ export const Tabs = createMaterialBottomTabNavigator(
   {
     initialRouteName: "PrescriptionList",
     shifting: true,
-    activeColor: '#f0edf6',
-    inactiveColor: '#3e2465',
-    barStyle: { backgroundColor: '#694fad' }, 
+    activeColor: "#f0edf6",
+    inactiveColor: "#3e2465",
+    barStyle: { backgroundColor: "#694fad" },
     tabBarOptions: {
       showIcon: true,
       labelStyle: { fontSize: 10 }
