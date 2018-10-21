@@ -26,10 +26,10 @@ spec = withApp $ do
 
       -- Doctors
       _ <- runDB $ mapM insert_
-        [ Doctor "Brad" "Pitt" -- $ patientKey <$> [1, 2, 4]
-        , Doctor "Jude" "Law" -- $ patientKey <$> [3]
-        , Doctor "Jet" "Li" -- $ patientKey <$> [1, 2, 3, 4]
-        , Doctor "John" "Wayne" -- []
+        [ Doctor "Brad" "Pitt"
+        , Doctor "Jude" "Law"
+        , Doctor "Jet" "Li"
+        , Doctor "John" "Wayne"
         ]
 
       -- Doctor patient relations
