@@ -56,4 +56,6 @@ DoctorPatientRelation json
 
 Prescription
     medication Text
+    dosageUnit
+    amount
 
