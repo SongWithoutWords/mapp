@@ -1,4 +1,32 @@
 ## TODO list
+#### Get started
+- git clone
+- npm install 
+- react-native run-ios OR react-native run-android
+    - make sure you are in mapp/front-end/mapp/app
+    - make sure you are in front-end branch
+    - make sure Android Virtual Device is running
+#### Directory Structure
+- /app      
+    - the main folder we will be working in 
+- /app/componets
+    - general components
+- /app/config
+    - router.js 
+        - handling navigation and navigation options
+- /app/screens
+    - all the screens (views)
+- /App.js
+    - root component
+    
+#### Troubleshooting
+```
+java.lang.string cannot be cast to com.facebook.react.uimanager.accessibility DelegateUtil$accessibilityRole
+```
+- [I have Some Error when add Button to my React Native App?](https://stackoverflow.com/questions/52784633/i-have-some-error-when-add-button-to-my-react-native-app?noredirect=1#comment92491686_52784633)
+
+
+
 #### UI  
 For patients:
 - prescription list screen (like a list of cards)
