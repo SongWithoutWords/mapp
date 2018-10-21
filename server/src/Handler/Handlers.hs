@@ -33,13 +33,13 @@ getDoctorsR = do
 
 postDoctorsR :: Handler Value
 postDoctorsR = do
-  PostDoctor email password fn ln <- requireJsonBody
+  PostDoctor email' password' firstName' lastName' <- requireJsonBody
   doctorInserted <- runDB $ insertEntity Doctor
-    { doctorFirstName = fn
-    , doctorLastName = ln
+    { doctorFirstName = firstName'
+    , doctorLastName = lastName'
     , doctorPatients = []
     }
-  let user = XUser email password "" (Left $ entityKey doctorInserted)
+  let user = XUser email' password' "" (Left $ entityKey doctorInserted)
   _ <- runDB $ insertEntity user
   returnJson doctorInserted
 
