@@ -48,6 +48,17 @@ instance ToJSON PostPatient
 share [mkPersist sqlSettings, mkMigrate "migrateAll"]
     $(persistFileWith lowerCaseSettings "config/models")
 
+
+-- Information returned for use by the doctors' app
+data DoctorWithPatients = DoctorWithPatients
+  { id :: DoctorId
+  , firstName :: Text
+  , lastName :: Text
+  , patients :: [Entity Patient]
+  } deriving(Eq, Generic, Show)
+instance FromJSON DoctorWithPatients
+instance ToJSON DoctorWithPatients
+
 -- Utility functions for database keys
 doctorKey :: Int -> DoctorId
 doctorKey = DoctorKey . fromIntegral
