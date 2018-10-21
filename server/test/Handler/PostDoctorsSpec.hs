@@ -17,7 +17,7 @@ spec = withApp $ do
         , email = "james@hill.com"
         , password = "jhill"
         }
-      jsonResponseIs $ Entity (doctorKey 1) $ Doctor "James" "Hill" []
+      jsonResponseIs $ DoctorWithPatients (doctorKey 1) "James" "Hill" []
 
       -- Attempt to claim this email by a second user
       postJson DoctorsR $ PostDoctor
@@ -47,16 +47,9 @@ spec = withApp $ do
                   assertEq "Doctor" doctor Doctor
                     { doctorFirstName = "James"
                     , doctorLastName = "Hill"
-                    , doctorPatients = []
                     }
 
+      -- Attempt to create a second doctor with same email should not create a second doctor
       get $ DoctorsR
-      jsonResponseIs
-        [ DoctorWithPatients
-          { id = doctorKey 1
-          , firstName = "James"
-          , lastName = "Hill"
-          , patients = []
-          }
-        ]
+      jsonResponseIs $ [Entity (doctorKey 1) $ Doctor "James" "Hill"]
 

@@ -32,4 +32,4 @@
 
 /requests RequestsR POST
 
-/doctors/#Int/patients DoctorPatientsR POST
+/relations RelationsR POST

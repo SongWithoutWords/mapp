@@ -25,17 +25,26 @@ spec = withApp $ do
         Patient "Mel" "Brooks" $ fromGregorian 1964 5 6
 
       -- Doctors
-      _ <- runDB $ insertEntity
-        $ Doctor "Brad" "Pitt" $ patientKey <$> [1, 2, 4]
+      _ <- runDB $ mapM insert_
+        [ Doctor "Brad" "Pitt" -- $ patientKey <$> [1, 2, 4]
+        , Doctor "Jude" "Law" -- $ patientKey <$> [3]
+        , Doctor "Jet" "Li" -- $ patientKey <$> [1, 2, 3, 4]
+        , Doctor "John" "Wayne" -- []
+        ]
 
-      _ <- runDB $ insertEntity
-        $ Doctor "Jude" "Law" $ patientKey <$> [3]
+      -- Doctor patient relations
+      _ <- runDB $ mapM insert_
+        [ doctorPatientRelation 1 1
+        , doctorPatientRelation 1 2
+        , doctorPatientRelation 1 4
 
-      _ <- runDB $ insertEntity
-        $ Doctor "Jet" "Li" $ patientKey <$> [1, 2, 3, 4]
+        , doctorPatientRelation 2 3
 
-      _ <- runDB $ insertEntity
-        $ Doctor "John" "Wayne" []
+        , doctorPatientRelation 3 1
+        , doctorPatientRelation 3 2
+        , doctorPatientRelation 3 3
+        , doctorPatientRelation 3 4
+        ]
 
       -- Actual http get request
       get $ DoctorR 1

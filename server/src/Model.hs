@@ -66,6 +66,10 @@ doctorKey = DoctorKey . fromIntegral
 patientKey :: Int -> PatientId
 patientKey = PatientKey . fromIntegral
 
+doctorPatientRelation :: Int -> Int -> DoctorPatientRelation
+doctorPatientRelation did pid =
+  DoctorPatientRelation (doctorKey did) (patientKey pid)
+
 instance PersistField (Either DoctorId PatientId) where
 
   toPersistValue :: Either DoctorId PatientId -> PersistValue

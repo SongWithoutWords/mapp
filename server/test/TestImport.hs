@@ -120,8 +120,9 @@ jsonResponseIs expected = withResponse $ \ (SResponse status _ bodyText) -> do
   liftIO $ case decode bodyText of
     Nothing -> H.assertFailure $ "Could not parse JSON response:\n" ++ show bodyText
     Just bodyJson -> case fromJSON bodyJson of
-      Error message ->
-        H.assertFailure $ "Could not parse JSON response as correct type:\n" ++ message
+      Error message -> H.assertFailure $
+        "Could not parse JSON response as correct type:\n" ++
+        message ++ "\n" ++ ppShow bodyJson
       Success result ->
         if result == expected
           then pure ()

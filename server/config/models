@@ -32,7 +32,6 @@ XUser
 Doctor json
     firstName Text
     lastName Text
-    patients [PatientId]
     deriving Eq
     deriving Show
 
@@ -43,11 +42,17 @@ Patient json
     deriving Eq
     deriving Show
 
-RequestForDoctor json
-    patientFrom PatientId
-    doctorTo DoctorId
-    UniqueRequestFrom patientFrom
-    UniqueRequestTo doctorTo
+-- Request by a patient for a doctor
+DoctorPatientRequest json
+    doctor DoctorId
+    patient PatientId
+    UniqueRequest patient doctor
+
+-- Relation between a patient and a doctor
+DoctorPatientRelation json
+    doctor DoctorId
+    patient PatientId
+    UniqueRelation patient doctor
 
 Prescription
     medication Text

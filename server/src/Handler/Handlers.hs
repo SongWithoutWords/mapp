@@ -17,20 +17,24 @@ dbLookup404 key = do
     Just value -> pure value
     Nothing -> notFound
 
-
-getDoctorR :: Int -> Handler Value
-getDoctorR id = do
-  Entity id' (Doctor fn ln pids') <- dbLookup404 (doctorKey id)
-  patients' <- runDB $ mapMaybeM getEntity pids'
-  returnJson DoctorWithPatients
-    { id = id'
+getDoctorWithPatients :: DoctorId -> Handler DoctorWithPatients
+getDoctorWithPatients did = do
+  Doctor fn ln <- runDB $ get404 did
+  relations <- runDB $ selectList [DoctorPatientRelationDoctor ==. did] []
+  let pids = doctorPatientRelationPatient . entityVal <$> relations
+  patients' <- runDB $ mapMaybeM getEntity pids
+  return $ DoctorWithPatients
+    { id = did
     , firstName = fn
     , lastName = ln
     , patients = patients'
     }
 
+getDoctorR :: Int -> Handler Value
+getDoctorR = getDoctorWithPatients . doctorKey >=> returnJson
+
 getPatientR :: Int -> Handler Value
-getPatientR id = dbLookup404 (patientKey id) >>= returnJson
+getPatientR = dbLookup404 . patientKey >=> returnJson
 
 getDoctorsR :: Handler Value
 getDoctorsR = do
@@ -44,19 +48,18 @@ getDoctorsR = do
 postDoctorsR :: Handler Value
 postDoctorsR = do
   PostDoctor email' password' firstName' lastName' <- requireJsonBody
-  doctorInserted <- runDB $ insertEntity Doctor
+  doctorId <- runDB $ insert Doctor
     { doctorFirstName = firstName'
     , doctorLastName = lastName'
-    , doctorPatients = []
     }
-  let user = XUser email' password' "" (Left $ entityKey doctorInserted)
+  let user = XUser email' password' "" (Left doctorId)
   userInserted <- runDB $ insertUniqueEntity user
 
   case userInserted of
     Nothing -> do
-      _ <- runDB $ delete $ entityKey doctorInserted
+      _ <- runDB $ delete doctorId
       invalidArgs ["Email already in use"]
-    Just _ -> returnJson doctorInserted
+    Just _ -> getDoctorWithPatients doctorId >>= returnJson
 
 postPatientsR :: Handler Value
 postPatientsR =  do
@@ -67,25 +70,20 @@ postPatientsR =  do
 
 postRequestsR :: Handler Value
 postRequestsR =  do
-  request :: RequestForDoctor <- requireJsonBody
-  requestInserted <- runDB $ insertEntity request
+  request :: DoctorPatientRequest <- requireJsonBody
+  requestInserted <- runDB $ insertUniqueEntity request
   returnJson requestInserted
 
-postDoctorPatientsR :: Int -> Handler Value
-postDoctorPatientsR doctorId = do
-  let doctorId' = doctorKey doctorId
-
-  doctor <- entityVal <$> dbLookup404 doctorId'
-
-  patientIdToAdd :: PatientId <- requireJsonBody
+postRelationsR :: Handler Value
+postRelationsR = do
+  DoctorPatientRequest did pid <- requireJsonBody
 
   pendingRequests <- runDB $ selectList
-    [ RequestForDoctorPatientFrom ==. patientIdToAdd
-    , RequestForDoctorDoctorTo ==. doctorId'] []
+    [ DoctorPatientRequestDoctor ==. did
+    , DoctorPatientRequestPatient ==. pid] []
 
   if null pendingRequests
     then invalidArgs ["No pending request from this patient to this doctor"]
     else do
-      let doctor' = doctor {doctorPatients = patientIdToAdd : doctorPatients doctor}
-      runDB $ replace doctorId' doctor'
-      returnJson doctor'
+      _ <- runDB $ insertUniqueEntity $ DoctorPatientRelation did pid
+      getDoctorWithPatients did >>= returnJson
