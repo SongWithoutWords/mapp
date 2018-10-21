@@ -50,3 +50,13 @@ spec = withApp $ do
                     , doctorPatients = []
                     }
 
+      get $ DoctorsR
+      jsonResponseIs
+        [ DoctorWithPatients
+          { id = doctorKey 1
+          , firstName = "James"
+          , lastName = "Hill"
+          , patients = []
+          }
+        ]
+
