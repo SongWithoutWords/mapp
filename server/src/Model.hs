@@ -19,6 +19,14 @@ import Database.Persist.Quasi
 import Text.Read(read)
 
 
+-- You can define all of your database entities in the entities file.
+-- You can find more information on persistent and how to declare entities
+-- at:
+-- http://www.yesodweb.com/book/persistent/
+share [mkPersist sqlSettings, mkMigrate "migrateAll"]
+    $(persistFileWith lowerCaseSettings "config/models")
+
+
 -- Information required to create a new doctor account
 data PostDoctor = PostDoctor
   { email :: Text
@@ -40,15 +48,6 @@ data PostPatient = PostPatient
 instance FromJSON PostPatient
 instance ToJSON PostPatient
 
-
--- You can define all of your database entities in the entities file.
--- You can find more information on persistent and how to declare entities
--- at:
--- http://www.yesodweb.com/book/persistent/
-share [mkPersist sqlSettings, mkMigrate "migrateAll"]
-    $(persistFileWith lowerCaseSettings "config/models")
-
-
 -- Information returned for use by the doctors' app
 data DoctorWithPatients = DoctorWithPatients
   { id :: DoctorId
@@ -59,7 +58,8 @@ data DoctorWithPatients = DoctorWithPatients
 instance FromJSON DoctorWithPatients
 instance ToJSON DoctorWithPatients
 
--- Utility functions for database keys
+
+-- Utility functions
 doctorKey :: Int -> DoctorId
 doctorKey = DoctorKey . fromIntegral
 
@@ -70,6 +70,8 @@ doctorPatientRelation :: Int -> Int -> DoctorPatientRelation
 doctorPatientRelation did pid =
   DoctorPatientRelation (doctorKey did) (patientKey pid)
 
+
+-- Instances for custom types in the database
 instance PersistField (Either DoctorId PatientId) where
 
   toPersistValue :: Either DoctorId PatientId -> PersistValue
