@@ -1,6 +1,7 @@
 {-# LANGUAGE QuasiQuotes #-}
 {-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE FlexibleContexts #-}
 module TestImport
     ( module TestImport
     , module X
@@ -115,16 +116,16 @@ jsonResponseIs :: (Show a, Eq a, FromJSON a, ToJSON a) => a -> YesodExample App 
 jsonResponseIs expected = withResponse $ \ (SResponse status _ bodyText) -> do
   statusIs 200
   liftIO $ case decode bodyText of
-    Nothing -> H.assertFailure $ "Could not parse JSON response:\n" -- ++ asString bodyText
-    Just (bodyJson :: Value) -> case fromJSON bodyJson of
+    Nothing -> H.assertFailure $ "Could not parse JSON response:\n" ++ show bodyText
+    Just bodyJson -> case fromJSON bodyJson of
       Error message ->
         H.assertFailure $ "Could not parse JSON response as correct type:\n" ++ message
       Success result ->
         if result == expected
           then pure ()
           else H.assertFailure $
-               "Expected:" ++ ppShow expected ++
-               "\nFound:" ++ ppShow result
+               "Expected:\n" ++ ppShow expected ++
+               "\nFound:\n" ++ ppShow result
 
 postJson :: (ToJSON a) => RedirectUrl App url => url -> a -> YesodExample App ()
 postJson url value = postBody url $ encode value
