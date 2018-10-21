@@ -58,12 +58,14 @@ library:
       - -Wall
       - -fwarn-tabs
       - -O0
+      - -XNoImplicitPrelude
       cpp-options: -DDEVELOPMENT
     else:
       ghc-options:
       - -Wall
       - -fwarn-tabs
       - -O2
+      - -XNoImplicitPrelude
 
 # Runnable executable for our application
 executables:
@@ -74,6 +76,7 @@ executables:
     - -threaded
     - -rtsopts
     - -with-rtsopts=-N
+    - -XNoImplicitPrelude
     dependencies:
     - server
     when:
@@ -85,7 +88,9 @@ tests:
   server-test:
     main: Spec.hs
     source-dirs: test
-    ghc-options: -Wall
+    ghc-options:
+    - -Wall
+    - -XNoImplicitPrelude
     dependencies:
     - server
     - hspec >=2.0.0
