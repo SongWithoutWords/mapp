@@ -126,4 +126,6 @@ jsonResponseIs expected = withResponse $ \ (SResponse status _ bodyText) -> do
                "Expected:" ++ ppShow expected ++
                "\nFound:" ++ ppShow result
 
+postJson :: (ToJSON a) => RedirectUrl App url => url -> a -> YesodExample App ()
+postJson url value = postBody url $ encode value
 
