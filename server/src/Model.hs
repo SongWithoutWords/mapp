@@ -1,3 +1,5 @@
+{-# LANGUAGE DeriveGeneric              #-}
+{-# LANGUAGE DuplicateRecordFields      #-}
 {-# LANGUAGE EmptyDataDecls             #-}
 {-# LANGUAGE FlexibleInstances          #-}
 {-# LANGUAGE GADTs                      #-}
@@ -18,6 +20,7 @@ import Database.Persist.Types
 
 import Text.Read(read)
 
+
 -- Information required to create a new doctor account
 data PostDoctor = PostDoctor
   { email :: Text
@@ -27,6 +30,17 @@ data PostDoctor = PostDoctor
   } deriving(Generic, Show)
 instance FromJSON PostDoctor
 instance ToJSON PostDoctor
+
+-- Information required to create a new patient account
+data PostPatient = PostPatient
+  { email :: Text
+  , password :: Text
+  , firstName :: Text
+  , lastName :: Text
+  , dateOfBirth :: Day
+  } deriving(Generic, Show)
+instance FromJSON PostPatient
+instance ToJSON PostPatient
 
 
 -- You can define all of your database entities in the entities file.
