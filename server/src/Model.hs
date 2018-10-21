@@ -16,8 +16,6 @@ module Model where
 import ClassyPrelude.Yesod hiding(id)
 import Database.Persist.Quasi
 
-import Database.Persist.Types
-
 import Text.Read(read)
 
 
