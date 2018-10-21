@@ -36,6 +36,13 @@ instance ToJSON PostDoctor
 share [mkPersist sqlSettings, mkMigrate "migrateAll"]
     $(persistFileWith lowerCaseSettings "config/models")
 
+-- Utility functions for database keys
+doctorKey :: Int -> DoctorId
+doctorKey id = DoctorKey $ fromIntegral id
+
+patientKey :: Int -> PatientId
+patientKey id = PatientKey $ fromIntegral id
+
 instance PersistField (Either DoctorId PatientId) where
 
   toPersistValue :: Either DoctorId PatientId -> PersistValue

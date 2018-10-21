@@ -18,10 +18,10 @@ dbLookup404 key = do
 
 
 getDoctorR :: Int -> Handler Value
-getDoctorR id = (dbLookup404 $ DoctorKey $ fromIntegral id) >>= returnJson
+getDoctorR id = dbLookup404 (doctorKey id) >>= returnJson
 
 getPatientR :: Int -> Handler Value
-getPatientR id = (dbLookup404 $ PatientKey $ fromIntegral id) >>= returnJson
+getPatientR id = dbLookup404 (patientKey id) >>= returnJson
 
 getDoctorsR :: Handler Value
 getDoctorsR = do
@@ -53,19 +53,19 @@ postRequestsR =  do
 
 postDoctorPatientsR :: Int -> Handler Value
 postDoctorPatientsR doctorId = do
-  let doctorKey = DoctorKey $ fromIntegral doctorId
+  let doctorId' = doctorKey doctorId
 
-  doctor <- entityVal <$> (dbLookup404 $ DoctorKey $ fromIntegral doctorId)
+  doctor <- entityVal <$> dbLookup404 doctorId'
 
   patientIdToAdd :: PatientId <- requireJsonBody
 
   pendingRequests <- runDB $ selectList
     [ RequestForDoctorPatientFrom ==. patientIdToAdd
-    , RequestForDoctorDoctorTo ==. doctorKey] []
+    , RequestForDoctorDoctorTo ==. doctorId'] []
 
   if null pendingRequests
     then invalidArgs ["No pending request from this patient to this doctor"]
     else do
       let doctor' = doctor {doctorPatients = patientIdToAdd : doctorPatients doctor}
-      runDB $ replace doctorKey doctor'
+      runDB $ replace doctorId' doctor'
       returnJson doctor'
