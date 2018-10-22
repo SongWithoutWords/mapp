@@ -14,7 +14,19 @@ const fake_prescriptions = [
     avatar_url: "https://bit.ly/2yhPJY0",
     subtitle: "..",
     image_name: "amoxicillin"
-  }
+  },
+  {
+    name: "divalproex",
+    avatar_url: "https://bit.ly/2yhPJY0",
+    subtitle: "..",
+    image_name: "divalproex" // index into the images array in the card component
+  },
+  {
+    name: "amoxicillin",
+    avatar_url: "https://bit.ly/2yhPJY0",
+    subtitle: "..",
+    image_name: "amoxicillin"
+  },
 ];
 
 class PrescriptionListScreen extends Component {

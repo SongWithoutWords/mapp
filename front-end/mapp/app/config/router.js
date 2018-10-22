@@ -3,12 +3,12 @@ import { createMaterialBottomTabNavigator } from "react-navigation-material-bott
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { createStackNavigator } from "react-navigation";
 
-import DoctorListScreen from "../screens/DoctorListScreen";
 import TestScreen from "../screens/TestScreen";
 import InboxScreen from "../screens/InboxScreen";
-
 import PrescriptionInfoScreen from "../screens/PrescriptionInfoScreen";
 import PrescriptionListScreen from "../screens/PrescriptionListScreen";
+import DoctorListScreen from "../screens/DoctorListScreen";
+import DoctorInfoScreen from "../screens/DoctorInfoScreen";
 
 const PrescriptionStackNavigator = createStackNavigator({
   PrescriptionList: {
@@ -20,6 +20,23 @@ const PrescriptionStackNavigator = createStackNavigator({
   },
   PrescriptionInfo: {
     screen: PrescriptionInfoScreen,
+    navigationOptions: {
+      headerForceInset: { top: "never", bottom: "never" }
+    }
+  }
+});
+
+
+const DoctorStackNavigator = createStackNavigator({
+  DoctorList: {
+    screen: DoctorListScreen,
+    navigationOptions: {
+      header: null,
+      headerForceInset: { top: 'never', bottom: 'never' }
+    }
+  },
+  DoctorInfo: {
+    screen: DoctorInfoScreen,
     navigationOptions: {
       headerForceInset: { top: "never", bottom: "never" }
     }
@@ -48,7 +65,7 @@ export const Tabs = createMaterialBottomTabNavigator(
       }
     },
     DoctorList: {
-      screen: DoctorListScreen,
+      screen: DoctorStackNavigator,
       navigationOptions: {
         tabBarLabel: "Doctors",
         tabBarIcon: ({ tintColor }) => (

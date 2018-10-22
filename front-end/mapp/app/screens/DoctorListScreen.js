@@ -20,6 +20,9 @@ const fake_doctors = [
 ];
 
 class DoctorListScreen extends Component {
+  onPress = () => {
+    this.props.navigation.navigate("DoctorInfo");
+  };
   render() {
     return (
       <View>
@@ -32,6 +35,7 @@ class DoctorListScreen extends Component {
                 avatar={{ uri: doctor.avatar_url }}
                 title={doctor.name}
                 subtitle={doctor.subtitle}
+                onPress={this.onPress}
               />
             ))}
           </List>
