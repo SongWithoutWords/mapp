@@ -1,12 +1,34 @@
-## TODO list
-#### Get started
+## TODO for the MVP 
+- sign-up/sign-in screen (text inputs + picker for doctor or patient account) 
+    - make a post request to the server
+    - return a message: sign in fail/ sign up fail/sign up sucess/sign in sucess
+    - give different layouts of the app based on the signed-in user type
+- doctor detail info screen
+    - probably have info like location, telephone, email, avatar, and specialty.
+    - a button for the patient to make a request (and information about himself/herself)
+        - onPress => make a POST to server
+- notificaiton screen info screen
+    - a material top tab navigation inside the existing bottom tab nav 
+        - message tab (used later for patient-doctor communication) + notification tab 
+    - patient: notification about his/her requests (to doctor/to renew prescription..)
+    - doctor: notiification about how is requesting to be his/her patient
+        - onPress => a button for accept/decline (and give info about the patient)
+        - make a POST to the server based on which button is pressed
+
+## TODO for this week
+- redux + redux persist for mutate states
+    - actions/reducers/store
+    - do research on medicine (json returned by drug apis) and create data structure for prescription
+- prescription edit (edit button on the top left of the info screen) + add new prescription screen (modal + fab ?)
+
+## Get started
 - git clone
 - npm install 
 - react-native run-ios OR react-native run-android
     - make sure you are in mapp/front-end/mapp/app
     - make sure you are in front-end branch
     - make sure Android Virtual Device is running
-#### Directory Structure
+### Directory Structure
 - /app      
     - the main folder we will be working in 
 - /app/componets
@@ -19,7 +41,7 @@
 - /App.js
     - root component
 
-#### Troubleshooting
+### Troubleshooting
 ```
 java.lang.string cannot be cast to com.facebook.react.uimanager.accessibility DelegateUtil$accessibilityRole
 ```
@@ -29,7 +51,9 @@ java.lang.string cannot be cast to com.facebook.react.uimanager.accessibility De
 error: bundling failed: Error: Unable to resolve module `./../react-transform-hmr/lib/index.js
 ```
 - [error: bundling failed: Error: Unable to resolve module ](https://github.com/facebook/react-native/issues/21490)
-#### UI  
+
+## TODO list
+### UI  
 For patients:
 - prescription list screen (like a list of cards)
     - each card could be a component
@@ -49,25 +73,24 @@ For both:
 - Search bar component
 - profile/settings screen
 
-#### Core Functinalities 
+### Core Functinalities 
 - authentication
-- scheduling timers/notifications for prescriptions
-- creating patient-doctor relationship
 - communication/sync with server (how? when? how often?)
 - on-device persistent storage of user data
+- scheduling timers/notifications for prescriptions
+- creating patient-doctor relationship
 - retrieving medication data (using APIs or building our own DB?)
 
 
-#### Stretch goals
+### Stretch goals
 - How do we integrate fuzzy find algorithm (on-device? server-side?)
 - Google sign-in integration
 - Integrate chat feature + sharing medical document?
 
 
-#### Libraries 
+### Libraries 
 - UI components:
     - React Native Elements 
     - Native Base
     - react-native-material-ui
-- Navigation:
     - react navigation
