@@ -76,7 +76,7 @@ postRequestsR =  do
 
 postRelationsR :: Handler Value
 postRelationsR = do
-  DoctorPatientRequest did pid <- requireJsonBody
+  relation@(DoctorPatientRelation did pid) <- requireJsonBody
 
   pendingRequests <- runDB $ selectList
     [ DoctorPatientRequestDoctor ==. did
@@ -85,5 +85,4 @@ postRelationsR = do
   if null pendingRequests
     then invalidArgs ["No pending request from this patient to this doctor"]
     else do
-      _ <- runDB $ insertUniqueEntity $ DoctorPatientRelation did pid
-      getDoctorWithPatients did >>= returnJson
+      (runDB $ insertUniqueEntity relation) >>= returnJson
