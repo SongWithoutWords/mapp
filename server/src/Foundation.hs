@@ -173,6 +173,9 @@ instance Yesod App where
     isAuthorized (PatientR _) _ = return Authorized
     isAuthorized PatientsR _ = return Authorized
 
+    isAuthorized RequestsR _ = return Authorized
+    isAuthorized RelationsR _ = return Authorized
+
     -- the profile route requires that the user is authenticated, so we
     -- delegate to that function
     isAuthorized ProfileR _ = isAuthenticated
