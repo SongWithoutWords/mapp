@@ -11,7 +11,7 @@
     - a material top tab navigation inside the existing bottom tab nav 
         - message tab (used later for patient-doctor communication) + notification tab 
     - patient: notification about his/her requests (to doctor/to renew prescription..)
-    - doctor: notiification about how is requesting to be his/her patient
+    - doctor: notification about who is requesting to be his/her patient
         - onPress => a button for accept/decline (and give info about the patient)
         - make a POST to the server based on which button is pressed
 
