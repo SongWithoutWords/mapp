@@ -1,22 +1,23 @@
 import React, { Component } from "react";
-import { List, ListItem } from "react-native-elements";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, ScrollView } from "react-native";
+import PrescriptionCardComponent from "../components/cardComponents/PrescriptionCardComponent";
 
 const fake_prescriptions = [
   {
     name: "divalproex",
     avatar_url: "https://bit.ly/2yhPJY0",
-    subtitle: ".."
+    subtitle: "..",
+    image_name: "divalproex" // index into the images array in the card component
   },
   {
-    name: "divalproex",
+    name: "amoxicillin",
     avatar_url: "https://bit.ly/2yhPJY0",
-    subtitle: ".."
+    subtitle: "..",
+    image_name: "amoxicillin"
   }
 ];
 
 class PrescriptionListScreen extends Component {
-
   onPress = () => {
     this.props.navigation.navigate("PrescriptionInfo");
   };
@@ -24,30 +25,23 @@ class PrescriptionListScreen extends Component {
   render() {
     return (
       <View>
-        <List>
-          {fake_prescriptions.map((prescription, i) => (
-            <ListItem
-              key={i}
-              roundAvatar
-              avatar={{ uri: prescription.avatar_url }}
-              title={prescription.name}
-              subtitle={prescription.subtitle}
-              onPress={this.onPress}
-            />
-          ))}
-        </List>
+        <ScrollView>
+          {fake_prescriptions.map((prescription,i) => {
+            return (
+              <PrescriptionCardComponent
+                title={prescription.name}
+                subtitle={prescription.subtitle}
+                image_name={prescription.image_name}
+                onPress={this.onPress}
+                key={i}
+              />
+            );
+          })}
+        </ScrollView>
       </View>
     );
   }
 }
 
-// styles for this screen
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center"
-  }
-});
 
 export default PrescriptionListScreen;

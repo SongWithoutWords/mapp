@@ -23,9 +23,12 @@
 ```
 java.lang.string cannot be cast to com.facebook.react.uimanager.accessibility DelegateUtil$accessibilityRole
 ```
-- [I have Some Error when add Button to my React Native App?](https://stackoverflow.com/questions/52784633/i-have-some-error-when-add-button-to-my-react-native-app?noredirect=1#comment92491686_52784633)
+ - [I have Some Error when add Button to my React Native App?](https://stackoverflow.com/questions/52784633/i-have-some-error-when-add-button-to-my-react-native-app?noredirect=1#comment92491686_52784633)
 
-
+```
+error: bundling failed: Error: Unable to resolve module `./../react-transform-hmr/lib/index.js
+```
+- [error: bundling failed: Error: Unable to resolve module ](https://github.com/facebook/react-native/issues/21490)
 #### UI  
 For patients:
 - prescription list screen (like a list of cards)
