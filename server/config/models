@@ -47,12 +47,16 @@ DoctorPatientRequest json
     doctor DoctorId
     patient PatientId
     UniqueRequest patient doctor
+    deriving Eq
+    deriving Show
 
 -- Relation between a patient and a doctor
 DoctorPatientRelation json
     doctor DoctorId
     patient PatientId
     UniqueRelation patient doctor
+    deriving Eq
+    deriving Show
 
 Prescription
     medication Text

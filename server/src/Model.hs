@@ -66,6 +66,16 @@ doctorKey = DoctorKey . fromIntegral
 patientKey :: Int -> PatientId
 patientKey = PatientKey . fromIntegral
 
+doctorPatientRequestKey :: Int -> DoctorPatientRequestId
+doctorPatientRequestKey = DoctorPatientRequestKey . fromIntegral
+
+doctorPatientRelationKey :: Int -> DoctorPatientRelationId
+doctorPatientRelationKey = DoctorPatientRelationKey . fromIntegral
+
+doctorPatientRequest :: Int -> Int -> DoctorPatientRequest
+doctorPatientRequest did pid =
+  DoctorPatientRequest (doctorKey did) (patientKey pid)
+
 doctorPatientRelation :: Int -> Int -> DoctorPatientRelation
 doctorPatientRelation did pid =
   DoctorPatientRelation (doctorKey did) (patientKey pid)
