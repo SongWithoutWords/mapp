@@ -20,14 +20,21 @@ dbLookup404 key = do
 getDoctorWithPatients :: DoctorId -> Handler DoctorWithPatients
 getDoctorWithPatients did = do
   Doctor fn ln <- runDB $ get404 did
+
   relations <- runDB $ selectList [DoctorPatientRelationDoctor ==. did] []
   let pids = doctorPatientRelationPatient . entityVal <$> relations
   patients' <- runDB $ mapMaybeM getEntity pids
+
+  requests <- runDB $ selectList [DoctorPatientRequestDoctor ==. did] []
+  let rids = doctorPatientRequestPatient . entityVal <$> requests
+  pendingRequests' <- runDB $ mapMaybeM getEntity rids
+
   return $ DoctorWithPatients
     { id = did
     , firstName = fn
     , lastName = ln
     , patients = patients'
+    , pendingRequests = pendingRequests'
     }
 
 getDoctorR :: Int -> Handler Value
