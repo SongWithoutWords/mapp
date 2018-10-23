@@ -17,7 +17,7 @@ spec = withApp $ do
         , email = "james@hill.com"
         , password = "jhill"
         }
-      jsonResponseIs $ DoctorWithPatients (doctorKey 1) "James" "Hill" []
+      jsonResponseIs $ DoctorWithPatients (doctorKey 1) "James" "Hill" [] []
 
       -- Attempt to claim this email by a second user
       postJson DoctorsR $ PostDoctor

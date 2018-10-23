@@ -37,8 +37,8 @@ spec = withApp $ do
         , firstName = "James"
         , lastName = "Hill"
         , patients = []
+        , pendingRequests = []
         }
-        -- (doctorKey 1) "James" "Hill" []
 
       -- Verify that the doctor account exists
       get $ DoctorR 1
@@ -47,9 +47,10 @@ spec = withApp $ do
         , firstName = "James"
         , lastName = "Hill"
         , patients = []
+        , pendingRequests = []
         }
 
-      -- Attempt to accept to create a relationship without a request
+      -- Attempt to create a relationship without a request
       postJson RelationsR $ doctorPatientRelation 1 1
       statusIs 400
 
@@ -60,6 +61,7 @@ spec = withApp $ do
         , firstName = "James"
         , lastName = "Hill"
         , patients = []
+        , pendingRequests = []
         }
 
       -- Add a request from the patient for the doctor
@@ -77,6 +79,7 @@ spec = withApp $ do
         , firstName = "James"
         , lastName = "Hill"
         , patients = [Entity (patientKey 1) $ Patient "Bobby" "Lee" Nothing]
+        , pendingRequests = []
         }
           -- [Entity (patientKey 1) $ Patient "Bobby" "Lee" Nothing]
 

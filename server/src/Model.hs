@@ -54,6 +54,7 @@ data DoctorWithPatients = DoctorWithPatients
   , firstName :: Text
   , lastName :: Text
   , patients :: [Entity Patient]
+  , pendingRequests :: [Entity Patient]
   } deriving(Eq, Generic, Show)
 instance FromJSON DoctorWithPatients
 instance ToJSON DoctorWithPatients

@@ -53,6 +53,7 @@ spec = withApp $ do
         , firstName = "Brad"
         , lastName = "Pitt"
         , patients = [tom, may, mel]
+        , pendingRequests = []
         }
 
       get $ DoctorR 2
@@ -61,6 +62,7 @@ spec = withApp $ do
         , firstName = "Jude"
         , lastName = "Law"
         , patients = [spike]
+        , pendingRequests = []
         }
 
       get $ DoctorR 3
@@ -69,6 +71,7 @@ spec = withApp $ do
         , firstName = "Jet"
         , lastName = "Li"
         , patients = [tom, may, spike, mel]
+        , pendingRequests = []
         }
 
       get $ DoctorR 4
@@ -77,6 +80,7 @@ spec = withApp $ do
         , firstName = "John"
         , lastName = "Wayne"
         , patients = []
+        , pendingRequests = []
         }
 
 
