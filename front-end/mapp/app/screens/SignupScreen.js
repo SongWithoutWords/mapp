@@ -4,11 +4,21 @@ import {
   ActivityIndicator,
   Text,
   View,
-  TextInput
+  TextInput,
+  Alert
 } from "react-native";
 import { Button } from "react-native-elements";
+import {
+  Container,
+  Header,
+  Content,
+  Form,
+  Item,
+  Input,
+  Label
+} from "native-base";
 
-class TestScreen extends Component {
+class SignupScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -21,8 +31,12 @@ class TestScreen extends Component {
     };
   }
 
+  //   onPress = () => {
+  //     this.props.navigation.navigate("Main");
+  //   };
+
   onPress = () => {
-    return fetch("http://www.agis-mapp.xyz/doctors", {
+    return fetch("http://www.agis-mapp.xyz/patients", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -42,7 +56,22 @@ class TestScreen extends Component {
             isLoading: false,
             dataSource: responseJson
           },
-          function() {}
+          function() {
+            Alert.alert(
+              "Created a patient account",
+              JSON.stringify(this.state.dataSource),
+              [
+                {
+                  text: "Cancel",
+                  onPress: () => console.log("Cancel Pressed"),
+                  style: "cancel"
+                },
+                { text: "OK", onPress: () => console.log("OK Pressed") }
+              ],
+              { cancelable: false }
+            );
+            this.props.navigation.navigate("Main");
+          }
         );
       })
       .catch(error => {
@@ -56,33 +85,41 @@ class TestScreen extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <View style={styles.layout}>
-          <TextInput
-            style={{ height: 40 }}
-            placeholder="First Name"
-            onChangeText={firstName => this.setState({ firstName })}
-          />
-          <TextInput
-            style={{ height: 40 }}
-            placeholder="Last Name"
-            onChangeText={lastName => this.setState({ lastName })}
-          />
-          <TextInput
-            style={{ height: 40 }}
-            placeholder="Email"
-            onChangeText={email => this.setState({ email })}
-          />
-          <TextInput
-            style={{ height: 40 }}
-            placeholder="Password"
-            onChangeText={password => this.setState({ password })}
-          />
-        </View>
+        <Form>
+          <Item floatingLabel>
+            <Label>First Name</Label>
+            <Input
+              placeholder=""
+              onChangeText={firstName => this.setState({ firstName })}
+            />
+          </Item>
+          <Item floatingLabel>
+            <Label>Last Name</Label>
+            <Input
+              placeholder=""
+              onChangeText={lastName => this.setState({ lastName })}
+            />
+          </Item>
+          <Item floatingLabel>
+            <Label>Email</Label>
+            <Input
+              placeholder=""
+              onChangeText={email => this.setState({ email })}
+            />
+          </Item>
+          <Item floatingLabel>
+            <Label>Password</Label>
+            <Input
+              placeholder=""
+              onChangeText={password => this.setState({ password })}
+            />
+          </Item>
+        </Form>
         <View style={styles.button}>
           <Text style={styles.text}>
             {JSON.stringify(this.state.dataSource)}
           </Text>
-          <Button title="Post a doctor" onPress={this.onPress} />
+          <Button title="Sign up" onPress={this.onPress} />
         </View>
       </View>
     );
@@ -112,4 +149,4 @@ const styles = StyleSheet.create({
     padding: 10
   }
 });
-export default TestScreen;
+export default SignupScreen;

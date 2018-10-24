@@ -9,13 +9,14 @@ import PrescriptionInfoScreen from "../screens/PrescriptionInfoScreen";
 import PrescriptionListScreen from "../screens/PrescriptionListScreen";
 import DoctorListScreen from "../screens/DoctorListScreen";
 import DoctorInfoScreen from "../screens/DoctorInfoScreen";
+import SignupScreen from "../screens/SignupScreen";
 
 const PrescriptionStackNavigator = createStackNavigator({
   PrescriptionList: {
     screen: PrescriptionListScreen,
     navigationOptions: {
       header: null,
-      headerForceInset: { top: 'never', bottom: 'never' }
+      headerForceInset: { top: "never", bottom: "never" }
     }
   },
   PrescriptionInfo: {
@@ -26,13 +27,12 @@ const PrescriptionStackNavigator = createStackNavigator({
   }
 });
 
-
 const DoctorStackNavigator = createStackNavigator({
   DoctorList: {
     screen: DoctorListScreen,
     navigationOptions: {
       header: null,
-      headerForceInset: { top: 'never', bottom: 'never' }
+      headerForceInset: { top: "never", bottom: "never" }
     }
   },
   DoctorInfo: {
@@ -43,7 +43,7 @@ const DoctorStackNavigator = createStackNavigator({
   }
 });
 
-export const Tabs = createMaterialBottomTabNavigator(
+const TabNavigator = createMaterialBottomTabNavigator(
   {
     // screens and their navigation options
     Test: {
@@ -95,3 +95,22 @@ export const Tabs = createMaterialBottomTabNavigator(
     }
   }
 );
+
+export const AppStackNavigator = createStackNavigator({
+  Signup: {
+    screen: SignupScreen,
+    navigationOptions: {
+      header: null,
+      headerForceInset: { top: "never", bottom: "never" }
+    }
+  },
+  Main: {
+    screen: TabNavigator,
+    navigationOptions: {
+      header: null,
+      headerForceInset: { top: "never", bottom: "never" }
+    }
+  }
+}, {
+    initialRouteName: "Signup",
+  });

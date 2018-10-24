@@ -6,16 +6,16 @@ import { List, ListItem } from "react-native-elements";
 
 const fake_doctors = [
   {
-    name: "Hot dog",
+    name: "Ursula Carey",
     avatar_url:
       "https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg",
-    subtitle: "Vice President"
+    subtitle: "Cardiology"
   },
   {
-    name: "Not Hot Dog",
+    name: "Keeva Mcleod",
     avatar_url:
       "https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg",
-    subtitle: "Vice Vice President"
+    subtitle: "Clinical immunology/allergy"
   }
 ];
 

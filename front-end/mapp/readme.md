@@ -1,3 +1,65 @@
+### RESTful APIs (in httpie syntax)
+#### create a patient account
+```
+http POST http://www.agis-mapp.xyz/patients 
+email=asdsadfdsfadsf@black.com
+password=jblack 
+firstName=Test 
+lastName=Test
+```
+------
+#### create a doctor account (dataOfBrith field rn is just null)
+```
+http POST http://www.agis-mapp.xyz/doctors
+email=asdsadfdsfadsf@black.com 
+password=jblack 
+firstName=Test 
+lastName=Test
+```
+
+------
+#### get all doctor info
+```
+http GET http://www.agis-mapp.xyz/doctors
+```
+
+------
+#### get a doctor's info (the doctor's id is 1 in this case)
+```
+http GET http://www.agis-mapp.xyz/doctors/1
+```
+
+------
+#### add a request from patient 1 to doctor 1's pending request list
+return null if the request already exists
+":=" is just the httpie syntax to indicate an integer value
+```
+http POST http://www.agis-mapp.xyz/requests
+doctor:=1 
+patient:=1
+```
+
+------
+
+#### doctor1 accepts the request from patient1
+```
+http POST  http://www.agis-mapp.xyz/relations 
+patient:=1 
+doctor:=1
+```
+return this if such pending request does not exist:
+```
+{
+    "errors": [
+        "No pending request from this patient to this doctor"
+    ],
+    "message": "Invalid Arguments"
+
+```
+
+
+
+
 ## TODO for the MVP 
 - sign-up/sign-in screen (text inputs + picker for doctor or patient account) 
     - make a post request to the server
