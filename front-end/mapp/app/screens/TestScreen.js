@@ -1,3 +1,4 @@
+import settings from "../config/settings"
 import React, { Component } from "react";
 import {
   StyleSheet,
@@ -22,7 +23,7 @@ class TestScreen extends Component {
   }
 
   onPress = () => {
-    return fetch("http://www.agis-mapp.xyz/doctors", {
+    return fetch(settings.REMOTE_SERVER_URL + settings.DOCTOR_RES, {
       method: "POST",
       headers: {
         Accept: "application/json",

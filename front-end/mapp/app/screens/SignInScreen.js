@@ -10,7 +10,7 @@ import {
   FormValidationMessage
 } from "react-native-elements";
 
-class SignUpScreen extends Component {
+class SignInScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -30,24 +30,27 @@ class SignUpScreen extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <Card>
-          <FormLabel>Email</FormLabel>
-          <FormInput placeholder="Email address..." />
-          <FormLabel>First Name</FormLabel>
-          <FormInput placeholder="Firstname..." />
-          <FormLabel>Last Name</FormLabel>
-          <FormInput placeholder="Lastname..." />
-          <FormLabel>Password</FormLabel>
-          <FormInput secureTextEntry placeholder="Password..." />
-          <FormLabel>Confirm Password</FormLabel>
-          <FormInput secureTextEntry placeholder="Confirm Password..." />
-          <Button
-            buttonStyle={{ marginTop: 20 }}
-            backgroundColor="#694fad"
-            title="SIGN UP"
-            onPress={() => onSignUp()}
-          />
-        </Card>
+        <View style={styles.card}>
+          <Card>
+            <FormLabel>Email</FormLabel>
+            <FormInput placeholder="Email address..." />
+            <FormLabel>Password</FormLabel>
+            <FormInput secureTextEntry placeholder="Password..." />
+            <Button
+              buttonStyle={{ marginTop: 20 }}
+              backgroundColor="#694fad"
+              title="SIGN IN"
+              onPress={() => onSignIn()}
+            />
+            <Button
+              buttonStyle={{ marginTop: 20 }}
+              backgroundColor="transparent"
+              textStyle={{ color: "#bcbec1" }}
+              title="SIGN UP"
+              onPress={() => this.props.navigation.navigate("SignUp")}
+            />
+          </Card>
+        </View>
       </View>
     );
   }
@@ -55,9 +58,12 @@ class SignUpScreen extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center"
   },
-  layout: {
+  card: {
     flex: 1,
     padding: 10
   },
@@ -68,12 +74,5 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
     marginTop: 10,
     marginBottom: 10
-  },
-  text: {
-    backgroundColor: "whitesmoke",
-    color: "#4A90E2",
-    fontSize: 24,
-    padding: 10
-  }
-});
-export default SignUpScreen;
+  }});
+export default SignInScreen;

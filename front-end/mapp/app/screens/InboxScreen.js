@@ -1,25 +1,21 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 import { StyleSheet } from "react-native";
 
-import {
-  Text,
-  View,
-  ScrollView
-} from 'react-native';
-import { List, ListItem } from 'react-native-elements';
+import { Text, View, ScrollView } from "react-native";
+import { List, ListItem } from "react-native-elements";
 
 class InboxScreen extends Component {
-  render(){
-    return(
+  render() {
+    return (
       <View>
         <ScrollView>
-          <List>
-          </List>
+          <List />
         </ScrollView>
       </View>
-  )}
+    );
   }
-  
+}
+
 // styles for this screen
 const styles = StyleSheet.create({
   container: {
@@ -27,5 +23,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center"
   }
-})
-  export default InboxScreen;
+});
+
+export default InboxScreen;

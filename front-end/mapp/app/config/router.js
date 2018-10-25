@@ -9,7 +9,9 @@ import PrescriptionInfoScreen from "../screens/PrescriptionInfoScreen";
 import PrescriptionListScreen from "../screens/PrescriptionListScreen";
 import DoctorListScreen from "../screens/DoctorListScreen";
 import DoctorInfoScreen from "../screens/DoctorInfoScreen";
-import SignupScreen from "../screens/SignupScreen";
+import SignUpScreen from "../screens/SignUpScreen";
+import SignInScreen from "../screens/SignInScreen";
+import AccountScreen from "../screens/AccountProfile";
 
 const PrescriptionStackNavigator = createStackNavigator({
   PrescriptionList: {
@@ -22,6 +24,7 @@ const PrescriptionStackNavigator = createStackNavigator({
   PrescriptionInfo: {
     screen: PrescriptionInfoScreen,
     navigationOptions: {
+      title: "Prescription Info",
       headerForceInset: { top: "never", bottom: "never" }
     }
   }
@@ -38,6 +41,7 @@ const DoctorStackNavigator = createStackNavigator({
   DoctorInfo: {
     screen: DoctorInfoScreen,
     navigationOptions: {
+      title: "Doctor Info",
       headerForceInset: { top: "never", bottom: "never" }
     }
   }
@@ -81,6 +85,15 @@ const TabNavigator = createMaterialBottomTabNavigator(
           <MaterialCommunityIcons name="inbox" size={25} color={tintColor} />
         )
       }
+    },
+    Account: {
+      screen: AccountScreen,
+      navigationOptions: {
+        tabBarLabel: "Account",
+        tabBarIcon: ({ tintColor }) => (
+          <MaterialCommunityIcons name="account-circle" size={25} color={tintColor} />
+        )
+      }
     }
   },
   {
@@ -97,10 +110,17 @@ const TabNavigator = createMaterialBottomTabNavigator(
 );
 
 export const AppStackNavigator = createStackNavigator({
-  Signup: {
-    screen: SignupScreen,
+  SignIn: {
+    screen: SignInScreen,
     navigationOptions: {
       header: null,
+      headerForceInset: { top: "never", bottom: "never" }
+    }
+  },
+  SignUp: {
+    screen: SignUpScreen,
+    navigationOptions: {
+      title: "Sign Up",
       headerForceInset: { top: "never", bottom: "never" }
     }
   },
@@ -112,5 +132,5 @@ export const AppStackNavigator = createStackNavigator({
     }
   }
 }, {
-    initialRouteName: "Signup",
+    initialRouteName: "SignIn",
   });
