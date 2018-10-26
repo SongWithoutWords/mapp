@@ -14,15 +14,17 @@ export default class App extends React.Component {
   constructor(props) {
     super(props);
 
-    state = {
+    this.state = {
       reacted : 'blue',
       showButtons: true,
-      text: 'You have a new request'
+      text: 'You have a new request from'
     }
 
     this.acceptPatientRequest = this.acceptPatientRequest.bind(this);
   }
-
+  declinePatientRequest = () => {
+    this.setState({text: 'You declined', showButtons: false})
+  }
   acceptPatientRequest() {
     return fetch('http://www.agis-mapp.xyz/relations' , {
       method: 'POST',
@@ -58,7 +60,7 @@ export default class App extends React.Component {
         <Card>
         <Text style={styles.medfield}>
           <Text style={styles.fieldValue}>
-            {this.state.text}  from
+            {this.state.text}
           </Text> Sina Saleh
         </Text>
         <View style={{
@@ -71,12 +73,40 @@ export default class App extends React.Component {
         }}>
 
         {this.state.showButtons && <View style={{width: '40%'}}>
-        <TouchableOpacity onPress={this.acceptPatientRequest} style={styles.RenewButton, {display: this.state.reacted}}>
+        <TouchableOpacity onPress={this.acceptPatientRequest} style={styles.RenewButton}>
           <Text style = {{color : 'white', fontFamily: 'Circular', fontWeight:'500', fontSize: 16}}>Accept</Text>
         </TouchableOpacity>
         </View>}
         {this.state.showButtons && <View style={{width: '40%'}}>
-        <TouchableOpacity onPress={this.test} style={styles.EditButton, {color: this.state.reacted}}>
+        <TouchableOpacity onPress={this.declinePatientRequest} style={styles.EditButton}>
+          <Text style = {{color : 'white', fontFamily: 'Circular', fontWeight:'500', fontSize: 16}}>Decline</Text>
+        </TouchableOpacity>
+        </View>}
+        </View>
+
+        </Card>
+        <Card>
+        <Text style={styles.medfield}>
+          <Text style={styles.fieldValue}>
+            {this.state.text}
+          </Text> Sina Saleh
+        </Text>
+        <View style={{
+          alignItems : 'center',
+          justifyContent : 'center',
+          flexDirection: 'row',
+          marginLeft: ''
+          //height: 100,
+          //padding: 20,
+        }}>
+
+        {this.state.showButtons && <View style={{width: '40%'}}>
+        <TouchableOpacity onPress={this.acceptPatientRequest} style={styles.RenewButton}>
+          <Text style = {{color : 'white', fontFamily: 'Circular', fontWeight:'500', fontSize: 16}}>Accept</Text>
+        </TouchableOpacity>
+        </View>}
+        {this.state.showButtons && <View style={{width: '40%'}}>
+        <TouchableOpacity onPress={this.declinePatientRequest} style={styles.EditButton}>
           <Text style = {{color : 'white', fontFamily: 'Circular', fontWeight:'500', fontSize: 16}}>Decline</Text>
         </TouchableOpacity>
         </View>}
