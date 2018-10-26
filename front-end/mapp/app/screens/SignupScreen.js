@@ -1,16 +1,10 @@
 import settings from "../config/settings";
-import { Toast } from "native-base";
 import React, { Component } from "react";
 import { StyleSheet, Text, View, Alert } from "react-native";
 import genAlert from "../components/testComponents/genAlert";
 import genToast from "../components/testComponents/genToast";
-import validate from 'validate.js';
-import {
-  Button,
-  Card,
-  FormLabel,
-  FormInput,
-} from "react-native-elements";
+import validate from "validate.js";
+import { Button, Card, FormLabel, FormInput } from "react-native-elements";
 
 class SignUpScreen extends Component {
   constructor(props) {
@@ -25,17 +19,25 @@ class SignUpScreen extends Component {
     };
   }
 
-  onSignUp = () => {
-    const {email, password, confirmPassword} = this.state;
-    const fields = {email, password, confirmPassword};
+  onSignUp = userTypeString => {
+    console.log(userTypeString);
+    const { email, password, confirmPassword } = this.state;
+    const fields = { email, password, confirmPassword };
     console.log(JSON.stringify(fields));
-    const result = validate(fields, constraints);  
+    const result = validate(fields, constraints);
     console.log(JSON.stringify(result, null, 2));
-    
-    if(typeof result !== 'undefined'){
-      genAlert(JSON.stringify(result));
-    }else {
-      return fetch(settings.REMOTE_SERVER_URL + settings.PATIENT_RES, {
+
+    if (typeof result !== "undefined") {
+      genAlert("Sign up failed", JSON.stringify(result));
+    } else if (userTypeString.length == 0) {
+      genAlert(
+        "Sign up failed",
+        "User type is undefined, please go back and retry"
+      );
+    } else {
+      const endpoint =
+        userTypeString == "doctor" ? settings.DOCTOR_RES : settings.PATIENT_RES;
+      return fetch(settings.LOCAL_SERVER_URL + endpoint, {
         method: "POST",
         headers: {
           Accept: "application/json",
@@ -55,13 +57,17 @@ class SignUpScreen extends Component {
               response: responseJson
             },
             function() {
+              const tabNav =
+                userTypeString == "doctor"
+                  ? "DoctorTab"
+                  : "PatientTab";
               genToast("Sign up successfully", "Okay", 3000);
-              this.props.navigation.navigate("Main");
+              this.props.navigation.navigate(tabNav);
             }
           );
         })
         .catch(error => {
-          genAlert(JSON.stringify(this.state.response));
+          genAlert("Error", JSON.stringify(this.state.response));
           console.error(error);
         });
     }
@@ -72,6 +78,9 @@ class SignUpScreen extends Component {
   // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises
 
   render() {
+    const { navigation } = this.props;
+    const userTypeString = navigation.getParam("userType", "");
+
     return (
       <View style={styles.container}>
         <Card>
@@ -106,7 +115,7 @@ class SignUpScreen extends Component {
             buttonStyle={{ marginTop: 20 }}
             backgroundColor="#694fad"
             title="SIGN UP"
-            onPress={() => this.onSignUp()}
+            onPress={() => this.onSignUp(userTypeString)}
           />
         </Card>
       </View>
@@ -123,12 +132,16 @@ var constraints = {
     }
   },
   confirmPassword: {
-    equality: "password"
+    equality: {
+      attribute: "password",
+      message: "is different from the password"
+    }
   },
   email: {
     email: true
   }
 };
+
 const styles = StyleSheet.create({
   container: {
     flex: 1

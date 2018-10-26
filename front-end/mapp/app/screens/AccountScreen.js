@@ -2,11 +2,10 @@ import React, { Component } from 'react';
 import { StyleSheet } from "react-native";
 
 import {
-  Text,
   View,
   ScrollView
 } from 'react-native';
-import { List, ListItem } from 'react-native-elements';
+import { List } from 'react-native-elements';
 
 class AccountScreen extends Component {
   render(){
@@ -20,13 +19,5 @@ class AccountScreen extends Component {
   )}
   }
   
-// styles for this screen
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center"
-  }
-})
  
 export default AccountScreen;

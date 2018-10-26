@@ -1,7 +1,7 @@
 import { Alert } from "react-native";
-export const genAlert = (msg) => {
+export const genAlert = (title, msg) => {
         Alert.alert(
-          "Sign up failed",
+          title,
           msg,
           [
             {

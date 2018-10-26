@@ -23,13 +23,16 @@ class SignInScreen extends Component {
   }
   onSignIn = () => {
     const msg = "Sorry, We haven't implemented user authentication on the server side."
-    genAlert(msg);
+    const title = "Sign in failed"
+    genAlert(title, msg);
   }
   // more info about fetch and promise:
   // https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
   // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises
 
   render() {
+    const {navigation} = this.props;
+    const userTypeString = navigation.getParam('userType', '');
     return (
       <View style={styles.container}>
         <View style={styles.card}>
@@ -49,7 +52,9 @@ class SignInScreen extends Component {
               backgroundColor="transparent"
               textStyle={{ color: "#bcbec1" }}
               title="SIGN UP"
-              onPress={() => this.props.navigation.navigate("SignUp")}
+              onPress={() => this.props.navigation.navigate("SignUp", {
+                userType: userTypeString
+              })}
             />
           </Card>
         </View>
