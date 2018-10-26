@@ -4,38 +4,50 @@ import { StyleSheet } from "react-native";
 import { View, ScrollView } from "react-native";
 import { List, ListItem } from "react-native-elements";
 
-const fake_doctors = [
-  {
-    name: "Ursula Carey",
-    avatar_url:
-      "https://s3.amazonaws.com/uifaces/faces/twitter/ladylexy/128.jpg",
-    subtitle: "Cardiology"
-  },
-  {
-    name: "Keeva Mcleod",
-    avatar_url:
-      "https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg",
-    subtitle: "Clinical immunology/allergy"
-  }
-];
-
 class DoctorListScreen extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      doctors : []
+    };
+  }
+
+  componentDidMount(){
+    this.fetchDoctorData();
+  }
+
+  fetchDoctorData(){
+    return fetch('http://www.agis-mapp.xyz/doctors')
+    .then((response) => response.json())
+    .then((responseJson) => {
+      this.setState({
+        doctors: responseJson
+      });
+      console.log(this.state.doctors);
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+  }
+
   onPress = () => {
     this.props.navigation.navigate("DoctorInfo");
   };
+
   render() {
     return (
       <View>
         <ScrollView>
           <List>
-            {fake_doctors.map((doctor, i) => (
+            {this.state.doctors.map((doctor, i) => (
               <ListItem
                 key={i}
                 roundAvatar
                 avatar={{ uri: doctor.avatar_url }}
-                title={doctor.name}
+                title= {"Dr. " + doctor.firstName + " " + doctor.lastName}
                 subtitle={doctor.subtitle}
-                onPress={this.onPress}
+                onPress={(doctor) => { //this.props.navigation.navigate("DoctorInfo", doctor.id)
+                console.log(doctor.id)}}
               />
             ))}
           </List>
@@ -45,13 +57,13 @@ class DoctorListScreen extends Component {
   }
 }
 
-// styles for this screen
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center"
-  }
-});
+// // styles for this screen
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     justifyContent: "center",
+//     alignItems: "center"
+//   }
+// });
 
 export default DoctorListScreen;
