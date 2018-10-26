@@ -37,6 +37,20 @@ getDoctorWithPatients did = do
     , pendingRequests = pendingRequests'
     }
 
+getPatientWithDoctors :: PatientId -> Handler PatientWithDoctors
+getPatientWithDoctors pid = do
+  Patient fn ln bd <- runDB $ get404 pid
+  relations <- runDB $ selectList [DoctorPatientRelationPatient ==. pid] []
+  let dids = doctorPatientRelationDoctor . entityVal <$> relations
+  doctors' <- runDB $ mapMaybeM getEntity dids
+  return $ PatientWithDoctors
+    { id = pid
+    , firstName = fn
+    , lastName = ln
+    , birthDate = bd
+    , doctors = doctors'
+    }
+
 getDoctorR :: Int -> Handler Value
 getDoctorR = getDoctorWithPatients . doctorKey >=> returnJson
 
@@ -47,10 +61,6 @@ getDoctorsR :: Handler Value
 getDoctorsR = do
   docs :: [Entity Doctor] <- runDB $ selectList [] []
   returnJson docs
-
-
--- requireJsonBody (used in post functions) parses the request body into the appropriate type,
--- or return a 400 status code if the request JSON is invalid.
 
 postDoctorsR :: Handler Value
 postDoctorsR = do
@@ -70,10 +80,20 @@ postDoctorsR = do
 
 postPatientsR :: Handler Value
 postPatientsR =  do
-  PostPatient _ _ fn ln bd <- requireJsonBody
-  let patient = Patient fn ln bd
-  patientInserted <- runDB $ insertEntity patient
-  returnJson patientInserted
+  PostPatient email' password' fn ln bd <- requireJsonBody
+  patientId <- runDB $ insert Patient
+    { patientFirstName = fn
+    , patientLastName = ln
+    , patientDateOfBirth = bd
+    }
+
+  let user = XUser email' password' "" (Right patientId)
+  userInserted <- runDB $ insertUniqueEntity user
+  case userInserted of
+    Nothing -> do
+      _ <- runDB $ delete patientId
+      invalidArgs ["Email already in use"]
+    Just _ -> getPatientWithDoctors patientId >>= returnJson
 
 postRequestsR :: Handler Value
 postRequestsR =  do

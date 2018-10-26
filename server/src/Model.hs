@@ -59,6 +59,17 @@ data DoctorWithPatients = DoctorWithPatients
 instance FromJSON DoctorWithPatients
 instance ToJSON DoctorWithPatients
 
+-- Information returned for use by the doctors' app
+data PatientWithDoctors = PatientWithDoctors
+  { id :: PatientId
+  , firstName :: Text
+  , lastName :: Text
+  , birthDate :: Maybe Day
+  , doctors :: [Entity Doctor]
+  } deriving(Eq, Generic, Show)
+instance FromJSON PatientWithDoctors
+instance ToJSON PatientWithDoctors
+
 
 -- Utility functions
 doctorKey :: Int -> DoctorId
