@@ -40,15 +40,22 @@ getDoctorWithPatients did = do
 getPatientWithDoctors :: PatientId -> Handler PatientWithDoctors
 getPatientWithDoctors pid = do
   Patient fn ln bd <- runDB $ get404 pid
+
   relations <- runDB $ selectList [DoctorPatientRelationPatient ==. pid] []
   let dids = doctorPatientRelationDoctor . entityVal <$> relations
   doctors' <- runDB $ mapMaybeM getEntity dids
+
+  requests <- runDB $ selectList [DoctorPatientRequestPatient ==. pid] []
+  let rids = doctorPatientRequestDoctor . entityVal <$> requests
+  pendingRequests' <- runDB $ mapMaybeM getEntity rids
+
   return $ PatientWithDoctors
     { id = pid
     , firstName = fn
     , lastName = ln
-    , birthDate = bd
+    , dateOfBirth = bd
     , doctors = doctors'
+    , pendingRequests = pendingRequests'
     }
 
 getDoctorR :: Int -> Handler Value
