@@ -52,19 +52,22 @@ class SignUpScreen extends Component {
       })
         .then(response => response.json())
         .then(responseJson => {
-          this.setState(
-            {
-              response: responseJson
-            },
-            function() {
-              const tabNav =
-                userTypeString == "doctor"
-                  ? "DoctorTab"
-                  : "PatientTab";
-              genToast("Sign up successfully", "Okay", 3000);
-              this.props.navigation.navigate(tabNav);
-            }
-          );
+          console.log(JSON.stringify(responseJson));
+          if (responseJson["errors"]) {
+            genAlert("Error", JSON.stringify(responseJson));
+          } else {
+            this.setState(
+              {
+                response: responseJson
+              },
+              function() {
+                const tabNav =
+                  userTypeString == "doctor" ? "DoctorTab" : "PatientTab";
+                genToast("Sign up successfully", "Okay", 3000);
+                this.props.navigation.navigate(tabNav);
+              }
+            );
+          }
         })
         .catch(error => {
           genAlert("Error", JSON.stringify(this.state.response));
@@ -113,7 +116,7 @@ class SignUpScreen extends Component {
           />
           <Button
             buttonStyle={{ marginTop: 20 }}
-            backgroundColor="#694fad"
+            backgroundColor={settings.THEME_COLOR}
             title="SIGN UP"
             onPress={() => this.onSignUp(userTypeString)}
           />

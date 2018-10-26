@@ -47,7 +47,7 @@ const DoctorStackNavigator = createStackNavigator({
 
 
 // tab navigator for patient
-export const PatientTabNavigator = createMaterialBottomTabNavigator(
+const PatientTabNavigator = createMaterialBottomTabNavigator(
   {
     // screens and their navigation options
     Inbox: {
@@ -78,7 +78,7 @@ export const PatientTabNavigator = createMaterialBottomTabNavigator(
       }
     },
     Account: {
-      screen: AccountScreen,
+      screen: AccountScreen, 
       navigationOptions: {
         tabBarLabel: "Account",
         tabBarIcon: ({ tintColor }) => (
@@ -101,4 +101,32 @@ export const PatientTabNavigator = createMaterialBottomTabNavigator(
   }
 );
 
+// class PatientTabNavContainer extends React.Component {
+//   constructor(props) {
+//     super(props);
+//     this.state = {
+//       lastName:'',
+//       firstName:'',
+//       id:'',
+//     };
+//   }
+//   componentDidMount() {
+//     const { navigation } = this.props;
+//     const firstName = navigation.getParam("firstName", "");
+//     const lastName = navigation.getParam("lastName", "");
+//     const id = navigation.getParam("id", "");
+//     console.log(firstName);
+//     console.log(lastName);
+//     console.log(id);
+//     this.setState({lastName})
+//     this.setState({firstName})
+//     this.setState({id})
+//   }
+
+//   render() {
+//     // pass user info to screens in the patient tab navigator
+//     return(<PatientTabNavigator screenProps={this.state} />);
+//   }
+// }
+// export default PatientTabNavContainer;
 export default PatientTabNavigator;
