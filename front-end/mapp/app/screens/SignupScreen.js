@@ -37,7 +37,7 @@ class SignUpScreen extends Component {
     } else {
       const endpoint =
         userTypeString == "doctor" ? settings.DOCTOR_RES : settings.PATIENT_RES;
-      return fetch(settings.LOCAL_SERVER_URL + endpoint, {
+      return fetch(settings.REMOTE_SERVER_URL + endpoint, {
         method: "POST",
         headers: {
           Accept: "application/json",

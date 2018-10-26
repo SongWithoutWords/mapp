@@ -5,36 +5,10 @@ class DoctorInfoScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      patientID: 1, // need to change 
-      doctorID: 1, // need to change
-      doctorFirstName: "",
-      doctorLastName: "",
       buttonText: "Send Request"
     };
-
-
   }
 
-  componentDidMount(){
-    this.fetchDoctorData();
-  }
-
-  fetchDoctorData(){
-    return fetch('http://www.agis-mapp.xyz/doctors/' + this.state.doctorID)
-    .then((response) => response.json())
-    .then((responseJson) => {
-      console.log(responseJson);
-      this.setState({
-        doctorID: responseJson.id,
-        doctorFirstName: responseJson.firstName,
-        doctorLastName: responseJson.lastName,
-      });
-    })
-    .catch((error) => {
-      console.error(error);
-    });
-    
-  }
 
   requestDoctor = () => {
     return fetch("http://www.agis-mapp.xyz/requests", {
@@ -44,8 +18,8 @@ class DoctorInfoScreen extends Component {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        doctor: this.state.doctorID,
-        patient: this.state.patientID
+        doctor: this.props.doctorID,
+        patient: this.props.patientID, 
       }),
     })
     .then((responseJson) => {
