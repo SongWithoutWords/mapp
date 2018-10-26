@@ -1,5 +1,5 @@
+import genAlert from "../components/testComponents/genAlert"
 import settings from "../config/settings";
-import { onSignIn, onSignUp } from "../../auth";
 import React, { Component } from "react";
 import { StyleSheet, Text, View, Alert } from "react-native";
 import {
@@ -7,7 +7,6 @@ import {
   Card,
   FormLabel,
   FormInput,
-  FormValidationMessage
 } from "react-native-elements";
 
 class SignInScreen extends Component {
@@ -22,7 +21,10 @@ class SignInScreen extends Component {
       password: ""
     };
   }
-
+  onSignIn = () => {
+    const msg = "Sorry, We haven't implemented user authentication on the server side."
+    genAlert(msg);
+  }
   // more info about fetch and promise:
   // https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
   // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises
@@ -40,7 +42,7 @@ class SignInScreen extends Component {
               buttonStyle={{ marginTop: 20 }}
               backgroundColor="#694fad"
               title="SIGN IN"
-              onPress={() => onSignIn()}
+              onPress={() => this.onSignIn()}
             />
             <Button
               buttonStyle={{ marginTop: 20 }}
