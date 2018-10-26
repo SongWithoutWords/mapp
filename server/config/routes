@@ -19,6 +19,9 @@
 -- Not from template
 -------------------
 
+-- POST login info and get either doctor or patient account info, or 400 bad argument status
+/logins LoginsR POST
+
 -- GET: a doctor's information (with patient info)
 /doctors/#Int DoctorR GET
 

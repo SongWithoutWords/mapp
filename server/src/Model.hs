@@ -27,6 +27,14 @@ share [mkPersist sqlSettings, mkMigrate "migrateAll"]
     $(persistFileWith lowerCaseSettings "config/models")
 
 
+-- Information required to POST /login
+data PostLogin = PostLogin
+  { email :: Text
+  , password :: Text
+  } deriving(Generic, Show)
+instance FromJSON PostLogin
+instance ToJSON PostLogin
+
 -- Information required to create a new doctor account
 data PostDoctor = PostDoctor
   { email :: Text

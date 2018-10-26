@@ -58,6 +58,19 @@ getPatientWithDoctors pid = do
     , pendingRequests = pendingRequests'
     }
 
+postLoginsR :: Handler Value
+postLoginsR = do
+  PostLogin emailReceived passwordReceived <- requireJsonBody
+  maybeUser <- runDB $ getBy $ UserEmail emailReceived
+  case maybeUser of
+    Nothing -> invalidArgs ["No account for this email address"]
+    Just (Entity _ (XUser _ password' _ doctorOrPatientId')) ->
+      if passwordReceived /= password'
+        then permissionDenied "Incorrect password"
+        else case doctorOrPatientId' of
+          Left did -> getDoctorWithPatients did >>= returnJson
+          Right pid -> getPatientWithDoctors pid >>= returnJson
+
 getDoctorR :: Int -> Handler Value
 getDoctorR = getDoctorWithPatients . doctorKey >=> returnJson
 
