@@ -15,7 +15,6 @@ export default class App extends React.Component {
     super(props);
 
     this.state = {
-      reacted : 'blue',
       showButtons: true,
       text: 'You have a new request from'
     }
