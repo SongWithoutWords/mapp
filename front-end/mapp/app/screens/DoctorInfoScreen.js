@@ -1,47 +1,77 @@
 import React, { Component } from "react";
-import { Button, Text, View, StyleSheet, TouchableOpacity } from "react-native";
+import { Button, Text, View, StyleSheet, TouchableOpacity, Alert, ToastAndroid} from "react-native";
 
 class DoctorInfoScreen extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      patientID: 1, // need to change 
+      doctorID: 1, // need to change
+      doctorFirstName: "",
+      doctorLastName: "",
+      buttonText: "Send Request"
+    };
+
+
   }
 
-  // onPress = () => {
-  //   return fetch("https://www.agis-mapp.xyz/requests", {
-  //     method: "POST",
-  //     headers: {
-  //       Accept: "application/json",
-  //       "Content-Type": "application/json"
-  //     },
-  //     body: JSON.stringify({
-  //       doctor: 1,
-  //       patient: 1
-  //     })
-  //   }).catch(error => {
-  //     console.error("sdfs" + error);
-  //   });
-  //   // .then(response => response.json())
-  //   // .then(responseJson => {
-  //   //   this.setState(
-  //   //     {
-  //   //       dataSource: responseJson
-  //   //     },
-  //   //     function() {}
-  //   //   );
-  //   // })
-  // };
+  componentDidMount(){
+    this.fetchDoctorData();
+  }
+
+  fetchDoctorData(){
+    return fetch('http://www.agis-mapp.xyz/doctors/' + this.state.doctorID)
+    .then((response) => response.json())
+    .then((responseJson) => {
+      console.log(responseJson);
+      this.setState({
+        doctorID: responseJson.id,
+        doctorFirstName: responseJson.firstName,
+        doctorLastName: responseJson.lastName,
+      });
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+    
+  }
+
+  requestDoctor = () => {
+    return fetch("http://www.agis-mapp.xyz/requests", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        doctor: this.state.doctorID,
+        patient: this.state.patientID
+      }),
+    })
+    .then((responseJson) => {
+      console.log(responseJson);
+      this.setState({
+        buttonText: "Request Sent!"
+      });
+    })
+    .catch((error) => {
+      console.error("Couldn't send request " + error);
+    });
+    
+  }
+
   render() {
     return (
       <View style={styles.container}>
-        <Text>Detail info about a doctor.</Text>
+        <Text style={styles.text} > Dr. {this.state.doctorFirstName} {this.state.doctorLastName}</Text>
+        <Text style={styles.text} > ID: {this.state.doctorID}</Text>
         <Button
           title="Go back to doctor list"
           onPress={() => this.props.navigation.goBack()}
         />
-        <TouchableOpacity style={styles.submitButton}>
-          <Text style={styles.submitButtonText}> Request Doctor </Text>
+        <TouchableOpacity style={styles.submitButton} onPress={this.requestDoctor}>
+          <Text style={styles.submitButtonText}> {this.state.buttonText} </Text>
         </TouchableOpacity>
-        {/* <Text> {JSON.stringify(this.state.dataSource)}</Text> */}
       </View>
     );
   }
@@ -64,6 +94,11 @@ const styles = StyleSheet.create({
   },
   submitButtonText: {
     color: "white"
+  },
+  text: {
+    color: "#009CC6",
+    fontWeight: 'bold',
+    fontSize: 35,
   }
 });
 
