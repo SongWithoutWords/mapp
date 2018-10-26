@@ -3,8 +3,8 @@ import { createStackNavigator, createSwitchNavigator } from "react-navigation";
 import SignUpScreen from "../screens/SignUpScreen";
 import SignInScreen from "../screens/SignInScreen";
 import WelcomeScreen from "../screens/WelcomeScreen";
-import PatienTabNavigator from "./patientNavs";
-import DoctorTabNavigator from "./doctorNavs";
+import PatientTabNavContainer from "./patientNavs";
+import DoctorTabNavContainer from "./doctorNavs";
 import AccountScreen from "../screens/AccountScreen";
 
 // a stack navigator for sign up and sign in
@@ -45,14 +45,14 @@ export const AuthSwitchNavigator = createSwitchNavigator(
       screen: AccountScreen
     },
     PatientTab: {
-      screen: PatienTabNavigator,
+      screen: PatientTabNavContainer,
       navigationOptions: {
         header: null,
         headerForceInset: { top: "never", bottom: "never" }
       }
     },
     DoctorTab: {
-      screen: DoctorTabNavigator,
+      screen: DoctorTabNavContainer,
       navigationOptions: {
         header: null,
         headerForceInset: { top: "never", bottom: "never" }

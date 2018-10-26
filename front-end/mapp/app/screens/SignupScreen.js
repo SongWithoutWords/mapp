@@ -64,7 +64,7 @@ class SignUpScreen extends Component {
                 const tabNav =
                   userTypeString == "doctor" ? "DoctorTab" : "PatientTab";
                 genToast("Sign up successfully", "Okay", 3000);
-                this.props.navigation.navigate(tabNav);
+                this.props.navigation.navigate(tabNav, responseJson);
               }
             );
           }

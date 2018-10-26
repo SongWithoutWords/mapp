@@ -34,7 +34,7 @@ const DoctorTabNavigator = createMaterialBottomTabNavigator(
     DoctorList: {
       screen: DoctorStackNavigator,
       navigationOptions: {
-        tabBarLabel: "Doctors",
+        tabBarLabel: "Patients",
         tabBarIcon: ({ tintColor }) => (
           <MaterialIcons name="people" size={25} color={tintColor} />
         )
@@ -77,32 +77,39 @@ const DoctorTabNavigator = createMaterialBottomTabNavigator(
   }
 );
 
-// class DoctorTabNavContainer extends React.Component {
-//   constructor(props) {
-//     super(props);
-//     this.state = {
-//       lastName:'',
-//       firstName:'',
-//       id:'',
-//     };
-//   }
-//   componentDidMount() {
-//     const { navigation } = this.props;
-//     const firstName = navigation.getParam("firstName", "");
-//     const lastName = navigation.getParam("lastName", "");
-//     const id = navigation.getParam("id", "");
-//     console.log(firstName);
-//     console.log(lastName);
-//     console.log(id);
-//     this.setState({lastName})
-//     this.setState({firstName})
-//     this.setState({id})
-//   }
+class DoctorTabNavContainer extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      lastName: "",
+      firstName: "",
+      id: "",
+    };
+  }
 
-//   render() {
-//     // pass user info to screens in the patient tab navigator
-//     return(<DoctorTabNavigator screenProps={this.state} />);
-//   }
-// }
-// export default DoctorTabNavContainer;
-export default DoctorTabNavigator;
+  componentDidMount() {
+    const { navigation } = this.props;
+    const firstName = navigation.getParam("firstName", "");
+    const lastName = navigation.getParam("lastName", "");
+    const id = navigation.getParam("id", "");
+    console.log(firstName);
+    console.log(lastName);
+    console.log(id);
+    this.setState({ lastName });
+    this.setState({ firstName });
+    this.setState({ id });
+  }
+  handleOnPress = () => {this.props.navigation.navigate("AuthStack")}
+  static router = DoctorTabNavigator.router;
+  render() {
+    let props = {
+      id: this.state.id,
+      firstName: this.state.firstName,
+      lastName: this.state.lastName,
+      handleOnPress: this.handleOnPress
+    }
+    // pass user info to screens in the patient tab navigator
+    return <DoctorTabNavigator navigation={this.props.navigation} screenProps={props} />;
+  }
+}
+export default DoctorTabNavContainer;

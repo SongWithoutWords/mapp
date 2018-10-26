@@ -13,26 +13,23 @@ import { View, ScrollView } from "react-native";
 import { List } from "react-native-elements";
 
 class AccountScreen extends Component {
-  onPress = () => {
-    this.props.navigation.navigate("AuthStack");
-  };
 
   render() {
-    // const firstName = this.props.userInfo.firstName;
-    // const lastName = this.props.userInfo.lastName;
-    // const id = this.props.userInfo.id;
+    const firstName = this.props.screenProps.firstName;
+    const lastName = this.props.screenProps.lastName;
+    const id = this.props.screenProps.id;
 
     return (
       <View style={styles.buttonContainer}>
-        {/* <Text style={styles.subtitle}>
+        <Text style={styles.subtitle}>
           {firstName} {lastName}
         </Text>
-        <Text style={styles.subtitle}>id: {id}</Text> */}
+        <Text style={styles.subtitle}>id: {id}</Text>
         <Button
           buttonStyle={styles.bottomButton}
           backgroundColor={settings.THEME_COLOR}
           title="SIGN OUT"
-          onPress={this.onPress}
+          onPress={() => this.props.screenProps.handleOnPress()}
         />
       </View>
     );
