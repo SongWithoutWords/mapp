@@ -81,5 +81,4 @@ spec = withApp $ do
         , patients = [Entity (patientKey 1) $ Patient "Bobby" "Lee" Nothing]
         , pendingRequests = []
         }
-          -- [Entity (patientKey 1) $ Patient "Bobby" "Lee" Nothing]
 
