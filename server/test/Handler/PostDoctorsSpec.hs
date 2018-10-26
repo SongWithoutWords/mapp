@@ -34,9 +34,9 @@ spec = withApp $ do
         Nothing -> failTest "No entry in User table after Doctor POST"
         (Just (Entity id user)) -> do
           assertEq "Email" (xUserEmail user) "james@hill.com"
-          assertEq "Data" (xUserData user) (Left $ doctorKey 1)
+          assertEq "Data" (xUserDoctorOrPatientId user) (Left $ doctorKey 1)
 
-          case xUserData user of
+          case xUserDoctorOrPatientId user of
             Right _ -> failTest "Doctor incorrectly entered as patient"
             Left did -> do
               mdoctor <- runDB $ getEntity did
