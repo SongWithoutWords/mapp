@@ -11,6 +11,10 @@ class DoctorInfoScreen extends Component {
 
 
   requestDoctor = () => {
+    const { navigation } = this.props;
+    const patientID = navigation.getParam("patientID", -1);
+    const doctorObj = navigation.getParam("doctor", {});
+
     return fetch("http://www.agis-mapp.xyz/requests", {
       method: "POST",
       headers: {
@@ -18,8 +22,8 @@ class DoctorInfoScreen extends Component {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        doctor: this.props.doctorID,
-        patient: this.props.patientID, 
+        doctor: doctorObj.id,
+        patient: patientID, 
       }),
     })
     .then((responseJson) => {
@@ -37,8 +41,8 @@ class DoctorInfoScreen extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text style={styles.text} > Dr. {this.state.doctorFirstName} {this.state.doctorLastName}</Text>
-        <Text style={styles.text} > ID: {this.state.doctorID}</Text>
+        <Text style={styles.text} > Dr. {doctorObj.firstName} {doctorObj.lastName}</Text>
+        <Text style={styles.text} > ID: {doctorObj.id}</Text>
         <Button
           title="Go back to doctor list"
           onPress={() => this.props.navigation.goBack()}
