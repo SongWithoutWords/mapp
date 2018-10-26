@@ -1,13 +1,14 @@
-import { createStackNavigator } from "react-navigation";
+import { createStackNavigator, createSwitchNavigator } from "react-navigation";
 
 import SignUpScreen from "../screens/SignUpScreen";
 import SignInScreen from "../screens/SignInScreen";
 import WelcomeScreen from "../screens/WelcomeScreen";
-import PatientTabNavigator from "./patientNavs";
+import PatienTabNavigator from "./patientNavs";
 import DoctorTabNavigator from "./doctorNavs";
+import AccountScreen from "../screens/AccountScreen";
 
 // a stack navigator for sign up and sign in
-export const AppStackNavigator = createStackNavigator(
+export const AuthStackNavigator = createStackNavigator(
   {
     SignIn: {
       screen: SignInScreen,
@@ -28,9 +29,23 @@ export const AppStackNavigator = createStackNavigator(
         header: null,
         headerForceInset: { top: "never", bottom: "never" }
       }
+    }
+  },
+  {
+    initialRouteName: "Welcome"
+  }
+);
+
+export const AuthSwitchNavigator = createSwitchNavigator(
+  {
+    AuthStack: {
+      screen: AuthStackNavigator
+    },
+    Account: {
+      screen: AccountScreen
     },
     PatientTab: {
-      screen: PatientTabNavigator,
+      screen: PatienTabNavigator,
       navigationOptions: {
         header: null,
         headerForceInset: { top: "never", bottom: "never" }
@@ -45,6 +60,6 @@ export const AppStackNavigator = createStackNavigator(
     }
   },
   {
-    initialRouteName: "Welcome"
+    initialRouteName: "AuthStack"
   }
 );

@@ -7,21 +7,21 @@ import { createStackNavigator } from "react-navigation";
 
 import InboxScreen from "../screens/InboxScreen";
 import AccountScreen from "../screens/AccountScreen";
-import PatientListScreen from "../screens/PatientListScreen";
-import PatientInfoScreen from "../screens/PatientInfoScreen";
+import DoctorListScreen from "../screens/DoctorListScreen";
+import DoctorInfoScreen from "../screens/DoctorInfoScreen";
 
-const PatientStackNavigator = createStackNavigator({
-  PatientList: {
-    screen: PatientListScreen,
+const DoctorStackNavigator = createStackNavigator({
+  DoctorList: {
+    screen: DoctorListScreen,
     navigationOptions: {
       header: null,
       headerForceInset: { top: "never", bottom: "never" }
     }
   },
-  PatientInfo: {
-    screen: PatientInfoScreen,
+  DoctorInfo: {
+    screen: DoctorInfoScreen,
     navigationOptions: {
-      title: "Patient Info",
+      title: "Doctor Info",
       headerForceInset: { top: "never", bottom: "never" }
     }
   }
@@ -31,10 +31,10 @@ const PatientStackNavigator = createStackNavigator({
 const DoctorTabNavigator = createMaterialBottomTabNavigator(
   {
     // screens and their navigation options
-    PatientList: {
-      screen: PatientStackNavigator,
+    DoctorList: {
+      screen: DoctorStackNavigator,
       navigationOptions: {
-        tabBarLabel: "Patients",
+        tabBarLabel: "Doctors",
         tabBarIcon: ({ tintColor }) => (
           <MaterialIcons name="people" size={25} color={tintColor} />
         )
@@ -64,7 +64,7 @@ const DoctorTabNavigator = createMaterialBottomTabNavigator(
     }
   },
   {
-    initialRouteName: "PatientList",
+    initialRouteName: "DoctorList",
     shifting: true,
     activeColor: settings.ACTIVE_COLOR,
     inactiveColor: settings.INACTIVE_COLOR,
@@ -73,8 +73,36 @@ const DoctorTabNavigator = createMaterialBottomTabNavigator(
       showIcon: true,
       labelStyle: { fontSize: 10 }
     },
-    order: ["Inbox", "PatientList", "Account"]
+    order: ["Inbox", "DoctorList", "Account"]
   }
 );
 
+// class DoctorTabNavContainer extends React.Component {
+//   constructor(props) {
+//     super(props);
+//     this.state = {
+//       lastName:'',
+//       firstName:'',
+//       id:'',
+//     };
+//   }
+//   componentDidMount() {
+//     const { navigation } = this.props;
+//     const firstName = navigation.getParam("firstName", "");
+//     const lastName = navigation.getParam("lastName", "");
+//     const id = navigation.getParam("id", "");
+//     console.log(firstName);
+//     console.log(lastName);
+//     console.log(id);
+//     this.setState({lastName})
+//     this.setState({firstName})
+//     this.setState({id})
+//   }
+
+//   render() {
+//     // pass user info to screens in the patient tab navigator
+//     return(<DoctorTabNavigator screenProps={this.state} />);
+//   }
+// }
+// export default DoctorTabNavContainer;
 export default DoctorTabNavigator;
