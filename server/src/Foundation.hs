@@ -167,6 +167,8 @@ instance Yesod App where
     isAuthorized (StaticR _) _ = return Authorized
     isAuthorized (EchoR _) _ = return Authorized
 
+    isAuthorized LoginsR _ = return Authorized
+
     isAuthorized (DoctorR _) _ = return Authorized
     isAuthorized DoctorsR _ = return Authorized
 
