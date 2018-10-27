@@ -102,7 +102,7 @@
                         Yesod has JSON support baked-in.
                         The form below makes an AJAX request with Javascript,
                         then updates the page with your submission.
-                        (see <tt>Handler/Comment.hs</tt>, <tt>templates/homepage.julius</tt>,
+                        (see, <tt>templates/homepage.julius</tt>,
                         and <tt>Handler/Home.hs</tt> for the implementation).
 
         <div .row>
@@ -120,9 +120,6 @@
                    <small>
                        Your comments will appear here. You can also open the
                        console log to see the raw response from the server.
-                   <ul ##{commentListId}>
-                       $forall comment <- allComments
-                           <li>#{commentMessage $ entityVal comment}
 
     <hr>
 

@@ -11,12 +11,6 @@ Email
     userId UserId Maybe
     verkey Text Maybe
     UniqueEmail email
--- Adding "json" causes ToJSON and FromJSON instances to be derived.
-Comment json
-    message Text
-    userId UserId Maybe
-    deriving Eq
-    deriving Show
 
 
 -- Not from template
