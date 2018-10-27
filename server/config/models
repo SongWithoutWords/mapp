@@ -6,11 +6,6 @@ User
     password Text Maybe
     UniqueUser ident
     deriving Typeable
-Email
-    email Text
-    userId UserId Maybe
-    verkey Text Maybe
-    UniqueEmail email
 
 
 -- Not from template
