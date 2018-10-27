@@ -1,3 +1,4 @@
+{-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
@@ -27,11 +28,7 @@ getHomeR = do
     let submission = Nothing :: Maybe FileForm
         handlerName = "getHomeR" :: Text
 
-    defaultLayout $ do
-        let (commentFormId, commentTextareaId, _) = commentIds
-        aDomId <- newIdent
-        setTitle "Welcome To Yesod!"
-        $(widgetFile "homepage")
+    yieldHome handlerName submission formEnctype formWidget
 
 postHomeR :: Handler Html
 postHomeR = do
@@ -41,11 +38,7 @@ postHomeR = do
             FormSuccess res -> Just res
             _ -> Nothing
 
-    defaultLayout $ do
-        let (commentFormId, commentTextareaId, _) = commentIds
-        aDomId <- newIdent
-        setTitle "Welcome To Yesod!"
-        $(widgetFile "homepage")
+    yieldHome handlerName submission formEnctype formWidget
 
 sampleForm :: Form FileForm
 sampleForm = renderBootstrap3 BootstrapBasicForm $ FileForm
@@ -62,6 +55,13 @@ sampleForm = renderBootstrap3 BootstrapBasicForm $ FileForm
                 , ("placeholder", "File description")
                 ]
             }
+
+yieldHome :: Text -> Maybe FileForm -> Enctype -> Widget -> Handler Html
+yieldHome handlerName submission formEnctype formWidget = defaultLayout $ do
+  let (commentFormId, commentTextareaId, _) = commentIds
+  aDomId <- newIdent
+  setTitle "Welcome To Yesod!"
+  $(widgetFile "homepage")
 
 commentIds :: (Text, Text, Text)
 commentIds = ("js-commentForm", "js-createCommentTextarea", "js-commentList")
