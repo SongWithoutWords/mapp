@@ -6,6 +6,16 @@ email=asdsadfdsfadsf@black.com
 password=jblack 
 firstName=Test 
 lastName=Test
+
+return:
+{
+    "dateOfBirth": null,
+    "doctors": [],
+    "firstName": "fan",
+    "id": 1,
+    "lastName": "no",
+    "pendingRequests": []
+}
 ```
 ------
 #### create a doctor account (dataOfBrith field rn is just null)
@@ -15,6 +25,15 @@ email=asdsadfdsfadsf@black.com
 password=jblack 
 firstName=Test 
 lastName=Test
+
+return:
+{
+    "firstName": "fan",
+    "id": 1,
+    "lastName": "no",
+    "patients": [],
+    "pendingRequests": []
+}
 ```
 
 ------
@@ -104,6 +123,9 @@ return this if such pending request does not exist:
     - root component
 
 ### Troubleshooting
+```
+setState() does not always immediately update the component. It may batch or defer the update until later. This makes reading this.state right after calling setState() a potential pitfall. Instead, use componentDidUpdate or a setState callback (setState(updater, callback)), either of which are guaranteed to fire after the update has been applied. If you need to set the state based on the previous state, read about the updater argument below.
+```
 ```
 java.lang.string cannot be cast to com.facebook.react.uimanager.accessibility DelegateUtil$accessibilityRole
 ```

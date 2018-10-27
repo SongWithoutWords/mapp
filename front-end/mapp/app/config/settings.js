@@ -17,6 +17,9 @@ let REQUESTS_RES = "/requests";
 let RELAITON_RES = "/relations";
 // accept a pending request
 
+let LOGIN_RES = "/logins";
+// post email and password to login 
+
 let THEME_COLOR = "#694fad";
 let INACTIVE_COLOR = "#3e2465";
 let ACTIVE_COLOR = "#f0edf6";
@@ -30,7 +33,8 @@ export const settings = {
   RELAITON_RES,
   THEME_COLOR,
   INACTIVE_COLOR,
-  ACTIVE_COLOR
+  ACTIVE_COLOR,
+  LOGIN_RES
 };
 
 export default settings;
