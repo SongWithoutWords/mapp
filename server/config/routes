@@ -13,8 +13,6 @@
 
 /profile ProfileR GET
 
-/echo/#String EchoR GET
-
 
 -- Not from template
 -------------------
