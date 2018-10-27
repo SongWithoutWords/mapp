@@ -133,4 +133,4 @@ postRelationsR = do
     then invalidArgs ["No pending request from this patient to this doctor"]
     else do
       _ <- runDB $ mapM (delete . entityKey) pendingRequests
-      (runDB $ insertUniqueEntity relation) >>= returnJson
+      runDB (insertUniqueEntity relation) >>= returnJson
