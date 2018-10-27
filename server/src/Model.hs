@@ -13,7 +13,7 @@
 {-# LANGUAGE StandaloneDeriving         #-}
 module Model where
 
-import ClassyPrelude.Yesod hiding(id)
+import ClassyPrelude.Yesod
 import Database.Persist.Quasi
 
 import Text.Read(read)

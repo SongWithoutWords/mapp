@@ -6,7 +6,7 @@
 
 module Handler.Handlers where
 
-import Import hiding(id)
+import Import
 import Control.Monad.Extra(mapMaybeM)
 
 dbLookup key = runDB $ getEntity key
