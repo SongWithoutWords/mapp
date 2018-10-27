@@ -41,7 +41,7 @@ spec = withApp $ do
 
       case muser of
         Nothing -> failTest "No entry in User table after POST /patients"
-        (Just (Entity id user)) -> do
+        (Just (Entity _ user)) -> do
           assertEq "Email" (xUserEmail user) "jack@black.com"
           assertEq "Data" (xUserDoctorOrPatientId user) (Right $ patientKey 1)
 
@@ -52,7 +52,7 @@ spec = withApp $ do
 
               case mpatient of
                 Nothing -> failTest "No entry in Patient table after POST /patients"
-                (Just (Entity _ patient)) -> do
+                (Just (Entity _ patient)) ->
                   assertEq "Patient" patient Patient
                     { patientFirstName = "Jack"
                     , patientLastName = "Black"
