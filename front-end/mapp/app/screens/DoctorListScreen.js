@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { StyleSheet } from "react-native";
+import { StyleSheet, AppRegistry } from "react-native";
 
 import { View, ScrollView } from "react-native";
 import { List, ListItem } from "react-native-elements";
@@ -67,3 +67,4 @@ class DoctorListScreen extends Component {
 // });
 
 export default DoctorListScreen;
+AppRegistry.registerComponent('DoctorListScreen', () => DoctorListScreen);

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, StyleSheet, ScrollView } from "react-native";
+import { View, StyleSheet, ScrollView, AppRegistry } from "react-native";
 import PrescriptionCardComponent from "../components/cardComponents/PrescriptionCardComponent";
 
 const fake_prescriptions = [
@@ -57,3 +57,4 @@ class PrescriptionListScreen extends Component {
 
 
 export default PrescriptionListScreen;
+AppRegistry.registerComponent('PrescriptionListScreen', () => PrescriptionListScreen);

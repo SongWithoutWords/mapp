@@ -1,6 +1,6 @@
 import settings from "../config/settings";
 import React, { Component } from "react";
-import { StyleSheet, Text, View, Alert } from "react-native";
+import { StyleSheet, Text, View, Alert, AppRegistry } from "react-native";
 import genAlert from "../components/testComponents/genAlert";
 import genToast from "../components/testComponents/genToast";
 import validate from "validate.js";
@@ -126,6 +126,9 @@ class SignUpScreen extends Component {
   }
 }
 
+export default SignUpScreen;
+AppRegistry.registerComponent('SignUpScreen', () => SignUpScreen);
+
 var constraints = {
   password: {
     presence: true,
@@ -168,4 +171,3 @@ const styles = StyleSheet.create({
     padding: 10
   }
 });
-export default SignUpScreen;

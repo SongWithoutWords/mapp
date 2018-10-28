@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { StyleSheet } from "react-native";
+import { StyleSheet, AppRegistry } from "react-native";
 
 import { View, ScrollView } from "react-native";
 import { List, ListItem } from "react-native-elements";
@@ -55,3 +55,4 @@ const styles = StyleSheet.create({
 });
 
 export default PatientListScreen;
+AppRegistry.registerComponent('PatientListScreen', () => PatientListScreen);

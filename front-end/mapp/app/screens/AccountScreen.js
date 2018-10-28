@@ -7,7 +7,7 @@ import {
   FormLabel,
   FormInput
 } from "react-native-elements";
-import { StyleSheet } from "react-native";
+import { StyleSheet, AppRegistry } from "react-native";
 
 import { View, ScrollView } from "react-native";
 import { List } from "react-native-elements";
@@ -53,3 +53,4 @@ const styles = StyleSheet.create({
 });
 
 export default AccountScreen;
+AppRegistry.registerComponent('AccountScreen', () => AccountScreen);

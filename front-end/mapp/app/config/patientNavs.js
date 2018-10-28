@@ -1,4 +1,5 @@
 import React from "react";
+import { AppRegistry } from 'react-native';
 import settings from "../config/settings";
 import { createMaterialBottomTabNavigator } from "react-navigation-material-bottom-tabs";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
@@ -140,4 +141,5 @@ class PatientTabNavContainer extends React.Component {
   }
 }
 export default PatientTabNavContainer;
+AppRegistry.registerComponent('PatientTabNavContainer', () => PatientTabNavContainer);
 // export default PatientTabNavigator;

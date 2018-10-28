@@ -1,7 +1,7 @@
 import genAlert from "../components/testComponents/genAlert"
 import settings from "../config/settings";
 import React, { Component } from "react";
-import { StyleSheet, Text, View, Alert } from "react-native";
+import { StyleSheet, Text, View, Alert, AppRegistry } from "react-native";
 import {
   Button,
   Card,
@@ -82,4 +82,6 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginBottom: 10
   }});
+
 export default SignInScreen;
+AppRegistry.registerComponent('SignInScreen', () => SignInScreen);

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Button, Text, View, StyleSheet, TouchableOpacity } from "react-native";
+import { Button, Text, View, StyleSheet, TouchableOpacity, AppRegistry } from "react-native";
 
 class PatientInfoScreen extends Component {
   constructor(props) {
@@ -64,3 +64,5 @@ const styles = StyleSheet.create({
 });
 
 export default PatientInfoScreen;
+AppRegistry.registerComponent('PatientInfoScreen', () => PatientInfoScreen);
+

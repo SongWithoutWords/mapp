@@ -1,5 +1,4 @@
 import { createStackNavigator, createSwitchNavigator } from "react-navigation";
-
 import SignUpScreen from "../screens/SignUpScreen";
 import SignInScreen from "../screens/SignInScreen";
 import WelcomeScreen from "../screens/WelcomeScreen";
@@ -63,3 +62,4 @@ export const AuthSwitchNavigator = createSwitchNavigator(
     initialRouteName: "AuthStack"
   }
 );
+

@@ -1,6 +1,5 @@
 import * as React from 'react';
-import { Text, View, StyleSheet,ScrollView,
-    TextInput, } from 'react-native';
+import { Text, View, StyleSheet, ScrollView, TextInput, AppRegistry} from 'react-native';
 //import { Constants } from 'expo';
 
 // You can import from local files
@@ -10,7 +9,7 @@ import { Text, View, StyleSheet,ScrollView,
 import { Card } from 'react-native-elements'; //0.19.1
 import { Button, TouchableOpacity, ProgressBar, Dimensions } from 'react-native';
 //import ProgressBarAnimated from 'react-native-progress-bar-animated';
-export default class App extends React.Component {
+export default class InboxScreen extends React.Component {
   constructor(props) {
     super(props);
 
@@ -113,6 +112,9 @@ export default class App extends React.Component {
     );
   }
 }
+
+AppRegistry.registerComponent('InboxScreen', () => InboxScreen);
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,

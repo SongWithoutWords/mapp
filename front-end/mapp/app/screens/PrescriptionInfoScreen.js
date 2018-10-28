@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Button, Text, View, StyleSheet } from "react-native";
+import { Button, Text, View, StyleSheet, AppRegistry } from "react-native";
 
 class PrescriptionInfoScreen extends Component {
   render() {
@@ -24,3 +24,4 @@ const styles = StyleSheet.create({
 });
 
 export default PrescriptionInfoScreen;
+AppRegistry.registerComponent('PrescriptionInfoScreen', () => PrescriptionInfoScreen);

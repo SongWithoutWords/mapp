@@ -4,7 +4,8 @@ import {
   Image,
   StyleSheet,
   View,
-  TouchableWithoutFeedback
+  TouchableWithoutFeedback,
+  AppRegistry
 } from "react-native";
 
 import { Card, CardItem, Body, Left, Button, Icon } from "native-base";
@@ -60,3 +61,4 @@ const styles = StyleSheet.create({
   }
 });
 export default PrescriptionCardComponent;
+AppRegistry.registerComponent('PrescriptionCardComponent', () => PrescriptionCardComponent);
