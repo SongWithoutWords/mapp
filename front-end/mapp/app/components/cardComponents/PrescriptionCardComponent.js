@@ -60,5 +60,6 @@ const styles = StyleSheet.create({
     fontSize: 20
   }
 });
+
 export default PrescriptionCardComponent;
 AppRegistry.registerComponent('PrescriptionCardComponent', () => PrescriptionCardComponent);

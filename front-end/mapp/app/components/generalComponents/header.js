@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Appbar } from 'react-native-paper';
+import { AppRegistry } from "react-native";
 
 export default class MyComponent extends React.Component {
   _goBack = () => console.log('Went back');
@@ -24,3 +25,5 @@ export default class MyComponent extends React.Component {
     );
   }
 }
+
+AppRegistry.registerComponent('MyComponent', () => MyComponent);

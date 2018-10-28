@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Button, Text, View, StyleSheet, TouchableOpacity, Alert, ToastAndroid, AppRegistry} from "react-native";
+import { Button, Text, View, StyleSheet, TouchableOpacity, AppRegistry} from "react-native";
 import settings from "../config/settings";
 
 class DoctorInfoScreen extends Component {

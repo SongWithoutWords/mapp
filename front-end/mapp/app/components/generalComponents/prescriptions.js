@@ -4,4 +4,4 @@ import {AppRegistry, Text, View, ListView, StyleSheet, TouchableHighlight} from 
 export default class Prescription extends Component{
 }
 
-//AppRegistry.registerComponent('Prescription', () => Prescription);
+AppRegistry.registerComponent('Prescription', () => Prescription);
