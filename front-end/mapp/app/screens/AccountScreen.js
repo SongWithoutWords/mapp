@@ -2,15 +2,9 @@ import React, { Component } from "react";
 import settings from "../config/settings";
 import {
   Button,
-  Text,
-  Card,
-  FormLabel,
-  FormInput
-} from "react-native-elements";
+  Text} from "react-native-elements";
 import { StyleSheet, AppRegistry } from "react-native";
-
-import { View, ScrollView } from "react-native";
-import { List } from "react-native-elements";
+import { View } from "react-native";
 
 class AccountScreen extends Component {
 

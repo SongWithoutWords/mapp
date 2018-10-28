@@ -8,19 +8,19 @@ import { createStackNavigator } from "react-navigation";
 
 import InboxScreen from "../screens/InboxScreen";
 import AccountScreen from "../screens/AccountScreen";
-import DoctorListScreen from "../screens/DoctorListScreen";
-import DoctorInfoScreen from "../screens/DoctorInfoScreen";
+import PatientListScreen from "../screens/PatientListScreen";
+import PatientInfoScreen from "../screens/PatientInfoScreen";
 
 const DoctorStackNavigator = createStackNavigator({
-  DoctorList: {
-    screen: DoctorListScreen,
+  PatientList: {
+    screen: PatientListScreen,
     navigationOptions: {
       header: null,
       headerForceInset: { top: "never", bottom: "never" }
     }
   },
-  DoctorInfo: {
-    screen: DoctorInfoScreen,
+  PatientInfo: {
+    screen: PatientInfoScreen,
     navigationOptions: {
       title: "Doctor Info",
       headerForceInset: { top: "never", bottom: "never" }
@@ -32,7 +32,7 @@ const DoctorStackNavigator = createStackNavigator({
 const DoctorTabNavigator = createMaterialBottomTabNavigator(
   {
     // screens and their navigation options
-    DoctorList: {
+    PatientList: {
       screen: DoctorStackNavigator,
       navigationOptions: {
         tabBarLabel: "Patients",
@@ -65,7 +65,7 @@ const DoctorTabNavigator = createMaterialBottomTabNavigator(
     }
   },
   {
-    initialRouteName: "DoctorList",
+    initialRouteName: "PatientList",
     shifting: true,
     activeColor: settings.ACTIVE_COLOR,
     inactiveColor: settings.INACTIVE_COLOR,
@@ -74,39 +74,22 @@ const DoctorTabNavigator = createMaterialBottomTabNavigator(
       showIcon: true,
       labelStyle: { fontSize: 10 }
     },
-    order: ["Inbox", "DoctorList", "Account"]
+    order: ["Inbox", "PatientList", "Account"]
   }
 );
 
 class DoctorTabNavContainer extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      lastName: "",
-      firstName: "",
-      id: "",
-    };
-  }
-
-  componentDidMount() {
+  handleOnPress = () => {this.props.navigation.navigate("AuthStack")}
+  static router = DoctorTabNavigator.router;
+  render() {
     const { navigation } = this.props;
     const firstName = navigation.getParam("firstName", "");
     const lastName = navigation.getParam("lastName", "");
     const id = navigation.getParam("id", "");
-    console.log(firstName);
-    console.log(lastName);
-    console.log(id);
-    this.setState({ lastName });
-    this.setState({ firstName });
-    this.setState({ id });
-  }
-  handleOnPress = () => {this.props.navigation.navigate("AuthStack")}
-  static router = DoctorTabNavigator.router;
-  render() {
     let props = {
-      id: this.state.id,
-      firstName: this.state.firstName,
-      lastName: this.state.lastName,
+      id: id,
+      firstName: firstName,
+      lastName: lastName,
       handleOnPress: this.handleOnPress
     }
     // pass user info to screens in the patient tab navigator
