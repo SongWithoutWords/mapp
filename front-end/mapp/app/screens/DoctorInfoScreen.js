@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-import { Button, Text, View, StyleSheet, TouchableOpacity, Alert, ToastAndroid} from "react-native";
+import { Button, Text, View, StyleSheet, TouchableOpacity, AppRegistry} from "react-native";
+import settings from "../config/settings";
 
 class DoctorInfoScreen extends Component {
   constructor(props) {
@@ -14,8 +15,9 @@ class DoctorInfoScreen extends Component {
     const { navigation } = this.props;
     const patientID = navigation.getParam("patientID", -1);
     const doctorObj = navigation.getParam("doctor", {});
+    console.log(doctorObj);
 
-    return fetch("http://www.agis-mapp.xyz/requests", {
+    return fetch(settings.REMOTE_SERVER_URL + settings.REQUESTS_RES, {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -39,6 +41,9 @@ class DoctorInfoScreen extends Component {
   }
 
   render() {
+    const { navigation } = this.props;
+    const doctorObj = navigation.getParam("doctor", {});
+    console.log(doctorObj);
     return (
       <View style={styles.container}>
         <Text style={styles.text} > Dr. {doctorObj.firstName} {doctorObj.lastName}</Text>
@@ -81,3 +86,4 @@ const styles = StyleSheet.create({
 });
 
 export default DoctorInfoScreen;
+AppRegistry.registerComponent('DoctorInfoScreen', () => DoctorInfoScreen);

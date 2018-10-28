@@ -1,4 +1,5 @@
 import React from "react";
+import { AppRegistry } from 'react-native';
 import settings from "../config/settings";
 import { createMaterialBottomTabNavigator } from "react-navigation-material-bottom-tabs";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
@@ -49,15 +50,15 @@ const DoctorStackNavigator = createStackNavigator({
 const PatientTabNavigator = createMaterialBottomTabNavigator(
   {
     // screens and their navigation options
-    Inbox: {
-      screen: InboxScreen,
-      navigationOptions: {
-        tabBarLabel: "Inbox",
-        tabBarIcon: ({ tintColor }) => (
-          <MaterialCommunityIcons name="inbox" size={25} color={tintColor} />
-        )
-      }
-    },
+    // Inbox: {
+    //   screen: InboxScreen,
+    //   navigationOptions: {
+    //     tabBarLabel: "Inbox",
+    //     tabBarIcon: ({ tintColor }) => (
+    //       <MaterialCommunityIcons name="inbox" size={25} color={tintColor} />
+    //     )
+    //   }
+    // },
     PrescriptionList: {
       screen: PrescriptionStackNavigator,
       navigationOptions: {
@@ -100,39 +101,22 @@ const PatientTabNavigator = createMaterialBottomTabNavigator(
       showIcon: true,
       labelStyle: { fontSize: 10 }
     },
-    order: ["Inbox", "PrescriptionList", "DoctorList", "Account"]
+    order: [ "PrescriptionList", "DoctorList", "Account"]
   }
 );
 
 class PatientTabNavContainer extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      lastName: "",
-      firstName: "",
-      id: "",
-    };
-  }
-
-  componentDidMount() {
+  handleOnPress = () => {this.props.navigation.navigate("AuthStack")}
+  static router = PatientTabNavigator.router;
+  render() {
     const { navigation } = this.props;
     const firstName = navigation.getParam("firstName", "");
     const lastName = navigation.getParam("lastName", "");
     const id = navigation.getParam("id", "");
-    console.log(firstName);
-    console.log(lastName);
-    console.log(id);
-    this.setState({ lastName });
-    this.setState({ firstName });
-    this.setState({ id });
-  }
-  handleOnPress = () => {this.props.navigation.navigate("AuthStack")}
-  static router = PatientTabNavigator.router;
-  render() {
     let props = {
-      id: this.state.id,
-      firstName: this.state.firstName,
-      lastName: this.state.lastName,
+      id: id,
+      firstName: firstName,
+      lastName: lastName,
       handleOnPress: this.handleOnPress
     }
     // pass user info to screens in the patient tab navigator
@@ -140,4 +124,5 @@ class PatientTabNavContainer extends React.Component {
   }
 }
 export default PatientTabNavContainer;
+AppRegistry.registerComponent('PatientTabNavContainer', () => PatientTabNavContainer);
 // export default PatientTabNavigator;

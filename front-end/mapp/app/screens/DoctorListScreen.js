@@ -1,37 +1,49 @@
 import React, { Component } from "react";
-import { StyleSheet } from "react-native";
-
-import { View, ScrollView } from "react-native";
+import { View, ScrollView, AppRegistry } from "react-native";
 import { List, ListItem } from "react-native-elements";
+import settings from "../config/settings";
+import genAlert from "../components/generalComponents/genAlert";
+import checkRequestErrors from "../lib/errors";
 
 class DoctorListScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      doctors : []
+      doctors: [],
+      patientID: -1
     };
   }
 
-  componentDidMount(){
-    this.fetchDoctorData();
+  componentDidMount() {
+    this.setState(
+      {
+        patientID: this.props.screenProps.id
+      },
+      this.fetchDoctorData
+    );
   }
 
-  fetchDoctorData(){
-    return fetch('http://www.agis-mapp.xyz/doctors')
-    .then((response) => response.json())
-    .then((responseJson) => {
-      this.setState({
-        doctors: responseJson
+  fetchDoctorData() {
+    return fetch(settings.REMOTE_SERVER_URL + settings.DOCTOR_RES)
+      .then(checkRequestErrors)
+      .then(response => response.json())
+      .then(responseJson => {
+        this.setState({
+          doctors: responseJson
+        });
+      })
+      .catch(error => {
+        genAlert("Error", "Failed to fetch doctor infomation");
+        console.error(error);
       });
-      console.log(this.state.doctors);
-    })
-    .catch((error) => {
-      console.error(error);
-    });
   }
 
-  onPress = () => {
-    this.props.navigation.navigate("DoctorInfo");
+  onPress = doctor => {
+    console.log(doctor);
+    this.props.navigation.navigate("DoctorInfo", {
+      doctor: doctor,
+      patientID: this.state.patientID
+    });
   };
 
   render() {
@@ -44,10 +56,9 @@ class DoctorListScreen extends Component {
                 key={i}
                 roundAvatar
                 avatar={{ uri: doctor.avatar_url }}
-                title= {"Dr. " + doctor.firstName + " " + doctor.lastName}
+                title={"Dr. " + doctor.firstName + " " + doctor.lastName}
                 subtitle={doctor.subtitle}
-                onPress={(doctor) => { //this.props.navigation.navigate("DoctorInfo", doctor.id)
-                console.log(doctor.id)}}
+                onPress={this.onPress.bind(this, doctor)}
               />
             ))}
           </List>
@@ -57,13 +68,5 @@ class DoctorListScreen extends Component {
   }
 }
 
-// // styles for this screen
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     justifyContent: "center",
-//     alignItems: "center"
-//   }
-// });
-
 export default DoctorListScreen;
+AppRegistry.registerComponent('DoctorListScreen', () => DoctorListScreen);

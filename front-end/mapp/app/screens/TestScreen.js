@@ -5,7 +5,8 @@ import {
   ActivityIndicator,
   Text,
   View,
-  TextInput
+  TextInput,
+  AppRegistry
 } from "react-native";
 import { Button } from "react-native-elements";
 
@@ -113,4 +114,6 @@ const styles = StyleSheet.create({
     padding: 10
   }
 });
+
 export default TestScreen;
+AppRegistry.registerComponent('TestScreen', () => TestScreen);

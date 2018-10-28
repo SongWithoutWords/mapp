@@ -1,6 +1,6 @@
 import { Button, Card, FormLabel, FormInput } from "react-native-elements";
 import React, { Component } from "react";
-import { StyleSheet } from "react-native";
+import { AppRegistry, StyleSheet } from "react-native";
 
 import { View, Text } from "react-native";
 import settings from "../config/settings";
@@ -62,4 +62,6 @@ const styles = StyleSheet.create({
     padding: 10
   }
 });
+
 export default WelcomeScreen;
+AppRegistry.registerComponent('WelcomeScreen', () => WelcomeScreen);

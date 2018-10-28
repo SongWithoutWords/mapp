@@ -1,8 +1,9 @@
+import postData  from "../lib/postData";
 import settings from "../config/settings";
 import React, { Component } from "react";
-import { StyleSheet, Text, View, Alert } from "react-native";
-import genAlert from "../components/testComponents/genAlert";
-import genToast from "../components/testComponents/genToast";
+import { StyleSheet, View, AppRegistry } from "react-native";
+import genAlert from "../components/generalComponents/genAlert";
+import genToast from "../components/generalComponents/genToast";
 import validate from "validate.js";
 import { Button, Card, FormLabel, FormInput } from "react-native-elements";
 
@@ -15,47 +16,31 @@ class SignUpScreen extends Component {
       email: "",
       password: "",
       confirmPassword: "",
-      response: {}
+      response:{}
     };
   }
 
   onSignUp = userTypeString => {
-    console.log(userTypeString);
     const { email, password, confirmPassword } = this.state;
     const fields = { email, password, confirmPassword };
-    console.log(JSON.stringify(fields));
     const result = validate(fields, constraints);
-    console.log(JSON.stringify(result, null, 2));
 
     if (typeof result !== "undefined") {
-      genAlert("Sign up failed", JSON.stringify(result));
-    } else if (userTypeString.length == 0) {
-      genAlert(
-        "Sign up failed",
-        "User type is undefined, please go back and retry"
-      );
+      genAlert("Sign up failed", JSON.stringify(result)); // TODO: making the form display errors rather than an alert
     } else {
       const endpoint =
         userTypeString == "doctor" ? settings.DOCTOR_RES : settings.PATIENT_RES;
-      return fetch(settings.REMOTE_SERVER_URL + endpoint, {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          email: this.state.email,
-          password: this.state.password,
-          firstName: this.state.firstName,
-          lastName: this.state.lastName
-        })
-      })
+      const url = settings.REMOTE_SERVER_URL + endpoint;
+      const { email, password, firstName, lastName } = this.state;
+      const json = { email, password, firstName, lastName};
+        postData(url, json) 
         .then(response => response.json())
         .then(responseJson => {
-          console.log(JSON.stringify(responseJson));
           if (responseJson["errors"]) {
             genAlert("Error", JSON.stringify(responseJson));
           } else {
+            // TODO: invoke redux dispatch to update states based on
+            // userType
             this.setState(
               {
                 response: responseJson
@@ -63,15 +48,18 @@ class SignUpScreen extends Component {
               function() {
                 const tabNav =
                   userTypeString == "doctor" ? "DoctorTab" : "PatientTab";
-                genToast("Sign up successfully", "Okay", 3000);
-                this.props.navigation.navigate(tabNav, responseJson);
+                genToast("Sign up successfully", "Okay", 2000);
+                this.props.navigation.navigate(tabNav, responseJson);                
+                // replace params with redux
+                // respons json contains current user's information 
+                // it can be accessed by child components via screenProps
               }
             );
           }
         })
         .catch(error => {
-          genAlert("Error", JSON.stringify(this.state.response));
-          console.error(error);
+          genAlert(error.name, error.message);
+          // TODO: invoke dispatch displayTheError(errorMessage)
         });
     }
   };
@@ -84,6 +72,7 @@ class SignUpScreen extends Component {
     const { navigation } = this.props;
     const userTypeString = navigation.getParam("userType", "");
 
+    // TODO: tap outside to hide keyboard
     return (
       <View style={styles.container}>
         <Card>
@@ -125,6 +114,9 @@ class SignUpScreen extends Component {
     );
   }
 }
+
+export default SignUpScreen;
+AppRegistry.registerComponent('SignUpScreen', () => SignUpScreen);
 
 var constraints = {
   password: {
@@ -168,4 +160,3 @@ const styles = StyleSheet.create({
     padding: 10
   }
 });
-export default SignUpScreen;

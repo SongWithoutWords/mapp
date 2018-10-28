@@ -2,7 +2,8 @@
 // for more info:
 import React, { Component } from "react";
 import { Root } from "native-base";
-import { AuthSwitchNavigator } from "./app/config/router";
+import {AppRegistry} from 'react-native';
+import {AuthSwitchNavigator} from "./app/config/router";
 import { SafeAreaView } from "react-navigation";
 
 type Props = {};
@@ -17,3 +18,5 @@ export default class App extends Component<Props> {
     );
   }
 }
+
+AppRegistry.registerComponent('App', () => App);
