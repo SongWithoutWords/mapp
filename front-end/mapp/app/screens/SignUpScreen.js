@@ -68,41 +68,31 @@ class SignUpScreen extends Component {
   // https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
   // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises
 
+
+  formItem = ({ itemLabel, key, isSecureEntry=false}) => (
+    <>
+      <FormLabel>{itemLabel}</FormLabel>
+      <FormInput
+        secureTextEntry={isSecureEntry}
+        placeholder={itemLabel}
+        onChangeText={value => this.setState({ [key]: value })}
+      />
+    </>
+  );
+
+
   render() {
     const { navigation } = this.props;
     const userTypeString = navigation.getParam("userType", "");
-
     // TODO: tap outside to hide keyboard
     return (
       <View style={styles.container}>
         <Card>
-          <FormLabel>Email</FormLabel>
-          <FormInput
-            placeholder="Email address..."
-            onChangeText={email => this.setState({ email })}
-          />
-          <FormLabel>First Name</FormLabel>
-          <FormInput
-            placeholder="Firstname..."
-            onChangeText={firstName => this.setState({ firstName })}
-          />
-          <FormLabel>Last Name</FormLabel>
-          <FormInput
-            placeholder="Lastname..."
-            onChangeText={lastName => this.setState({ lastName })}
-          />
-          <FormLabel>Password</FormLabel>
-          <FormInput
-            secureTextEntry
-            placeholder="Password..."
-            onChangeText={password => this.setState({ password })}
-          />
-          <FormLabel>Confirm Password</FormLabel>
-          <FormInput
-            secureTextEntry
-            placeholder="Confirm Password..."
-            onChangeText={confirmPassword => this.setState({ confirmPassword })}
-          />
+          {this.formItem({itemLabel: "Email", key: "email"})}
+          {this.formItem({itemLabel: "First Name", key: "firstName"})}
+          {this.formItem({itemLabel: "Last Name", key: "lastName"})}
+          {this.formItem({itemLabel: "Password", key: "password", isSecureEntry: true})}
+          {this.formItem({itemLabel: "Confirm Password", key: "confirmPassword", isSecureEntry: true})}
           <Button
             buttonStyle={{ marginTop: 20 }}
             backgroundColor={settings.THEME_COLOR}
