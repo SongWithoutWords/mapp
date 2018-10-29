@@ -14,6 +14,15 @@ class PatientListScreen extends Component {
     };
   }
 
+  patientToListItem = (patient, i) => (
+    <ListItem
+      key={i}
+      title={"Patient " + patient.firstName + " " + patient.lastName}
+      subtitle={patient.subtitle}
+      onPress={this.onPress.bind(this, patient)}
+    />
+  )
+
   componentDidMount() {
     console.log(this.props.screenProps.id);
     this.fetchPatientData();
@@ -58,16 +67,7 @@ class PatientListScreen extends Component {
       <View>
         <ScrollView>
           <List>
-            {this.state.patients.map((doctor, i) => (
-              <ListItem
-                key={i}
-                roundAvatar
-                avatar={{ uri: doctor.avatar_url }}
-                title={"Dr. " + doctor.firstName + " " + doctor.lastName}
-                subtitle={doctor.subtitle}
-                onPress={this.onPress.bind(this, doctor)}
-              />
-            ))}
+            {this.state.patients.map(this.patientToListItem)}
           </List>
         </ScrollView>
       </View>
