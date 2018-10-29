@@ -28,10 +28,7 @@ class PrescriptionCardComponent extends Component {
           </CardItem>
           <CardItem bordered>
             <CardItem cardBody>
-              <Image
-                source={images[this.props.image_name]}
-                style={{ height: 125, width: null, flex: 1 }}
-              />
+              <Image source={images[this.props.image_name]} style={{ height: 125, width: null, flex: 1 }}/>
             </CardItem>
           </CardItem>
           <CardItem bordered>
