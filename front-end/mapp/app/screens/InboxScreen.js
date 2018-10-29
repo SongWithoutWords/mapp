@@ -58,6 +58,30 @@ export default class InboxScreen extends React.Component {
       });
   };
 
+  mapRequestToCard = (request, i) => (
+        <Card>
+        <Text style={styles.medfield}>
+          <Text style={styles.fieldValue}>
+            {this.state.text}
+          </Text> {request.firstName + request.lastName}
+        </Text>
+        <View style={styles.acceptRequest}>
+
+        {this.state.showButtons && <View style={{width: '40%'}}>
+        <TouchableOpacity onPress={this.acceptPatientRequest.bind(this, request.id)} style={styles.RenewButton}>
+          <Text style = {{color : 'white', fontFamily: 'Circular', fontWeight:'500', fontSize: 16}}>Accept</Text>
+        </TouchableOpacity>
+        </View>}
+        {this.state.showButtons && <View style={{width: '40%'}}>
+        <TouchableOpacity onPress={this.declinePatientRequest} style={styles.EditButton}>
+          <Text style = {{color : 'white', fontFamily: 'Circular', fontWeight:'500', fontSize: 16}}>Decline</Text>
+        </TouchableOpacity>
+        </View>}
+        </View>
+        </Card>
+      )
+
+
   fetchDoctorData() {
     return fetch(
       settings.REMOTE_SERVER_URL + settings.DOCTOR_RES + this.state.doctorID
@@ -74,63 +98,11 @@ export default class InboxScreen extends React.Component {
       });
   }
 
+
   render() {
     return (
       <View style={styles.container}>
-        {this.state.pendingRequests.map(request => (
-          <Card>
-            <Text style={styles.medfield}>
-              <Text style={styles.fieldValue}>{this.state.text}</Text>{" "}
-              {request.firstName + request.lastName}
-            </Text>
-            <View
-              style={{
-                alignItems: "center",
-                justifyContent: "center",
-                flexDirection: "row"
-              }}
-            >
-              {this.state.showButtons && (
-                <View style={{ width: "40%" }}>
-                  <TouchableOpacity
-                    onPress={this.acceptPatientRequest(
-                      this.state.pendingRequests[i].id
-                    )}
-                    style={styles.RenewButton}
-                  >
-                    <Text
-                      style={{
-                        color: "white",
-                        fontWeight: "500",
-                        fontSize: 16
-                      }}
-                    >
-                      Accept
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-              )}
-              {this.state.showButtons && (
-                <View style={{ width: "40%" }}>
-                  <TouchableOpacity
-                    onPress={this.declinePatientRequest}
-                    style={styles.EditButton}
-                  >
-                    <Text
-                      style={{
-                        color: "white",
-                        fontWeight: "500",
-                        fontSize: 16
-                      }}
-                    >
-                      Decline
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-              )}
-            </View>
-          </Card>
-        ))}
+        {this.state.pendingRequests.map(this.mapRequestToCard)}
         <TouchableOpacity
           onPress={this.fetchDoctorData.bind(this)}
           style={styles.button}
@@ -159,6 +131,12 @@ const styles = StyleSheet.create({
     //justifyContent: 'center',
     //paddingTop: Constants.statusBarHeight,
     backgroundColor: "#ecf0f1"
+  },
+  acceptRequest: {
+    alignItems : 'center',
+    justifyContent : 'center',
+    flexDirection: 'row',
+    marginLeft: ''
   },
   fieldValue: {
     fontSize: 16,
