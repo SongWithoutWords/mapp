@@ -10,8 +10,9 @@ import InboxScreen from "../screens/InboxScreen";
 import AccountScreen from "../screens/AccountScreen";
 import PatientListScreen from "../screens/PatientListScreen";
 import PatientInfoScreen from "../screens/PatientInfoScreen";
+import {genTabNavOptions} from "../lib/genNavOptions"
 
-const DoctorStackNavigator = createStackNavigator({
+const PatientStackNavigator = createStackNavigator({
   PatientList: {
     screen: PatientListScreen,
     navigationOptions: {
@@ -28,12 +29,13 @@ const DoctorStackNavigator = createStackNavigator({
   }
 });
 
+const DoctorTabNavOptions = genTabNavOptions("PatientList", ["Inbox", "PatientList", "Account"]);
 // tab navigator for doctor
 const DoctorTabNavigator = createMaterialBottomTabNavigator(
   {
     // screens and their navigation options
     PatientList: {
-      screen: DoctorStackNavigator,
+      screen: PatientStackNavigator,
       navigationOptions: {
         tabBarLabel: "Patients",
         tabBarIcon: ({ tintColor }) => (
@@ -64,18 +66,7 @@ const DoctorTabNavigator = createMaterialBottomTabNavigator(
       }
     }
   },
-  {
-    initialRouteName: "PatientList",
-    shifting: true,
-    activeColor: settings.ACTIVE_COLOR,
-    inactiveColor: settings.INACTIVE_COLOR,
-    barStyle: { backgroundColor: settings.THEME_COLOR },
-    tabBarOptions: {
-      showIcon: true,
-      labelStyle: { fontSize: 10 }
-    },
-    order: ["Inbox", "PatientList", "Account"]
-  }
+  DoctorTabNavOptions 
 );
 export default DoctorTabNavigator;
 AppRegistry.registerComponent('DoctorTabNavigator', () => DoctorTabNavigator);

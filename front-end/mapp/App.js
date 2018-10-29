@@ -4,7 +4,7 @@ import React, { Component } from "react";
 import { Root } from "native-base";
 import { AppRegistry } from "react-native";
 import { SafeAreaView } from "react-navigation";
-import AuthStackNavigator from "./app/config/router";
+import AuthStackNavigator from "./app/config/authNavs";
 import PatientTabNavigator from "./app/config/patientNavs";
 import DoctorTabNavigator from "./app/config/doctorNavs";
 
