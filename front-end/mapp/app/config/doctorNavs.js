@@ -22,7 +22,7 @@ const DoctorStackNavigator = createStackNavigator({
   PatientInfo: {
     screen: PatientInfoScreen,
     navigationOptions: {
-      title: "Doctor Info",
+      title: "Patient Info",
       headerForceInset: { top: "never", bottom: "never" }
     }
   }
@@ -77,24 +77,6 @@ const DoctorTabNavigator = createMaterialBottomTabNavigator(
     order: ["Inbox", "PatientList", "Account"]
   }
 );
+export default DoctorTabNavigator;
+AppRegistry.registerComponent('DoctorTabNavigator', () => DoctorTabNavigator);
 
-class DoctorTabNavContainer extends React.Component {
-  handleOnPress = () => {this.props.navigation.navigate("AuthStack")}
-  static router = DoctorTabNavigator.router;
-  render() {
-    const { navigation } = this.props;
-    const firstName = navigation.getParam("firstName", "");
-    const lastName = navigation.getParam("lastName", "");
-    const id = navigation.getParam("id", "");
-    let props = {
-      id: id,
-      firstName: firstName,
-      lastName: lastName,
-      handleOnPress: this.handleOnPress
-    }
-    // pass user info to screens in the patient tab navigator
-    return <DoctorTabNavigator navigation={this.props.navigation} screenProps={props} />;
-  }
-}
-export default DoctorTabNavContainer;
-AppRegistry.registerComponent('DoctorTabNavContainer', () => DoctorTabNavContainer);

@@ -9,17 +9,17 @@ class PatientListScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      doctorID: this.props.screenProps.id,
+      doctorID: this.props.screenProps.user.id,
       patients: []
     };
   }
 
   componentDidMount() {
-    console.log(this.props.screenProps.id);
+    console.log(this.props.screenProps.user.id);
     this.fetchPatientData();
   }
 
-  fetchPatientData() {
+  fetchPatientData = () => {
     console.log(
       settings.REMOTE_SERVER_URL +
         settings.DOCTOR_RES +
@@ -45,11 +45,11 @@ class PatientListScreen extends Component {
       });
   }
 
-  onPress = doctor => {
-    console.log(doctor);
+  onPress = (patient) => {
+    console.log(patient);
     this.props.navigation.navigate("PatientInfo", {
       patient: patient,
-      doctorID: doctorID
+      doctorID: this.state.doctorID
     });
   };
 
@@ -58,14 +58,14 @@ class PatientListScreen extends Component {
       <View>
         <ScrollView>
           <List>
-            {this.state.patients.map((doctor, i) => (
+            {this.state.patients.map((patient, i) => (
               <ListItem
                 key={i}
                 roundAvatar
-                avatar={{ uri: doctor.avatar_url }}
-                title={"Dr. " + doctor.firstName + " " + doctor.lastName}
-                subtitle={doctor.subtitle}
-                onPress={this.onPress.bind(this, doctor)}
+                avatar={{ uri: patient.avatar_url }}
+                title={patient.firstName + " " + patient.lastName}
+                subtitle={patient.subtitle}
+                onPress={() => this.onPress(patient)}
               />
             ))}
           </List>

@@ -1,4 +1,4 @@
-import postData  from "../lib/postData";
+import postData from "../lib/postData";
 import settings from "../config/settings";
 import React, { Component } from "react";
 import { StyleSheet, View, AppRegistry } from "react-native";
@@ -15,8 +15,7 @@ class SignUpScreen extends Component {
       lastName: "",
       email: "",
       password: "",
-      confirmPassword: "",
-      response:{}
+      confirmPassword: ""
     };
   }
 
@@ -32,8 +31,8 @@ class SignUpScreen extends Component {
         userTypeString == "doctor" ? settings.DOCTOR_RES : settings.PATIENT_RES;
       const url = settings.REMOTE_SERVER_URL + endpoint;
       const { email, password, firstName, lastName } = this.state;
-      const json = { email, password, firstName, lastName};
-        postData(url, json) 
+      const json = { email, password, firstName, lastName };
+      postData(url, json)
         .then(response => response.json())
         .then(responseJson => {
           if (responseJson["errors"]) {
@@ -41,20 +40,12 @@ class SignUpScreen extends Component {
           } else {
             // TODO: invoke redux dispatch to update states based on
             // userType
-            this.setState(
-              {
-                response: responseJson
-              },
-              function() {
-                const tabNav =
-                  userTypeString == "doctor" ? "DoctorTab" : "PatientTab";
-                genToast("Sign up successfully", "Okay", 2000);
-                this.props.navigation.navigate(tabNav, responseJson);                
-                // replace params with redux
-                // respons json contains current user's information 
-                // it can be accessed by child components via screenProps
-              }
-            );
+            responseJson["userType"] = userTypeString;
+            genToast("Sign up successfully", "Okay", 2000);
+            this.props.screenProps.onSignIn(responseJson);
+            // replace params with redux
+            // respons json contains current user's information
+            // it can be accessed by child components via screenProps
           }
         })
         .catch(error => {
@@ -68,8 +59,7 @@ class SignUpScreen extends Component {
   // https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
   // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises
 
-
-  formItem = ({ itemLabel, key, isSecureEntry=false}) => (
+  formItem = ({ itemLabel, key, isSecureEntry = false }) => (
     <>
       <FormLabel>{itemLabel}</FormLabel>
       <FormInput
@@ -80,7 +70,6 @@ class SignUpScreen extends Component {
     </>
   );
 
-
   render() {
     const { navigation } = this.props;
     const userTypeString = navigation.getParam("userType", "");
@@ -88,11 +77,19 @@ class SignUpScreen extends Component {
     return (
       <View style={styles.container}>
         <Card>
-          {this.formItem({itemLabel: "Email", key: "email"})}
-          {this.formItem({itemLabel: "First Name", key: "firstName"})}
-          {this.formItem({itemLabel: "Last Name", key: "lastName"})}
-          {this.formItem({itemLabel: "Password", key: "password", isSecureEntry: true})}
-          {this.formItem({itemLabel: "Confirm Password", key: "confirmPassword", isSecureEntry: true})}
+          {this.formItem({ itemLabel: "Email", key: "email" })}
+          {this.formItem({ itemLabel: "First Name", key: "firstName" })}
+          {this.formItem({ itemLabel: "Last Name", key: "lastName" })}
+          {this.formItem({
+            itemLabel: "Password",
+            key: "password",
+            isSecureEntry: true
+          })}
+          {this.formItem({
+            itemLabel: "Confirm Password",
+            key: "confirmPassword",
+            isSecureEntry: true
+          })}
           <Button
             buttonStyle={{ marginTop: 20 }}
             backgroundColor={settings.THEME_COLOR}
@@ -106,7 +103,7 @@ class SignUpScreen extends Component {
 }
 
 export default SignUpScreen;
-AppRegistry.registerComponent('SignUpScreen', () => SignUpScreen);
+AppRegistry.registerComponent("SignUpScreen", () => SignUpScreen);
 
 var constraints = {
   password: {

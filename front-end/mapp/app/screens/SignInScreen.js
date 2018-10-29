@@ -13,7 +13,6 @@ class SignInScreen extends Component {
     this.state = {
       email: "",
       password: "",
-      response: {}
     };
   }
   // TODO: implement signin after integrating redux
@@ -41,18 +40,10 @@ class SignInScreen extends Component {
               "Email or password is incorrect, please retry"
             ); // TODO: making the form display errors rather than an alert
           } else {
-            this.setState(
-              {
-                response: responseJson
-              },
-              function() {
-                const tabNav =
-                  userTypeString == "doctor" ? "DoctorTab" : "PatientTab";
-                genToast("Sign in successfully", "Okay", 2000);
-                this.props.navigation.navigate(tabNav, responseJson);
-                // replace params with redux
-              }
-            );
+            responseJson['userType'] = userTypeString;
+            genToast("Sign in successfully", "Okay", 2000);
+            this.props.screenProps.onSignIn(responseJson);
+            // replace params with redux
           }
         })
         .catch(error => {
@@ -62,7 +53,7 @@ class SignInScreen extends Component {
     }
   };
 
-  formItem = ({ itemLabel, key, isSecureEntry=false}) => (
+  formItem = ({ itemLabel, key, isSecureEntry = false }) => (
     <>
       <FormLabel>{itemLabel}</FormLabel>
       <FormInput
@@ -79,8 +70,12 @@ class SignInScreen extends Component {
       <View style={styles.container}>
         <View style={styles.card}>
           <Card>
-            {this.formItem({ itemLabel: "Email", key: "email"})}
-            {this.formItem({ itemLabel: "Password", key: "password", isSecureEntry: true })}
+            {this.formItem({ itemLabel: "Email", key: "email" })}
+            {this.formItem({
+              itemLabel: "Password",
+              key: "password",
+              isSecureEntry: true
+            })}
             <Button
               buttonStyle={{ marginTop: 20 }}
               backgroundColor="#694fad"

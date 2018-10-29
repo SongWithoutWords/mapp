@@ -9,9 +9,9 @@ import { View } from "react-native";
 class AccountScreen extends Component {
 
   render() {
-    const firstName = this.props.screenProps.firstName;
-    const lastName = this.props.screenProps.lastName;
-    const id = this.props.screenProps.id;
+    const firstName = this.props.screenProps.user.firstName;
+    const lastName = this.props.screenProps.user.lastName;
+    const id = this.props.screenProps.user.id;
 
     return (
       <View style={styles.buttonContainer}>
@@ -23,7 +23,7 @@ class AccountScreen extends Component {
           buttonStyle={styles.bottomButton}
           backgroundColor={settings.THEME_COLOR}
           title="SIGN OUT"
-          onPress={() => this.props.screenProps.handleOnPress()}
+          onPress={() => this.props.screenProps.onSignOut()}
         />
       </View>
     );
