@@ -37,16 +37,12 @@ export default class App extends Component<Props> {
   render() {
     const isLoggedIn = this.state.isLoggedIn;
     const user = this.state.user;
-    let isDoctor;
-    if (isLoggedIn && user) {
-      isDoctor = (user.userType === "doctor");
-    }
     let navigator;
     if (isLoggedIn) {
-      if(isDoctor){
+      if(user.userType === "doctor"){
         navigator = <DoctorTabNavigator screenProps={{"user": user, "onSignOut":this.onSignOut}}/>;
       }else{
-      navigator = <PatientTabNavigator screenProps={{"user": user, "onSignOut":this.onSignOut}}/>;
+        navigator = <PatientTabNavigator screenProps={{"user": user, "onSignOut":this.onSignOut}}/>;
       }
     } else {
       navigator = <AuthStackNavigator screenProps={{"onSignIn": this.onSignIn}}/>;
