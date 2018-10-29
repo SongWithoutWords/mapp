@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import settings from "../config/settings";
-import checkRequestErrors from "../lib/errors";
 import { View, ScrollView, AppRegistry } from "react-native";
 import { List, ListItem } from "react-native-elements";
 import genAlert from "../components/generalComponents/genAlert";
+import getDoctorData from "../lib/getDoctorData";
 
 class PatientListScreen extends Component {
   constructor(props) {
@@ -35,14 +35,7 @@ class PatientListScreen extends Component {
         "/" +
         this.state.doctorID
     );
-    return fetch(
-      settings.REMOTE_SERVER_URL +
-        settings.DOCTOR_RES +
-        "/" +
-        this.state.doctorID
-    )
-      .then(checkRequestErrors)
-      .then(response => response.json())
+    return getDoctorData(this.state.doctorID)
       .then(responseJson => {
         this.setState({
           patients: responseJson.patients

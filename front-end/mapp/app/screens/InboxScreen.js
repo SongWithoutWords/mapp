@@ -1,10 +1,11 @@
 import * as React from "react";
-import checkRequestErrors from "../lib/errors";
 import settings from "../config/settings";
 import { Text, View, StyleSheet, AppRegistry, ScrollView } from "react-native";
 import { Card } from "react-native-elements"; //0.19.1
 import { TouchableOpacity } from "react-native";
 import genAlert from "../components/generalComponents/genAlert";
+import postData from "../lib/postData";
+import getDoctorData from "../lib/getDoctorData";
 
 export default class InboxScreen extends React.Component {
   constructor(props) {
@@ -12,7 +13,7 @@ export default class InboxScreen extends React.Component {
     this.state = {
       showButtons: true,
       text: "",
-      doctorID: 1,
+      doctorID: 10,
       patientID: -1,
       pendingRequests: []
     };
@@ -31,25 +32,14 @@ export default class InboxScreen extends React.Component {
 
   acceptPatientRequest = requestID => {
     console.log(requestID + " " + this.state.doctorID );
-    return fetch(settings.REMOTE_SERVER_URL + settings.RELAITON_RES, {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        patient: requestID,
-        doctor: this.state.doctorID
-      })
-    })
-      .then(checkRequestErrors)
+    return postData(settings.REMOTE_SERVER_URL + settings.RELAITON_RES, 
+      {patient: requestID, doctor: this.state.doctorID})
       .then(response => response.json())
       .then(responseJson => {
         this.setState(
           {
             response: responseJson
-          },
-          function() {}
+          }
         );
       })
       .catch(error => {
@@ -82,12 +72,8 @@ export default class InboxScreen extends React.Component {
 
 
   fetchDoctorData() {
-    console.log( "SALAM! " + this.state.doctorID );
-    return fetch(
-      settings.REMOTE_SERVER_URL + settings.DOCTOR_RES + '/' + this.state.doctorID
-    )
-      .then(checkRequestErrors)
-      .then(response => response.json())
+    console.log( "fetchDoctorData: " + this.state.doctorID );
+    return getDoctorData(this.state.doctorID)
       .then(responseJson => {
         this.setState({
           pendingRequests: responseJson.pendingRequests
