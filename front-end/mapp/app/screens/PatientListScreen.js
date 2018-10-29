@@ -49,7 +49,7 @@ class PatientListScreen extends Component {
         });
       })
       .catch(error => {
-        genAlert("Error", "Failed to fetch patient infomation");
+        genAlert("Error", "Failed to fetch patient information");
         console.error(error);
       });
   }

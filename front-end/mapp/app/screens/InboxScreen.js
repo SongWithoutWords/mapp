@@ -1,7 +1,7 @@
 import * as React from "react";
 import checkRequestErrors from "../lib/errors";
 import settings from "../config/settings";
-import { Text, View, StyleSheet, AppRegistry } from "react-native";
+import { Text, View, StyleSheet, AppRegistry, ScrollView } from "react-native";
 import { Card } from "react-native-elements"; //0.19.1
 import { TouchableOpacity } from "react-native";
 import genAlert from "../components/generalComponents/genAlert";
@@ -12,7 +12,7 @@ export default class InboxScreen extends React.Component {
     this.state = {
       showButtons: true,
       text: "",
-      doctorID: -1,
+      doctorID: 1,
       patientID: -1,
       pendingRequests: []
     };
@@ -22,16 +22,15 @@ export default class InboxScreen extends React.Component {
 
   componentDidMount() {
     this.fetchDoctorData();
-    this.setState({
-      text: "you have new requests"
-    });
+    this.text = "you have new requests";
   }
 
   declinePatientRequest = () => {
-    this.setState({ text: "You decline", showButtons: false });
+    this.setState({ text: "You decline" });
   };
 
   acceptPatientRequest = requestID => {
+    console.log(requestID + " " + this.state.doctorID );
     return fetch(settings.REMOTE_SERVER_URL + settings.RELAITON_RES, {
       method: "POST",
       headers: {
@@ -83,8 +82,9 @@ export default class InboxScreen extends React.Component {
 
 
   fetchDoctorData() {
+    console.log( "SALAM! " + this.state.doctorID );
     return fetch(
-      settings.REMOTE_SERVER_URL + settings.DOCTOR_RES + this.state.doctorID
+      settings.REMOTE_SERVER_URL + settings.DOCTOR_RES + '/' + this.state.doctorID
     )
       .then(checkRequestErrors)
       .then(response => response.json())
@@ -101,6 +101,8 @@ export default class InboxScreen extends React.Component {
 
   render() {
     return (
+      <View>
+      <ScrollView>
       <View style={styles.container}>
         {this.state.pendingRequests.map(this.mapRequestToCard)}
         <TouchableOpacity
@@ -117,6 +119,8 @@ export default class InboxScreen extends React.Component {
             Refresh
           </Text>
         </TouchableOpacity>
+      </View>
+      </ScrollView>
       </View>
     );
   }
@@ -136,7 +140,7 @@ const styles = StyleSheet.create({
     alignItems : 'center',
     justifyContent : 'center',
     flexDirection: 'row',
-    marginLeft: ''
+    //marginLeft: ''
   },
   fieldValue: {
     fontSize: 16,

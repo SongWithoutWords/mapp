@@ -33,7 +33,7 @@ class DoctorListScreen extends Component {
         });
       })
       .catch(error => {
-        genAlert("Error", "Failed to fetch doctor infomation");
+        genAlert("Error", "Failed to fetch doctor information");
         console.error(error);
       });
   }
