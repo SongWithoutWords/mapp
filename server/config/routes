@@ -7,11 +7,6 @@
 /favicon.ico FaviconR GET
 /robots.txt RobotsR GET
 
-/ HomeR GET POST
-
-/profile ProfileR GET
-
-
 -- Not from template
 -------------------
 
