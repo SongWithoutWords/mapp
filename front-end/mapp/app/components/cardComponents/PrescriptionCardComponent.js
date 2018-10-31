@@ -10,16 +10,16 @@ import {
 
 import { Card, CardItem, Body, Left, Button, Icon } from "native-base";
 
+const images = {
+  divalproex: require("../../assets/images/divalproex.jpg"),
+  amoxicillin: require("../../assets/images/amoxicillin.png")
+};
+
 class PrescriptionCardComponent extends Component {
   constructor(props) {
     super(props);
   }
   render() {
-    const images = {
-      divalproex: require("../../assets/images/divalproex.jpg"),
-      amoxicillin: require("../../assets/images/amoxicillin.png")
-    };
-
     return (
       <TouchableWithoutFeedback onPress={this.props.onPress}>
         <Card>
@@ -28,10 +28,7 @@ class PrescriptionCardComponent extends Component {
           </CardItem>
           <CardItem bordered>
             <CardItem cardBody>
-              <Image
-                source={images[this.props.image_name]}
-                style={{ height: 125, width: null, flex: 1 }}
-              />
+              <Image source={images[this.props.image_name]} style={{ height: 125, width: null, flex: 1 }}/>
             </CardItem>
           </CardItem>
           <CardItem bordered>
@@ -62,4 +59,7 @@ const styles = StyleSheet.create({
 });
 
 export default PrescriptionCardComponent;
-AppRegistry.registerComponent('PrescriptionCardComponent', () => PrescriptionCardComponent);
+AppRegistry.registerComponent(
+  "PrescriptionCardComponent",
+  () => PrescriptionCardComponent
+);

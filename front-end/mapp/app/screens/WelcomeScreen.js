@@ -6,6 +6,20 @@ import { View, Text } from "react-native";
 import settings from "../config/settings";
 
 class WelcomeScreen extends Component {
+
+  button = ({ title, userType}) => (
+      <Button
+        buttonStyle={{ marginTop: 20 }}
+        backgroundColor={settings.THEME_COLOR}
+        title={title}
+        onPress={() => {
+          this.props.navigation.navigate("SignIn", {
+            userType: userType
+          });
+        }}
+      />
+  );
+
   render() {
     return (
       <View style={styles.buttonContainer}>
@@ -15,26 +29,8 @@ class WelcomeScreen extends Component {
             An application for doctors to prescribe medications for their
             patients, and patients to receive notifications
           </Text>
-          <Button
-            buttonStyle={{ marginTop: 20 }}
-            backgroundColor={settings.THEME_COLOR}
-            title="Patient"
-            onPress={() => {
-              this.props.navigation.navigate("SignIn", {
-                  userType: "patient"
-              });
-            }}
-          />
-          <Button
-            buttonStyle={{ marginTop: 20 }}
-            backgroundColor={settings.THEME_COLOR}
-            title="Doctor"
-            onPress={() => {
-              this.props.navigation.navigate("SignIn", {
-                  userType: "doctor"
-              });
-            }}
-          />
+          {this.button({"title":"Patient", "userType": "patient"})}
+          {this.button({"title":"Doctor", "userType": "doctor"})}
         </Card>
       </View>
     );
@@ -64,4 +60,4 @@ const styles = StyleSheet.create({
 });
 
 export default WelcomeScreen;
-AppRegistry.registerComponent('WelcomeScreen', () => WelcomeScreen);
+AppRegistry.registerComponent("WelcomeScreen", () => WelcomeScreen);

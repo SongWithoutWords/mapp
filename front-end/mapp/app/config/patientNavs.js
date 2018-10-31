@@ -10,6 +10,7 @@ import PrescriptionInfoScreen from "../screens/PrescriptionInfoScreen";
 import PrescriptionListScreen from "../screens/PrescriptionListScreen";
 import DoctorListScreen from "../screens/DoctorListScreen";
 import DoctorInfoScreen from "../screens/DoctorInfoScreen";
+import {genTabNavOptions} from "../lib/genNavOptions"
 
 // stack navigators
 const PrescriptionStackNavigator = createStackNavigator({
@@ -45,6 +46,9 @@ const DoctorStackNavigator = createStackNavigator({
     }
   }
 });
+
+
+const PatientTabNavOptions = genTabNavOptions("PrescriptionList", [ "PrescriptionList", "DoctorList", "Account"]);
 
 // tab navigator for patient
 const PatientTabNavigator = createMaterialBottomTabNavigator(
@@ -91,38 +95,7 @@ const PatientTabNavigator = createMaterialBottomTabNavigator(
       }
     }
   },
-  {
-    initialRouteName: "PrescriptionList",
-    shifting: true,
-    activeColor: settings.ACTIVE_COLOR,
-    inactiveColor: settings.INACTIVE_COLOR,
-    barStyle: { backgroundColor: settings.THEME_COLOR },
-    tabBarOptions: {
-      showIcon: true,
-      labelStyle: { fontSize: 10 }
-    },
-    order: [ "PrescriptionList", "DoctorList", "Account"]
-  }
+  PatientTabNavOptions  
 );
-
-class PatientTabNavContainer extends React.Component {
-  handleOnPress = () => {this.props.navigation.navigate("AuthStack")}
-  static router = PatientTabNavigator.router;
-  render() {
-    const { navigation } = this.props;
-    const firstName = navigation.getParam("firstName", "");
-    const lastName = navigation.getParam("lastName", "");
-    const id = navigation.getParam("id", "");
-    let props = {
-      id: id,
-      firstName: firstName,
-      lastName: lastName,
-      handleOnPress: this.handleOnPress
-    }
-    // pass user info to screens in the patient tab navigator
-    return <PatientTabNavigator navigation={this.props.navigation} screenProps={props} />;
-  }
-}
-export default PatientTabNavContainer;
-AppRegistry.registerComponent('PatientTabNavContainer', () => PatientTabNavContainer);
-// export default PatientTabNavigator;
+export default PatientTabNavigator;
+AppRegistry.registerComponent('PatientTabNavigator', () => PatientTabNavigator);
