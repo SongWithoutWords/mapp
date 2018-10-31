@@ -126,7 +126,9 @@ const styles = StyleSheet.create({
     alignItems : 'center',
     justifyContent : 'center',
     flexDirection: 'row',
-    //marginLeft: ''
+
+    marginLeft: ''
+
   },
   fieldValue: {
     fontSize: 16,
