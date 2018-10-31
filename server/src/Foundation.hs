@@ -107,18 +107,7 @@ instance Yesod App where
         (title, parents) <- breadcrumbs
 
         -- Define the menu items of the header.
-        let menuItems =
-                [ NavbarRight $ MenuItem
-                    { menuItemLabel = "Login"
-                    , menuItemRoute = AuthR LoginR
-                    , menuItemAccessCallback = isNothing muser
-                    }
-                , NavbarRight $ MenuItem
-                    { menuItemLabel = "Logout"
-                    , menuItemRoute = AuthR LogoutR
-                    , menuItemAccessCallback = isJust muser
-                    }
-                ]
+        let menuItems = []
 
         let navbarLeftMenuItems = [x | NavbarLeft x <- menuItems]
         let navbarRightMenuItems = [x | NavbarRight x <- menuItems]
@@ -141,14 +130,13 @@ instance Yesod App where
     authRoute
         :: App
         -> Maybe (Route App)
-    authRoute _ = Just $ AuthR LoginR
+    authRoute _ = Just $ undefined -- AuthR LoginR
 
     isAuthorized
         :: Route App  -- ^ The route the user is visiting.
         -> Bool       -- ^ Whether or not this is a "write" request.
         -> Handler AuthResult
     -- Routes not requiring authentication.
-    isAuthorized (AuthR _) _ = return Authorized
     isAuthorized FaviconR _ = return Authorized
     isAuthorized RobotsR _ = return Authorized
     isAuthorized (StaticR _) _ = return Authorized
