@@ -86,17 +86,6 @@ getTables = do
     tables <- rawSql "SELECT name FROM sqlite_master WHERE type = 'table';" []
     return (fmap unSingle tables)
 
--- | Authenticate as a user. This relies on the `auth-dummy-login: true` flag
--- being set in test-settings.yaml, which enables dummy authentication in
--- Foundation.hs
-authenticateAs :: Entity User -> YesodExample App ()
-authenticateAs (Entity _ u) = do
-    request $ do
-        setMethod "POST"
-        addPostParam "ident" $ userIdent u
-        setUrl $ AuthR $ PluginR "dummy" []
-
-
 failTest :: String -> YesodExample App ()
 failTest = liftIO . H.assertFailure
 

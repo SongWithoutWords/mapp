@@ -61,10 +61,10 @@ getPatientWithDoctors pid = do
 postLoginsR :: Handler Value
 postLoginsR = do
   PostLogin emailReceived passwordReceived <- requireJsonBody
-  maybeUser <- runDB $ getBy $ UserEmail emailReceived
+  maybeUser <- runDB $ getBy $ UniqueUser emailReceived
   case maybeUser of
     Nothing -> invalidArgs ["No account for this email address"]
-    Just (Entity _ (XUser _ password' _ doctorOrPatientId')) ->
+    Just (Entity _ (User _ password' _ doctorOrPatientId')) ->
       if passwordReceived /= password'
         then permissionDenied "Incorrect password"
         else case doctorOrPatientId' of
@@ -89,7 +89,7 @@ postDoctorsR = do
     { doctorFirstName = firstName'
     , doctorLastName = lastName'
     }
-  let user = XUser email' password' "" (Left doctorId)
+  let user = User email' password' "" (Left doctorId)
   userInserted <- runDB $ insertUniqueEntity user
 
   case userInserted of
@@ -107,7 +107,7 @@ postPatientsR =  do
     , patientDateOfBirth = bd
     }
 
-  let user = XUser email' password' "" (Right patientId)
+  let user = User email' password' "" (Right patientId)
   userInserted <- runDB $ insertUniqueEntity user
   case userInserted of
     Nothing -> do
