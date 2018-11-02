@@ -37,15 +37,15 @@ spec = withApp $ do
         }
       statusIs 400
 
-      muser <- runDB $ getBy (UserEmail "jack@black.com")
+      muser <- runDB $ getBy (UniqueUser "jack@black.com")
 
       case muser of
         Nothing -> failTest "No entry in User table after POST /patients"
         (Just (Entity _ user)) -> do
-          assertEq "Email" (xUserEmail user) "jack@black.com"
-          assertEq "Data" (xUserDoctorOrPatientId user) (Right $ patientKey 1)
+          assertEq "Email" (userEmail user) "jack@black.com"
+          assertEq "Data" (userDoctorOrPatientId user) (Right $ patientKey 1)
 
-          case xUserDoctorOrPatientId user of
+          case userDoctorOrPatientId user of
             Left _ -> failTest "Patient incorrectly entered as doctor"
             Right did -> do
               mpatient <- runDB $ getEntity did
