@@ -134,3 +134,6 @@ postRelationsR = do
     else do
       _ <- runDB $ mapM (delete . entityKey) pendingRequests
       runDB (insertUniqueEntity relation) >>= returnJson
+
+postPrescriptionsR :: Handler Value
+postPrescriptionsR = undefined
