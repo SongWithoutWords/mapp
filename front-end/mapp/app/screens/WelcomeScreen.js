@@ -13,7 +13,7 @@ class WelcomeScreen extends Component {
         backgroundColor={settings.THEME_COLOR}
         title={title}
         onPress={() => {
-          this.props.navigation.navigate("SignIn", {
+          this.props.navigation.navigate("SignUp", {
             userType: userType
           });
         }}

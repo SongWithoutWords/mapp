@@ -3,9 +3,7 @@ import { StyleSheet, Text, View, Alert, AppRegistry } from "react-native";
 import { Button, Card, FormLabel, FormInput } from "react-native-elements";
 import validate from "validate.js";
 import settings from "../config/settings";
-import genToast from "../components/generalComponents/genToast";
 import genAlert from "../components/generalComponents/genAlert";
-import postData from "../lib/postData";
 
 class SignInScreen extends Component {
   constructor(props) {
@@ -16,7 +14,7 @@ class SignInScreen extends Component {
     };
   }
   // TODO: implement signin after integrating redux
-  onSignIn = userTypeString => {
+  onSignIn = () => {
     const { email, password } = this.state;
     const fields = { email, password };
     const result = validate(fields, constraints);
@@ -24,32 +22,10 @@ class SignInScreen extends Component {
     if (typeof result !== "undefined") {
       genAlert("Sign in failed", JSON.stringify(result)); // TODO: making the form display errors rather than an alert
     } else {
+      const {email, password} = this.state;
+      const form = {email, password};
       const url = settings.REMOTE_SERVER_URL + settings.LOGIN_RES;
-      const { email, password } = this.state;
-      const json = { email, password };
-      postData(url, json)
-        .then(response => response.json())
-        .then(responseJson => {
-          // TODO: invoke redux dispatch to update states based on
-          // userType
-          const isPatient = responseJson.hasOwnProperty("doctors");
-          const expectedUserType = isPatient ? "patient" : "doctor";
-          if (expectedUserType !== userTypeString) {
-            genAlert(
-              "Sign in failed",
-              "Email or password is incorrect, please retry"
-            ); // TODO: making the form display errors rather than an alert
-          } else {
-            responseJson['userType'] = userTypeString;
-            genToast("Sign in successfully", "Okay", 2000);
-            this.props.screenProps.onSignIn(responseJson);
-            // replace params with redux
-          }
-        })
-        .catch(error => {
-          genAlert("Sign in failed", error.message);
-          // TODO: invoke dispatch displayTheError(errorMessage)
-        });
+      this.props.screenProps.onSignIn(url, form);
     }
   };
 
@@ -78,20 +54,9 @@ class SignInScreen extends Component {
             })}
             <Button
               buttonStyle={{ marginTop: 20 }}
-              backgroundColor="#694fad"
+              backgroundColor={settings.THEME_COLOR}
               title="SIGN IN"
               onPress={() => this.onSignIn(userTypeString)}
-            />
-            <Button
-              buttonStyle={{ marginTop: 20 }}
-              backgroundColor="transparent"
-              textStyle={{ color: "#bcbec1" }}
-              title="SIGN UP"
-              onPress={() =>
-                this.props.navigation.navigate("SignUp", {
-                  userType: userTypeString
-                })
-              }
             />
           </Card>
         </View>

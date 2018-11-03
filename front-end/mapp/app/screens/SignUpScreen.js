@@ -1,9 +1,7 @@
-import postData from "../lib/postData";
 import settings from "../config/settings";
 import React, { Component } from "react";
 import { StyleSheet, View, AppRegistry } from "react-native";
 import genAlert from "../components/generalComponents/genAlert";
-import genToast from "../components/generalComponents/genToast";
 import validate from "validate.js";
 import { Button, Card, FormLabel, FormInput } from "react-native-elements";
 
@@ -27,31 +25,17 @@ class SignUpScreen extends Component {
     if (typeof result !== "undefined") {
       genAlert("Sign up failed", JSON.stringify(result)); // TODO: making the form display errors rather than an alert
     } else {
+      const {
+        firstName,
+        lastName,
+        email,
+        password,
+      } = this.state;
+      const form = { firstName, lastName, email, password};
       const endpoint =
         userTypeString == "doctor" ? settings.DOCTOR_RES : settings.PATIENT_RES;
       const url = settings.REMOTE_SERVER_URL + endpoint;
-      const { email, password, firstName, lastName } = this.state;
-      const json = { email, password, firstName, lastName };
-      postData(url, json)
-        .then(response => response.json())
-        .then(responseJson => {
-          if (responseJson["errors"]) {
-            genAlert("Error", JSON.stringify(responseJson));
-          } else {
-            // TODO: invoke redux dispatch to update states based on
-            // userType
-            responseJson["userType"] = userTypeString;
-            genToast("Sign up successfully", "Okay", 2000);
-            this.props.screenProps.onSignIn(responseJson);
-            // replace params with redux
-            // respons json contains current user's information
-            // it can be accessed by child components via screenProps
-          }
-        })
-        .catch(error => {
-          genAlert(error.name, error.message);
-          // TODO: invoke dispatch displayTheError(errorMessage)
-        });
+      this.props.screenProps.onSignIn(url, form);
     }
   };
 
@@ -95,6 +79,17 @@ class SignUpScreen extends Component {
             backgroundColor={settings.THEME_COLOR}
             title="SIGN UP"
             onPress={() => this.onSignUp(userTypeString)}
+          />
+          <Button
+            buttonStyle={{ marginTop: 20 }}
+            backgroundColor="transparent"
+            textStyle={{ color: "#bcbec1" }}
+            title="SIGN IN"
+            onPress={() =>
+              this.props.navigation.navigate("SignIn", {
+                userType: userTypeString
+              })
+            }
           />
         </Card>
       </View>
