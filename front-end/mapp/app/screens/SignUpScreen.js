@@ -47,6 +47,7 @@ class SignUpScreen extends Component {
     <>
       <FormLabel>{itemLabel}</FormLabel>
       <FormInput
+        autoCapitalize="none"
         secureTextEntry={isSecureEntry}
         placeholder={itemLabel}
         onChangeText={value => this.setState({ [key]: value })}
