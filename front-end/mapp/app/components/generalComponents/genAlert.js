@@ -1,4 +1,5 @@
 import { Alert } from "react-native";
+
 export const genAlert = (title, msg) => {
         Alert.alert(
           title,
@@ -9,10 +10,11 @@ export const genAlert = (title, msg) => {
               onPress: () => console.log("Cancel Pressed"),
               style: "cancel"
             },
-            { text: "OK", onPress: () => console.log("OK Pressed") }
+            { 
+              text: "OK", 
+              onPress: () => console.log("OK Pressed"),
+            }
           ],
           { cancelable: false }
         );
 }
-
-export default genAlert;
