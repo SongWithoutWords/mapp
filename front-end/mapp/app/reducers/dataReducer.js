@@ -27,7 +27,7 @@ const initialState = {
         dateOfBirth:null,
         myDoctors:[], 
         myPatients:[],
-        pendingRequests: []
+        myPendingRequests: []
     },
     patients:{ 
         byId:{},

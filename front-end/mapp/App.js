@@ -22,13 +22,21 @@ class App extends Component<Props> {
       if (user.userType === USER_TYPE.DOCTOR) {
         navigator = (
           <DoctorTabNavigator
-            screenProps={{ user: user, onSignOut: this.props.clearUser }}
+            screenProps={{
+              user: user,
+              onSignOut: this.props.clearUser,
+              pendingRequests: this.props.pendingRequests
+            }}
           />
         );
       } else {
         navigator = (
           <PatientTabNavigator
-            screenProps={{ user: user, onSignOut: this.props.clearUser }}
+            screenProps={{
+              user: user,
+              onSignOut: this.props.clearUser,
+              pendingRequests: this.props.pendingRequests
+            }}
           />
         );
       }
@@ -77,5 +85,4 @@ export default connect(
   mapDispatchToProps
 )(App);
 
-// not sure if we need to change this
 AppRegistry.registerComponent("App", () => App);

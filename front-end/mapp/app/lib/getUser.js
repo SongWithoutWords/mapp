@@ -29,10 +29,13 @@ function getUser(url, form) {
       let { doctors = [], patients = [], pendingRequests = [] } = user;
       const myDoctors = doctors.map(x => x.id);
       const myPatients = patients.map(x => x.id);
+      const myPendingRequests = pendingRequests.map(x => x.id);
       delete user.doctors;
       delete user.patients;
+      delete user.pendingRequests;
       user.myDoctors = myDoctors;
       user.myPatients = myPatients;
+      user.myPendingRequests = myPendingRequests;
       user.userType = userTypeString;
 
       console.log(user);

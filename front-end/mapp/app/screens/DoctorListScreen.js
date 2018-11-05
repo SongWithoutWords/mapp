@@ -4,6 +4,7 @@ import { List, ListItem } from "react-native-elements";
 import settings from "../config/settings";
 import genAlert from "../components/generalComponents/genAlert";
 import checkRequestErrors from "../lib/errors";
+import { FETCHING_USER_FULFILLED } from "../config/constants";
 
 class DoctorListScreen extends Component {
   constructor(props) {
@@ -17,7 +18,7 @@ class DoctorListScreen extends Component {
   componentDidMount() {
     this.setState(
       {
-        patientID: this.props.screenProps.id
+        patientID: this.props.screenProps.user.id
       },
       this.fetchDoctorData
     );
