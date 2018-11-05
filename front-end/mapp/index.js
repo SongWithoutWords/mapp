@@ -17,6 +17,7 @@ export default function Main() {
     <Tester
       specs={[DoctorListSpec, SignUpSpec]}
       store={testHookStore}
+      sendReport={true}
       waitTime={1000}
       startDelay={3000}
     >

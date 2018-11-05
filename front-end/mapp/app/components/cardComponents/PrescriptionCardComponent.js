@@ -9,6 +9,7 @@ import {
 } from "react-native";
 
 import { Card, CardItem, Body, Left, Button, Icon } from "native-base";
+import { hook, wrap } from "cavy";
 
 const images = {
   divalproex: require("../../assets/images/divalproex.jpg"),
@@ -58,7 +59,7 @@ const styles = StyleSheet.create({
   }
 });
 
-export default PrescriptionCardComponent;
+export default hook(PrescriptionCardComponent);
 AppRegistry.registerComponent(
   "PrescriptionCardComponent",
   () => PrescriptionCardComponent

@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { View, StyleSheet, ScrollView, AppRegistry } from "react-native";
 import PrescriptionCardComponent from "../components/cardComponents/PrescriptionCardComponent";
+import { hook, wrap } from "cavy";
 
 const fake_prescriptions = [
   {
@@ -41,6 +42,7 @@ class PrescriptionListScreen extends Component {
           {fake_prescriptions.map((prescription,i) => {
             return (
               <PrescriptionCardComponent
+                ref={this.props.generateTestHook('PrescriptionCardComponent')}
                 title={prescription.name}
                 subtitle={prescription.subtitle}
                 image_name={prescription.image_name}
@@ -56,5 +58,5 @@ class PrescriptionListScreen extends Component {
 }
 
 
-export default PrescriptionListScreen;
+export default hook(PrescriptionListScreen);
 AppRegistry.registerComponent('PrescriptionListScreen', () => PrescriptionListScreen);
