@@ -41,7 +41,7 @@ Prescription json
     doctor DoctorId
     patient PatientId
     medication Text
-    dosageUnit
+    dosageUnit DosageUnit
     amountInitial
     amountRemaining
 
