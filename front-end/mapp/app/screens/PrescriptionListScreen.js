@@ -1,7 +1,7 @@
 import React, { Component } from "react";
-import { View, StyleSheet, ScrollView, AppRegistry } from "react-native";
+import { View, ScrollView, AppRegistry } from "react-native";
 import PrescriptionCardComponent from "../components/cardComponents/PrescriptionCardComponent";
-import { hook, wrap } from "cavy";
+import { hook } from "cavy";
 
 const fake_prescriptions = [
   {
