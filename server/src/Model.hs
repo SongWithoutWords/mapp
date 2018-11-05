@@ -16,6 +16,8 @@ module Model where
 import ClassyPrelude.Yesod
 import Database.Persist.Quasi
 
+import Model.DosageUnit
+
 import Text.Read(read)
 
 
@@ -79,6 +81,22 @@ data PatientWithDoctors = PatientWithDoctors
 instance FromJSON PatientWithDoctors
 instance ToJSON PatientWithDoctors
 
+data PostPrescription = PostPrescription
+  { doctor :: DoctorId
+  , patient :: PatientId
+  , medication :: Text
+  , dosageUnit :: DosageUnit
+  , amountInitial :: Double
+  , dosageSchedule :: [PostRecurringDose]
+  } deriving(Generic)
+instance FromJSON PostPrescription
+
+data PostRecurringDose = PostRecurringDose
+  { firstDose :: UTCTime
+  , minutesBetweenDoses :: Int
+  , dosage :: Double
+  } deriving(Generic)
+instance FromJSON PostRecurringDose
 
 -- Utility functions
 doctorKey :: Int -> DoctorId
