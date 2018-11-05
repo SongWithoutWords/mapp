@@ -7,12 +7,15 @@ import genToast from "../components/generalComponents/genToast";
 import genAlert from "../components/generalComponents/genAlert";
 import postData from "../lib/postData";
 
+import { wrap, hook } from "cavy";
+const WrappedButton = wrap(Button);
+
 class SignInScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
       email: "",
-      password: "",
+      password: ""
     };
   }
   // TODO: implement signin after integrating redux
@@ -40,7 +43,7 @@ class SignInScreen extends Component {
               "Email or password is incorrect, please retry"
             ); // TODO: making the form display errors rather than an alert
           } else {
-            responseJson['userType'] = userTypeString;
+            responseJson["userType"] = userTypeString;
             genToast("Sign in successfully", "Okay", 2000);
             this.props.screenProps.onSignIn(responseJson);
             // replace params with redux
@@ -57,6 +60,7 @@ class SignInScreen extends Component {
     <>
       <FormLabel>{itemLabel}</FormLabel>
       <FormInput
+        ref={this.props.generateTestHook("SignIn.TextInput." + itemLabel)}
         secureTextEntry={isSecureEntry}
         placeholder={itemLabel}
         onChangeText={value => this.setState({ [key]: value })}
@@ -76,13 +80,15 @@ class SignInScreen extends Component {
               key: "password",
               isSecureEntry: true
             })}
-            <Button
+            <WrappedButton
+              ref={this.props.generateTestHook("SignIn.Button.SignIn")}
               buttonStyle={{ marginTop: 20 }}
               backgroundColor="#694fad"
               title="SIGN IN"
               onPress={() => this.onSignIn(userTypeString)}
             />
-            <Button
+            <WrappedButton
+              ref={this.props.generateTestHook("SignIn.Button.SignUp")}
               buttonStyle={{ marginTop: 20 }}
               backgroundColor="transparent"
               textStyle={{ color: "#bcbec1" }}
@@ -129,5 +135,6 @@ const styles = StyleSheet.create({
   }
 });
 
-export default SignInScreen;
+// export default SignInScreen;
+export default hook(SignInScreen);
 AppRegistry.registerComponent("SignInScreen", () => SignInScreen);

@@ -5,10 +5,18 @@ import { AppRegistry, StyleSheet } from "react-native";
 import { View, Text } from "react-native";
 import settings from "../config/settings";
 
+
+
+import { wrap, hook } from 'cavy';
+const WrappedButton = wrap(Button);
+//https://github.com/pixielabs/cavy/blob/1881c35b787b43f9d136eeeeae29a71e8e4a858f/src/wrap.js
+
+
 class WelcomeScreen extends Component {
 
   button = ({ title, userType}) => (
-      <Button
+      <WrappedButton
+        ref={this.props.generateTestHook('Welcome.' + title)}
         buttonStyle={{ marginTop: 20 }}
         backgroundColor={settings.THEME_COLOR}
         title={title}
@@ -59,5 +67,5 @@ const styles = StyleSheet.create({
   }
 });
 
-export default WelcomeScreen;
+export default hook(WelcomeScreen);
 AppRegistry.registerComponent("WelcomeScreen", () => WelcomeScreen);
