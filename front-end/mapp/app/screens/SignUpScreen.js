@@ -6,6 +6,8 @@ import genAlert from "../components/generalComponents/genAlert";
 import genToast from "../components/generalComponents/genToast";
 import validate from "validate.js";
 import { Button, Card, FormLabel, FormInput } from "react-native-elements";
+import { wrap, hook } from "cavy";
+const WrappedButton = wrap(Button);
 
 class SignUpScreen extends Component {
   constructor(props) {
@@ -63,6 +65,7 @@ class SignUpScreen extends Component {
     <>
       <FormLabel>{itemLabel}</FormLabel>
       <FormInput
+        ref={this.props.generateTestHook("SignUp.TextInput." + itemLabel)}
         secureTextEntry={isSecureEntry}
         placeholder={itemLabel}
         onChangeText={value => this.setState({ [key]: value })}
@@ -90,7 +93,8 @@ class SignUpScreen extends Component {
             key: "confirmPassword",
             isSecureEntry: true
           })}
-          <Button
+          <WrappedButton
+            ref={this.props.generateTestHook("SignUp.Button.SignUp")}
             buttonStyle={{ marginTop: 20 }}
             backgroundColor={settings.THEME_COLOR}
             title="SIGN UP"
@@ -102,7 +106,8 @@ class SignUpScreen extends Component {
   }
 }
 
-export default SignUpScreen;
+export default hook(SignUpScreen);
+
 AppRegistry.registerComponent("SignUpScreen", () => SignUpScreen);
 
 var constraints = {
