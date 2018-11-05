@@ -37,7 +37,7 @@ DoctorPatientRelation json
     deriving Eq
     deriving Show
 
-Prescription
+Prescription json
     doctor DoctorId
     patient PatientId
     medication Text
@@ -45,7 +45,7 @@ Prescription
     amountInitial
     amountRemaining
 
-RecurringDose
+RecurringDose json
     prescription PrescriptionId
     firstDose UTCTime
     minutesBetweenDoses Int
