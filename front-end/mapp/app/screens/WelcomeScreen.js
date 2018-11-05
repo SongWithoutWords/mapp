@@ -4,6 +4,7 @@ import { AppRegistry, StyleSheet } from "react-native";
 
 import { View, Text } from "react-native";
 import settings from "../config/settings";
+import { USER_TYPE } from "../config/constants";
 
 class WelcomeScreen extends Component {
 
@@ -29,8 +30,8 @@ class WelcomeScreen extends Component {
             An application for doctors to prescribe medications for their
             patients, and patients to receive notifications
           </Text>
-          {this.button({"title":"Patient", "userType": "patient"})}
-          {this.button({"title":"Doctor", "userType": "doctor"})}
+          {this.button({"title":"Patient", "userType": USER_TYPE.PATIENT})}
+          {this.button({"title":"Doctor", "userType": USER_TYPE.DOCTOR})}
         </Card>
       </View>
     );

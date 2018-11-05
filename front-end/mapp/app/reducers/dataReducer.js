@@ -7,7 +7,7 @@ import {
  FETCHING_DOCTORS_FULFILLED,
  FETCHING_DOCTORS_REJECTED,
  CLEAR_USER
-  } from '../actions/actions'
+  } from '../config/constants' 
 
 // user normalized data structure rather than nested components
 // more info see: https://redux.js.org/recipes/structuringreducers/normalizingstateshape
@@ -18,7 +18,7 @@ const initialState = {
     fetchingDoctorError:false,
     isLoggedIn: false,
     user:{
-        id:null,
+        id:-1,
         firstName:'',
         lastName:'',
         email:'',

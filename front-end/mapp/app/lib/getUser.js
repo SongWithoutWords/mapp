@@ -1,4 +1,5 @@
 import _ from "lodash";
+import { USER_TYPE } from "../config/constants";
 
 // signin/signup api calls
 function getUser(url, form) {
@@ -12,12 +13,18 @@ function getUser(url, form) {
     },
     body: JSON.stringify(jsonBody)
   })
-    .then(response => response.json())
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Password or Email is incorrect');
+      }
+      return response.json();
+    })
     .then(function(responseJson) {
       result = {};
 
       // user
-      const userTypeString = "doctors" in responseJson ? "patient" : "doctor";
+      const userTypeString =
+        "doctors" in responseJson ? USER_TYPE.PATIENT : USER_TYPE.DOCTOR;
       const user = _.merge({}, form, responseJson); // response json may overwrite attributes in form
       let { doctors = [], patients = [], pendingRequests = [] } = user;
       const myDoctors = doctors.map(x => x.id);

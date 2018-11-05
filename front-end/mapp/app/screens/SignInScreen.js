@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { StyleSheet, Text, View, Alert, AppRegistry } from "react-native";
+import { StyleSheet, Text, View, ScrollView, AppRegistry } from "react-native";
 import { Button, Card, FormLabel, FormInput } from "react-native-elements";
 import validate from "validate.js";
 import settings from "../config/settings";
@@ -10,7 +10,7 @@ class SignInScreen extends Component {
     super(props);
     this.state = {
       email: "",
-      password: "",
+      password: ""
     };
   }
   // TODO: implement signin after integrating redux
@@ -22,8 +22,8 @@ class SignInScreen extends Component {
     if (typeof result !== "undefined") {
       genAlert("Sign in failed", JSON.stringify(result)); // TODO: making the form display errors rather than an alert
     } else {
-      const {email, password} = this.state;
-      const form = {email, password};
+      const { email, password } = this.state;
+      const form = { email, password };
       const url = settings.REMOTE_SERVER_URL + settings.LOGIN_RES;
       this.props.screenProps.onSignIn(url, form);
     }
@@ -45,7 +45,7 @@ class SignInScreen extends Component {
     const userTypeString = this.props.navigation.getParam("userType", "");
     return (
       <View style={styles.container}>
-        <View style={styles.card}>
+        <ScrollView>
           <Card>
             {this.formItem({ itemLabel: "Email", key: "email" })}
             {this.formItem({
@@ -60,7 +60,7 @@ class SignInScreen extends Component {
               onPress={() => this.onSignIn(userTypeString)}
             />
           </Card>
-        </View>
+        </ScrollView>
       </View>
     );
   }
@@ -77,13 +77,6 @@ var constraints = {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center"
-  },
-  card: {
-    flex: 1,
-    padding: 10
   },
   button: {
     flex: 1,
