@@ -6,10 +6,9 @@ import { View, Text } from "react-native";
 import settings from "../config/settings";
 
 
-
-import { wrap, hook } from 'cavy';
-const WrappedButton = wrap(Button);
-//https://github.com/pixielabs/cavy/blob/1881c35b787b43f9d136eeeeae29a71e8e4a858f/src/wrap.js
+import toClass from 'recompose/toClass'
+import { hook } from 'cavy';
+const WrappedButton = toClass(Button);
 
 
 class WelcomeScreen extends Component {

@@ -8,8 +8,8 @@ import {
   AppRegistry
 } from "react-native";
 
-import { Card, CardItem, Body, Left, Button, Icon } from "native-base";
-import { hook, wrap } from "cavy";
+import { Card, CardItem, Body } from "native-base";
+import { hook } from "cavy";
 
 const images = {
   divalproex: require("../../assets/images/divalproex.jpg"),

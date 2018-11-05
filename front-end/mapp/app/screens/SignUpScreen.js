@@ -6,8 +6,11 @@ import genAlert from "../components/generalComponents/genAlert";
 import genToast from "../components/generalComponents/genToast";
 import validate from "validate.js";
 import { Button, Card, FormLabel, FormInput } from "react-native-elements";
-import { wrap, hook } from "cavy";
-const WrappedButton = wrap(Button);
+
+
+import toClass from 'recompose/toClass'
+import { hook } from "cavy";
+const WrappedButton = toClass(Button);
 
 class SignUpScreen extends Component {
   constructor(props) {

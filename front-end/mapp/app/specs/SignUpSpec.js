@@ -1,6 +1,6 @@
 export default function(spec) {
   spec.describe("Sign up as a patient", function() {
-    spec.it("Select user type and fill in accoung info", async function() {
+    spec.it("Select user type and fill in account info", async function() {
       await spec.press("Welcome.Patient");
       await spec.pause(500);
       await spec.press("SignIn.Button.SignUp");
