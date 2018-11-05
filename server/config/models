@@ -42,8 +42,8 @@ Prescription json
     patient PatientId
     medication Text
     dosageUnit DosageUnit
-    amountInitial
-    amountRemaining
+    amountInitial Double
+    amountRemaining Double
 
 RecurringDose json
     prescription PrescriptionId
