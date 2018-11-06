@@ -16,9 +16,9 @@ export default class DoctorInboxScreen extends React.Component {
     };
   }
 
-  declinePatientRequest = () => {
-    this.setState({ text: "You decline" });
-  };
+  // declinePatientRequest = () => {
+  //   this.setState({ text: "You decline" });
+  // };
 
   // acceptPatientRequest = requestID => {
   //   console.log(requestID + " " + this.state.doctorID );
@@ -37,29 +37,61 @@ export default class DoctorInboxScreen extends React.Component {
   //     });
   // };
 
-  // mapRequestToCard = (request, i) => (
-  //       <Card>
-  //       <Text style={styles.medfield}>
-  //         <Text style={styles.fieldValue}>
-  //           {this.state.text}
-  //         </Text> {request.firstName + request.lastName}
-  //       </Text>
-  //       <View style={styles.acceptRequest}>
+  // mapRequestToCard = request => (
+  //   <Card key={request.id}>
+  //     <Text style={styles.medfield}>
+  //       {request.firstName + request.lastName}
+  //     </Text>
+  //     <View style={styles.acceptRequest}>
+  //       {this.state.showButtons && (
+  //         <View style={{ width: "40%" }}>
+  //           <TouchableOpacity
+  //             // onPress={this.acceptPatientRequest.bind(this, request.id)}
+  //             style={styles.RenewButton}
+  //           >
+  //             <Text>Accept</Text>
+  //           </TouchableOpacity>
+  //         </View>
+  //       )}
+  //       {this.state.showButtons && (
+  //         <View style={{ width: "40%" }}>
+  //           <TouchableOpacity
+  //             // onPress={this.declinePatientRequest}
+  //             style={styles.EditButton}
+  //           >
+  //             <Text>Decline</Text>
+  //           </TouchableOpacity>
+  //         </View>
+  //       )}
+  //     </View>
+  //   </Card>
+  // );
 
-  //       {this.state.showButtons && <View style={{width: '40%'}}>
-  //       <TouchableOpacity onPress={this.acceptPatientRequest.bind(this, request.id)} style={styles.RenewButton}>
-  //         <Text style = {{color : 'white', fontFamily: 'Circular', fontWeight:'500', fontSize: 16}}>Accept</Text>
-  //       </TouchableOpacity>
-  //       </View>}
-  //       {this.state.showButtons && <View style={{width: '40%'}}>
-  //       <TouchableOpacity onPress={this.declinePatientRequest} style={styles.EditButton}>
-  //         <Text style = {{color : 'white', fontFamily: 'Circular', fontWeight:'500', fontSize: 16}}>Decline</Text>
-  //       </TouchableOpacity>
-  //       </View>}
-  //       </View>
-  //       </Card>
-  //     )
-
+  mapRequestToCard = request => (
+    <Card key={request.id}>
+      <Text>{request.firstName + " " + request.lastName}</Text>
+      <View>
+        {this.state.showButtons && (
+          <View>
+            <TouchableOpacity
+              // onPress={this.acceptPatientRequest.bind(this, request.id)}
+            >
+              <Text>Accept</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+        {this.state.showButtons && (
+          <View>
+            <TouchableOpacity
+            // onPress={this.declinePatientRequest}
+            >
+              <Text>Decline</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+      </View>
+    </Card>
+  );
   render() {
     const pendingRequests = this.props.screenProps.pendingRequests;
     const requestIDs = this.props.screenProps.user.myPendingRequests;
@@ -68,11 +100,9 @@ export default class DoctorInboxScreen extends React.Component {
     return (
       <View style={styles.container}>
         <ScrollView>
-          <Text>A list of pendingRequests</Text>
-          <Text>{JSON.stringify(pendingRequests)}</Text>
-          {requestIDs.map(x => (
-            <Text key={x}>{x}</Text>
-          ))}
+          {requestIDs.map(id =>
+            this.mapRequestToCard(pendingRequests.byId[id])
+          )}
         </ScrollView>
       </View>
     );
@@ -83,55 +113,7 @@ AppRegistry.registerComponent("DoctorInboxScreen", () => DoctorInboxScreen);
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
+    backgroundColor: "#ecf0f1"
   }
 });
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     alignItems: "center",
-//     backgroundColor: "#ecf0f1"
-//   },
-//   acceptRequest: {
-//     alignItems : 'center',
-//     justifyContent : 'center',
-//     flexDirection: 'row',
-//     marginLeft: ''
-//   },
-//   fieldValue: {
-//     fontSize: 16,
-//     fontWeight: "200",
-//     fontFamily: "Poppins",
-//     textAlign: "center",
-//     color: "black"
-//   },
-//   medfield: {
-//     fontSize: 16,
-//     fontWeight: "600",
-//     color: "#009CC6",
-//     marginBottom: 10,
-//     marginLeft: 24,
-//     marginRight: 24
-//   },
-
-//   button: {
-//     alignItems: "center",
-//     backgroundColor: "#00BCC6",
-//     padding: 6,
-//     borderRadius: 10,
-//     margin: 14
-//   },
-//   EditButton: {
-//     alignItems: "center",
-//     backgroundColor: "#009CC6",
-//     padding: 6,
-//     borderRadius: 10,
-//     margin: 14
-//   },
-//   RenewButton: {
-//     alignItems: "center",
-//     backgroundColor: "#50BB75",
-//     padding: 6,
-//     borderRadius: 10
-//   }
-// });
