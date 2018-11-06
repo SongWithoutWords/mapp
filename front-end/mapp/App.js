@@ -26,6 +26,7 @@ class App extends Component<Props> {
               user: user,
               patients: this.props.patients,
               onSignOut: this.props.clearUser,
+              onSignIn: this.props.fetchUser,
               pendingRequests: this.props.pendingRequests
             }}
           />
