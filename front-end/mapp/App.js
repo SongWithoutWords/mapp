@@ -24,6 +24,7 @@ class App extends Component<Props> {
           <DoctorTabNavigator
             screenProps={{
               user: user,
+              patients: this.props.patients,
               onSignOut: this.props.clearUser,
               pendingRequests: this.props.pendingRequests
             }}
