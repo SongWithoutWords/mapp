@@ -1,4 +1,30 @@
+<!-- TOC -->
+
+- [RESTful APIs (in httpie syntax)](#restful-apis-in-httpie-syntax)
+    - [available Routes](#available-routes)
+    - [create a patient account](#create-a-patient-account)
+    - [create a doctor account (dataOfBrith field rn is just null)](#create-a-doctor-account-dataofbrith-field-rn-is-just-null)
+    - [get all doctor info](#get-all-doctor-info)
+    - [get a doctor's info (the doctor's id is 1 in this case)](#get-a-doctors-info-the-doctors-id-is-1-in-this-case)
+    - [add a request from patient 1 to doctor 1's pending request list](#add-a-request-from-patient-1-to-doctor-1s-pending-request-list)
+    - [doctor1 accepts the request from patient1](#doctor1-accepts-the-request-from-patient1)
+- [Get started](#get-started)
+    - [Directory Structure](#directory-structure)
+    - [Redux, Thunk and Promise Middleware](#redux-thunk-and-promise-middleware)
+    - [Troubleshooting](#troubleshooting)
+- [TODO list](#todo-list)
+    - [UI](#ui)
+    - [Core Functinalities](#core-functinalities)
+    - [Stretch goals](#stretch-goals)
+    - [Libraries](#libraries)
+
+<!-- /TOC -->
 ### RESTful APIs (in httpie syntax)
+#### available Routes
+- https://github.com/SongWithoutWords/mapp/blob/ed7c56f141c18c12c6697be67588016dfe92c0bc/server/config/routes
+
+- search keywords (e.g. PatientR, DoctorR) in github to figure out request examples
+- NOTE: examples below may be outdated
 #### create a patient account
 ```
 http POST http://www.agis-mapp.xyz/patients 
@@ -78,38 +104,14 @@ return this if such pending request does not exist:
 
 
 
-
-## TODO for the MVP 
-- sign-up/sign-in screen (text inputs + picker for doctor or patient account) 
-    - make a post request to the server
-    - return a message: sign in fail/ sign up fail/sign up sucess/sign in sucess
-    - give different layouts of the app based on the signed-in user type
-- doctor detail info screen
-    - probably have info like location, telephone, email, avatar, and specialty.
-    - a button for the patient to make a request (and information about himself/herself)
-        - onPress => make a POST to server
-- notificaiton screen info screen
-    - a material top tab navigation inside the existing bottom tab nav 
-        - message tab (used later for patient-doctor communication) + notification tab 
-    - patient: notification about his/her requests (to doctor/to renew prescription..)
-    - doctor: notification about who is requesting to be his/her patient
-        - onPress => a button for accept/decline (and give info about the patient)
-        - make a POST to the server based on which button is pressed
-
-## TODO for this week
-- redux + redux persist for mutate states
-    - actions/reducers/store
-    - do research on medicine (json returned by drug apis) and create data structure for prescription
-- prescription edit (edit button on the top left of the info screen) + add new prescription screen (modal + fab ?)
-
-## Get started
+### Get started
 - git clone
 - npm install 
 - react-native run-ios OR react-native run-android
     - make sure you are in mapp/front-end/mapp/app
     - make sure you are in front-end branch
     - make sure Android Virtual Device is running
-### Directory Structure
+#### Directory Structure
 - /app      
     - the main folder we will be working in 
 - /app/componets
@@ -121,8 +123,18 @@ return this if such pending request does not exist:
     - all the screens (views)
 - /App.js
     - root component
+#### Redux, Thunk and Promise Middleware
+- Please read these:
+    - https://www.one-tab.com/page/aQ_PTKu7SqqI0koEjYFaCg
+- To debug Redux, install these two (install the second one as a npm package):
+    - https://github.com/jhen0409/react-native-debugger
+    - https://github.com/zalmoxisus/redux-devtools-extension
 
-### Troubleshooting
+- related files are in /store, /reducers, /actions
+
+
+#### Troubleshooting
+[unable to resolve module](https://github.com/facebook/react-native/issues/4968)
 ```
 setState() does not always immediately update the component. It may batch or defer the update until later. This makes reading this.state right after calling setState() a potential pitfall. Instead, use componentDidUpdate or a setState callback (setState(updater, callback)), either of which are guaranteed to fire after the update has been applied. If you need to set the state based on the previous state, read about the updater argument below.
 ```
@@ -136,8 +148,11 @@ error: bundling failed: Error: Unable to resolve module `./../react-transform-hm
 ```
 - [error: bundling failed: Error: Unable to resolve module ](https://github.com/facebook/react-native/issues/21490)
 
-## TODO list
-### UI  
+
+
+### TODO list
+https://github.com/SongWithoutWords/mapp/issues
+#### UI  
 For patients:
 - prescription list screen (like a list of cards)
     - each card could be a component
@@ -157,7 +172,7 @@ For both:
 - Search bar component
 - profile/settings screen
 
-### Core Functinalities 
+#### Core Functinalities 
 - authentication
 - communication/sync with server (how? when? how often?)
 - on-device persistent storage of user data
@@ -166,13 +181,13 @@ For both:
 - retrieving medication data (using APIs or building our own DB?)
 
 
-### Stretch goals
+#### Stretch goals
 - How do we integrate fuzzy find algorithm (on-device? server-side?)
 - Google sign-in integration
 - Integrate chat feature + sharing medical document?
 
 
-### Libraries 
+#### Libraries 
 - UI components:
     - React Native Elements 
     - Native Base

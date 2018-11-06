@@ -6,7 +6,7 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import { createStackNavigator } from "react-navigation";
 
-import InboxScreen from "../screens/InboxScreen";
+import DoctorInboxScreen from "../screens/DoctorInboxScreen";
 import AccountScreen from "../screens/AccountScreen";
 import PatientListScreen from "../screens/PatientListScreen";
 import PatientInfoScreen from "../screens/PatientInfoScreen";
@@ -44,7 +44,7 @@ const DoctorTabNavigator = createMaterialBottomTabNavigator(
       }
     },
     Inbox: {
-      screen: InboxScreen,
+      screen: DoctorInboxScreen,
       navigationOptions: {
         tabBarLabel: "Inbox",
         tabBarIcon: ({ tintColor }) => (

@@ -4,61 +4,38 @@ import { List, ListItem } from "react-native-elements";
 import settings from "../config/settings";
 import genAlert from "../components/generalComponents/genAlert";
 import checkRequestErrors from "../lib/errors";
+import { FETCHING_USER_FULFILLED } from "../config/constants";
 
 class DoctorListScreen extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      doctors: [],
-      patientID: -1
-    };
-  }
+  componentWillMount() {
+    this.props.screenProps.fetchDoctors();
+  } 
 
-  componentDidMount() {
-    this.setState(
-      {
-        patientID: this.props.screenProps.id
-      },
-      this.fetchDoctorData
-    );
-  }
-
-  fetchDoctorData() {
-    return fetch(settings.REMOTE_SERVER_URL + settings.DOCTOR_RES)
-      .then(checkRequestErrors)
-      .then(response => response.json())
-      .then(responseJson => {
-        this.setState({
-          doctors: responseJson
-        });
-      })
-      .catch(error => {
-        genAlert("Error", "Failed to fetch doctor information");
-        console.error(error);
-      });
-  }
-
-  onPress = doctor => {
-    console.log(doctor);
+  onPress = id => {
+    console.log(id);
     this.props.navigation.navigate("DoctorInfo", {
-      doctor: doctor,
-      patientID: this.state.patientID
+      doctor: this.props.screenProps.doctors.byId[id],
+      user: this.props.screenProps.user
     });
   };
 
   render() {
+    const doctors = this.props.screenProps.doctors;
+    console.log("Doctors: " + JSON.stringify(doctors))
     return (
       <View>
         <ScrollView>
           <List>
-            {this.state.doctors.map((doctor, i) => (
+            {doctors.allIds.map(id => (
               <ListItem
-                key={i}
-                roundAvatar
-                avatar={{ uri: doctor.avatar_url }}
-                title={"Dr. " + doctor.firstName + " " + doctor.lastName}
-                subtitle={doctor.subtitle}
-                onPress={this.onPress.bind(this, doctor)}
+                key={id}
+                title={
+                  "Dr. " +
+                  doctors['byId'][id]['firstName'] +
+                  " " +
+                  doctors['byId'][id]['lastName']
+                }
+                onPress={()=>this.onPress(id)}
               />
             ))}
           </List>
@@ -69,4 +46,15 @@ class DoctorListScreen extends Component {
 }
 
 export default DoctorListScreen;
-AppRegistry.registerComponent('DoctorListScreen', () => DoctorListScreen);
+AppRegistry.registerComponent("DoctorListScreen", () => DoctorListScreen);
+
+// {/* {doctors.map(doctor => (
+//   <ListItem
+//     key={doctor.id}
+//     roundAvatar
+//     avatar={{ uri: doctor.avatar_url }}
+//     title={"Dr. " + doctor.firstName + " " + doctor.lastName}
+//     subtitle={doctor.subtitle}
+//     onPress={this.onPress.bind(this, doctor)}
+//   />
+// ))} */}

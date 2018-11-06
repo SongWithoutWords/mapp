@@ -21,6 +21,7 @@ let LOGIN_RES = "/logins";
 // post email and password to login 
 
 let THEME_COLOR = "#694fad";
+let THEME_COLOR_LIGHT = "#9a7cdf";
 let INACTIVE_COLOR = "#3e2465";
 let ACTIVE_COLOR = "#f0edf6";
 

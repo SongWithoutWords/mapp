@@ -1,9 +1,8 @@
-import postData from "../lib/postData";
 import settings from "../config/settings";
+import { USER_TYPE } from "../config/constants";
 import React, { Component } from "react";
-import { StyleSheet, View, AppRegistry } from "react-native";
+import { StyleSheet, Text, View, ScrollView, AppRegistry } from "react-native";
 import genAlert from "../components/generalComponents/genAlert";
-import genToast from "../components/generalComponents/genToast";
 import validate from "validate.js";
 import { Button, Card, FormLabel, FormInput } from "react-native-elements";
 
@@ -27,31 +26,14 @@ class SignUpScreen extends Component {
     if (typeof result !== "undefined") {
       genAlert("Sign up failed", JSON.stringify(result)); // TODO: making the form display errors rather than an alert
     } else {
+      const { firstName, lastName, email, password } = this.state;
+      const form = { firstName, lastName, email, password };
       const endpoint =
-        userTypeString == "doctor" ? settings.DOCTOR_RES : settings.PATIENT_RES;
+        userTypeString == USER_TYPE.DOCTOR
+          ? settings.DOCTOR_RES
+          : settings.PATIENT_RES;
       const url = settings.REMOTE_SERVER_URL + endpoint;
-      const { email, password, firstName, lastName } = this.state;
-      const json = { email, password, firstName, lastName };
-      postData(url, json)
-        .then(response => response.json())
-        .then(responseJson => {
-          if (responseJson["errors"]) {
-            genAlert("Error", JSON.stringify(responseJson));
-          } else {
-            // TODO: invoke redux dispatch to update states based on
-            // userType
-            responseJson["userType"] = userTypeString;
-            genToast("Sign up successfully", "Okay", 2000);
-            this.props.screenProps.onSignIn(responseJson);
-            // replace params with redux
-            // respons json contains current user's information
-            // it can be accessed by child components via screenProps
-          }
-        })
-        .catch(error => {
-          genAlert(error.name, error.message);
-          // TODO: invoke dispatch displayTheError(errorMessage)
-        });
+      this.props.screenProps.onSignIn(url, form);
     }
   };
 
@@ -63,6 +45,7 @@ class SignUpScreen extends Component {
     <>
       <FormLabel>{itemLabel}</FormLabel>
       <FormInput
+        autoCapitalize="none"
         secureTextEntry={isSecureEntry}
         placeholder={itemLabel}
         onChangeText={value => this.setState({ [key]: value })}
@@ -71,32 +54,43 @@ class SignUpScreen extends Component {
   );
 
   render() {
-    const { navigation } = this.props;
-    const userTypeString = navigation.getParam("userType", "");
-    // TODO: tap outside to hide keyboard
+    const userTypeString = this.props.navigation.getParam("userType", "");
     return (
       <View style={styles.container}>
-        <Card>
-          {this.formItem({ itemLabel: "Email", key: "email" })}
-          {this.formItem({ itemLabel: "First Name", key: "firstName" })}
-          {this.formItem({ itemLabel: "Last Name", key: "lastName" })}
-          {this.formItem({
-            itemLabel: "Password",
-            key: "password",
-            isSecureEntry: true
-          })}
-          {this.formItem({
-            itemLabel: "Confirm Password",
-            key: "confirmPassword",
-            isSecureEntry: true
-          })}
-          <Button
-            buttonStyle={{ marginTop: 20 }}
-            backgroundColor={settings.THEME_COLOR}
-            title="SIGN UP"
-            onPress={() => this.onSignUp(userTypeString)}
-          />
-        </Card>
+        <ScrollView>
+          <Card>
+            {this.formItem({ itemLabel: "Email", key: "email" })}
+            {this.formItem({ itemLabel: "First Name", key: "firstName" })}
+            {this.formItem({ itemLabel: "Last Name", key: "lastName" })}
+            {this.formItem({
+              itemLabel: "Password",
+              key: "password",
+              isSecureEntry: true
+            })}
+            {this.formItem({
+              itemLabel: "Confirm Password",
+              key: "confirmPassword",
+              isSecureEntry: true
+            })}
+            <Button
+              buttonStyle={{ marginTop: 20 }}
+              backgroundColor={settings.THEME_COLOR}
+              title="SIGN UP"
+              onPress={() => this.onSignUp(userTypeString)}
+            />
+            <Button
+              buttonStyle={{ marginTop: 20 }}
+              backgroundColor="transparent"
+              textStyle={{ color: "#bcbec1" }}
+              title="SIGN IN"
+              onPress={() =>
+                this.props.navigation.navigate("SignIn", {
+                  userType: userTypeString
+                })
+              }
+            />
+          </Card>
+        </ScrollView>
       </View>
     );
   }
