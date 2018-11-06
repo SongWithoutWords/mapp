@@ -1,6 +1,15 @@
 import React, { Component } from "react";
-import { Button, Text, View, StyleSheet, TouchableOpacity, AppRegistry} from "react-native";
+import {
+  Button,
+  Text,
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  AppRegistry
+} from "react-native";
 import settings from "../config/settings";
+import { CLEAR_USER } from "../config/constants";
+import postData from "../lib/postData";
 
 class DoctorInfoScreen extends Component {
   constructor(props) {
@@ -10,49 +19,43 @@ class DoctorInfoScreen extends Component {
     };
   }
 
-
   requestDoctor = () => {
-    const { navigation } = this.props;
-    const patientID = navigation.getParam("patientID", -1);
-    const doctorObj = navigation.getParam("doctor", {});
-    console.log(doctorObj);
+    const user = this.props.navigation.getParam("user", {});
+    const doctor = this.props.navigation.getParam("doctor", {});
+    console.log(doctor);
+    console.log(user);
+    const url = settings.REMOTE_SERVER_URL + settings.REQUESTS_RES;
+    const json = { doctor: doctor.id, patient: user.id };
 
-    return fetch(settings.REMOTE_SERVER_URL + settings.REQUESTS_RES, {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        doctor: doctorObj.id,
-        patient: patientID, 
-      }),
-    })
-    .then((responseJson) => {
-      console.log(responseJson);
-      this.setState({
-        buttonText: "Request Sent!"
+    return postData(url, json)
+      .then(responseJson => {
+        console.log(responseJson);
+        this.setState({
+          buttonText: "Request Sent!"
+        });
+      })
+      .catch(error => {
+        genAlert("Failed to send the request", error.message);
       });
-    })
-    .catch((error) => {
-      console.error("Couldn't send request " + error);
-    });
-    
-  }
+  };
 
   render() {
-    const { navigation } = this.props;
-    const doctorObj = navigation.getParam("doctor", {});
-    console.log(doctorObj);
+    const doctor = this.props.navigation.getParam("doctor", {});
     return (
       <View style={styles.container}>
-        <Text style={styles.text} > Dr. {doctorObj.firstName} {doctorObj.lastName}</Text>
-        <Text style={styles.text} > ID: {doctorObj.id}</Text>
+        <Text style={styles.text}>
+          {" "}
+          Dr. {doctor.firstName} {doctor.lastName}
+        </Text>
+        <Text style={styles.text}> ID: {doctor.id}</Text>
         <Button
           title="Go back to doctor list"
           onPress={() => this.props.navigation.goBack()}
         />
-        <TouchableOpacity style={styles.submitButton} onPress={this.requestDoctor}>
+        <TouchableOpacity
+          style={styles.submitButton}
+          onPress={this.requestDoctor}
+        >
           <Text style={styles.submitButtonText}> {this.state.buttonText} </Text>
         </TouchableOpacity>
       </View>
@@ -80,10 +83,10 @@ const styles = StyleSheet.create({
   },
   text: {
     color: "#009CC6",
-    fontWeight: 'bold',
-    fontSize: 35,
+    fontWeight: "bold",
+    fontSize: 35
   }
 });
 
 export default DoctorInfoScreen;
-AppRegistry.registerComponent('DoctorInfoScreen', () => DoctorInfoScreen);
+AppRegistry.registerComponent("DoctorInfoScreen", () => DoctorInfoScreen);

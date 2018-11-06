@@ -35,7 +35,9 @@ class App extends Component<Props> {
             screenProps={{
               user: user,
               onSignOut: this.props.clearUser,
-              pendingRequests: this.props.pendingRequests
+              pendingRequests: this.props.pendingRequests,
+              fetchDoctors: this.props.fetchDoctors,
+              doctors: this.props.doctors
             }}
           />
         );
@@ -75,7 +77,12 @@ function mapDispatchToProps(dispatch) {
       dispatch(fetchUser(url, form)).catch(error => {
         genAlert("Failed to fetch user info", error.message);
       }),
-    fetchDoctors: () => dispatch(fetchDoctors()),
+
+    fetchDoctors: () =>
+      dispatch(fetchDoctors()).catch(error => {
+        genAlert("Failed to fetch doctors' info", error.message);
+      }),
+
     clearUser: () => dispatch(clearUser())
   };
 }

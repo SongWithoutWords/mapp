@@ -15,7 +15,7 @@ function getUser(url, form) {
   })
     .then(response => {
       if (!response.ok) {
-        throw new Error('Password or Email is incorrect');
+        throw new Error(response.status + ' Password or Email is incorrect');
       }
       return response.json();
     })

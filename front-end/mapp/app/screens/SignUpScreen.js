@@ -54,9 +54,7 @@ class SignUpScreen extends Component {
   );
 
   render() {
-    const { navigation } = this.props;
-    const userTypeString = navigation.getParam("userType", "");
-    // TODO: tap outside to hide keyboard
+    const userTypeString = this.props.navigation.getParam("userType", "");
     return (
       <View style={styles.container}>
         <ScrollView>

@@ -66,11 +66,13 @@ export default class DoctorInboxScreen extends React.Component {
     console.log(pendingRequests);
     console.log(requestIDs);
     return (
-      <View>
+      <View style={styles.container}>
         <ScrollView>
           <Text>A list of pendingRequests</Text>
           <Text>{JSON.stringify(pendingRequests)}</Text>
-          {requestIDs.map(x=>(<Text key={x}>{x}</Text>))}
+          {requestIDs.map(x => (
+            <Text key={x}>{x}</Text>
+          ))}
         </ScrollView>
       </View>
     );
@@ -79,6 +81,11 @@ export default class DoctorInboxScreen extends React.Component {
 
 AppRegistry.registerComponent("DoctorInboxScreen", () => DoctorInboxScreen);
 
+const styles = StyleSheet.create({
+  container: {
+    flex: 1
+  }
+});
 // const styles = StyleSheet.create({
 //   container: {
 //     flex: 1,

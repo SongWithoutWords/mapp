@@ -27,7 +27,8 @@ const initialState = {
         dateOfBirth:null,
         myDoctors:[], 
         myPatients:[],
-        myPendingRequests: []
+        myPendingRequests: [],
+        myPrescriptions: []
     },
     patients:{ 
         byId:{},
@@ -91,7 +92,10 @@ export default function dataReducer(state=initialState, action) {
         case FETCHING_DOCTORS_FULFILLED:
             return {
                 ...state,
-                doctors: {},
+                doctors:{
+                    byId: _.merge({}, state.doctors.byId, action.payload.byId),
+                    allIds: _.union([], state.doctors.allIds, action.payload.allIds )
+                },
                 isFetchingDoctors: false,
             }
         case FETCHING_DOCTORS_REJECTED:
