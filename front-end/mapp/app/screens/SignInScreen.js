@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { StyleSheet, Text, View, Alert, AppRegistry } from "react-native";
+import { StyleSheet, View, AppRegistry } from "react-native";
 import { Button, Card, FormLabel, FormInput } from "react-native-elements";
 import validate from "validate.js";
 import settings from "../config/settings";
@@ -7,8 +7,9 @@ import genToast from "../components/generalComponents/genToast";
 import genAlert from "../components/generalComponents/genAlert";
 import postData from "../lib/postData";
 
-import { wrap, hook } from "cavy";
-const WrappedButton = wrap(Button);
+import toClass from 'recompose/toClass'
+import { hook } from "cavy";
+const WrappedButton = toClass(Button);
 
 class SignInScreen extends Component {
   constructor(props) {
