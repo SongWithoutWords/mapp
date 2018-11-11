@@ -4,7 +4,7 @@ import { View, ScrollView, AppRegistry } from "react-native";
 import { List, ListItem } from "react-native-elements";
 import genAlert from "../components/generalComponents/genAlert";
 import getDoctorData from "../lib/getDoctorData";
-
+import PatientPrescriptionList from "../screens/PatientPrescriptionList";
 class PatientListScreen extends Component {
   constructor(props) {
     super(props);
@@ -49,7 +49,7 @@ class PatientListScreen extends Component {
 
   onPress = (patient) => {
     console.log(patient);
-    this.props.navigation.navigate("PatientInfo", {
+    this.props.navigation.navigate("PatientPrescriptionList", {
       patient: patient,
       doctorID: this.state.doctorID
     });
@@ -60,6 +60,12 @@ class PatientListScreen extends Component {
       <View>
         <ScrollView>
           <List>
+            <ListItem
+              key={1}
+              title={"Patient " + "Sina" + " " + "Saleh"}
+              subtitle={"Salam"}
+              onPress={this.onPress.bind(this, null)}
+            />
             {this.state.patients.map(this.patientToListItem)}
           </List>
         </ScrollView>
