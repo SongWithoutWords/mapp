@@ -23,6 +23,9 @@ before_install:
 
 install:
 # Build dependencies
+- pwd
+- cd server
+- pwd
 - stack --no-terminal --install-ghc test --only-dependencies
 
 script:
