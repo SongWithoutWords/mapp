@@ -27,4 +27,7 @@ install:
 
 script:
 # Build the package, its tests, and run the tests
+- pwd
+- cd server
+- pwd
 - stack --no-terminal test
