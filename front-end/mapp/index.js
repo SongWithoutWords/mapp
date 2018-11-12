@@ -14,17 +14,17 @@ const testHookStore = new TestHookStore();
 
 export default function Main() {
   return (
-    <Tester
+    /*<Tester
       specs={[DoctorListSpec, SignUpSpec]}
       store={testHookStore}
       sendReport={true}
       waitTime={1000}
       startDelay={3000}
-    >
+    >*/
       <PaperProvider>
         <App />
       </PaperProvider>
-    </Tester>
+    //</Tester>
   );
 }
 

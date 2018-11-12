@@ -8,6 +8,7 @@ import { createStackNavigator } from "react-navigation";
 
 import InboxScreen from "../screens/InboxScreen";
 import AccountScreen from "../screens/AccountScreen";
+import MakePrescriptionView from "../screens/MakePrescriptionView";
 import PatientListScreen from "../screens/PatientListScreen";
 import PatientInfoScreen from "../screens/PatientInfoScreen";
 import {genTabNavOptions} from "../lib/genNavOptions"
@@ -44,7 +45,7 @@ const DoctorTabNavigator = createMaterialBottomTabNavigator(
       }
     },
     Inbox: {
-      screen: InboxScreen,
+      screen: MakePrescriptionView,
       navigationOptions: {
         tabBarLabel: "Inbox",
         tabBarIcon: ({ tintColor }) => (
@@ -66,8 +67,7 @@ const DoctorTabNavigator = createMaterialBottomTabNavigator(
       }
     }
   },
-  DoctorTabNavOptions 
+  DoctorTabNavOptions
 );
 export default DoctorTabNavigator;
 AppRegistry.registerComponent('DoctorTabNavigator', () => DoctorTabNavigator);
-
