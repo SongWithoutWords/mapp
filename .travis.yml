@@ -23,14 +23,10 @@ before_install:
 
 install:
 # Build dependencies
-- pwd
 - cd server
-- pwd
-- stack --no-terminal --install-ghc test --only-dependencies
+- travis_wait stack --no-terminal --install-ghc test --only-dependencies
 
 script:
 # Build the package, its tests, and run the tests
-- pwd
 - cd server
-- pwd
-- stack --no-terminal test
+- travis_wait stack --no-terminal test
