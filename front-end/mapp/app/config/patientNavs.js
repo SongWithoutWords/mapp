@@ -4,7 +4,7 @@ import settings from "../config/settings";
 import { createMaterialBottomTabNavigator } from "react-navigation-material-bottom-tabs";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { createStackNavigator } from "react-navigation";
-// import DoctorInboxScreen from "../screens/DoctorInboxScreen";
+import PatientInboxScreen from "../screens/PatientInboxScreen";
 import AccountScreen from "../screens/AccountScreen";
 import PrescriptionInfoScreen from "../screens/PrescriptionInfoScreen";
 import PrescriptionListScreen from "../screens/PrescriptionListScreen";
@@ -48,21 +48,20 @@ const DoctorStackNavigator = createStackNavigator({
 });
 
 
-const PatientTabNavOptions = genTabNavOptions("PrescriptionList", [ "PrescriptionList", "DoctorList", "Account"]);
+const PatientTabNavOptions = genTabNavOptions("PrescriptionList", [ "Inbox", "PrescriptionList", "DoctorList", "Account"]);
 
 // tab navigator for patient
 const PatientTabNavigator = createMaterialBottomTabNavigator(
   {
-    // screens and their navigation options
-    // Inbox: {
-    //   screen: InboxScreen,
-    //   navigationOptions: {
-    //     tabBarLabel: "Inbox",
-    //     tabBarIcon: ({ tintColor }) => (
-    //       <MaterialCommunityIcons name="inbox" size={25} color={tintColor} />
-    //     )
-    //   }
-    // },
+    Inbox: {
+      screen: PatientInboxScreen,
+      navigationOptions: {
+        tabBarLabel: "Inbox",
+        tabBarIcon: ({ tintColor }) => (
+          <MaterialCommunityIcons name="inbox" size={25} color={tintColor} />
+        )
+      }
+    },
     PrescriptionList: {
       screen: PrescriptionStackNavigator,
       navigationOptions: {

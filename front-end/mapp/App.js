@@ -23,6 +23,7 @@ class App extends Component<Props> {
         navigator = (
           <DoctorTabNavigator
             screenProps={{
+              isFetchingUser: this.props.isFetchingUser,
               user: user,
               patients: this.props.patients,
               onSignOut: this.props.clearUser,
@@ -35,23 +36,28 @@ class App extends Component<Props> {
         navigator = (
           <PatientTabNavigator
             screenProps={{
+              isFetchingUser: this.props.isFetchingUser,
               user: user,
+              onSignIn: this.props.fetchUser,
               onSignOut: this.props.clearUser,
               pendingRequests: this.props.pendingRequests,
               fetchDoctors: this.props.fetchDoctors,
               doctors: this.props.doctors,
-              prescriptions:  { byId:
-             { '1':
-               { id: 1,
-                 doctor: 1,
-                 patient: 1,
-                 medication: 'Cefixime 400',
-                 dosageUnit: 'Pills',
-                 amountInitial: 100,
-                 amountRemaining: 60 } },
-                 allIds: [ 1 ] }
-          }
-        }
+              prescriptions: {
+                byId: {
+                  "1": {
+                    id: 1,
+                    doctor: 1,
+                    patient: 1,
+                    medication: "Cefixime 400",
+                    dosageUnit: "Pills",
+                    amountInitial: 100,
+                    amountRemaining: 60
+                  }
+                },
+                allIds: [1]
+              }
+            }}
           />
         );
       }
