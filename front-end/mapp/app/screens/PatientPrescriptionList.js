@@ -58,12 +58,12 @@ export default class PatientPrescriptionList extends React.Component {
         }}>
         <View style={{width: '40%'}}>
         <TouchableOpacity style={styles.RenewButton}>
-          <Text style = {{color : 'white', fontFamily: 'Circular', fontWeight:'500', fontSize: 16}}>Renew</Text>
+          <Text style = {styles.buttonText}>Renew</Text>
         </TouchableOpacity>
         </View>
         <View style={{width: '40%'}}>
         <TouchableOpacity style={styles.EditButton}>
-          <Text style = {{color : 'white', fontFamily: 'Circular', fontWeight:'500', fontSize: 16}}>Edit</Text>
+          <Text style = {styles.buttonText}>Edit</Text>
         </TouchableOpacity>
         </View>
         </View>
@@ -121,6 +121,12 @@ const styles = StyleSheet.create({
     color: 'white'
     //textAlign: 'center',
     //color: '#34495e',
+  },
+  buttonText: {
+    color : 'white',
+    fontFamily: 'Circular',
+    fontWeight:'500',
+    fontSize: 16
   },
   EditButton: { alignItems: 'center',
     backgroundColor: '#009CC6',padding: 6, borderRadius:10 ,margin: 14,
