@@ -22,7 +22,8 @@
     "redux": "^4.0.1",
     "redux-promise-middleware": "^5.1.1",
     "redux-thunk": "^2.3.0",
-    "validate.js": "^0.12.0"
+    "validate.js": "^0.12.0",
+    "react-native-progress-bar-animated": "1.0.6"
   },
   "devDependencies": {
     "babel-jest": "23.6.0",

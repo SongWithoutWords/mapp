@@ -37,7 +37,14 @@ function getUser(url, form) {
       user.myPatients = myPatients;
       user.myPendingRequests = myPendingRequests;
       user.userType = userTypeString;
-
+      user.myPrescriptions = [{ id : 1
+      , doctor : 1
+      , patient : 1
+      , medication : "Cefixime 400"
+      , dosageUnit : "Pills"
+      , amountInitial : 100
+      , amountRemaining : 60
+      }];
       console.log(user);
 
       // patients and doctors
@@ -46,13 +53,14 @@ function getUser(url, form) {
 
       // pendingRequests
       pendingRequests = arrayToObj(pendingRequests);
-
+      let prescriptions = arrayToObj(user.myPrescriptions);
       // prescriptions
       result = {
         user,
         patients,
         doctors,
-        pendingRequests
+        pendingRequests,
+        prescriptions
       };
       console.log(result);
       return result;

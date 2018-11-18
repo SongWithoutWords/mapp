@@ -1,45 +1,62 @@
 import React, { Component } from "react";
 import { View, StyleSheet, ScrollView, AppRegistry, Text, TextInput, } from "react-native";
 import PrescriptionCardComponent from "../components/cardComponents/PrescriptionCardComponent";
-import { hook, wrap } from "cavy";
 // or any pure javascript modules available in npm
 import { Card } from 'react-native-elements'; // 0.19.1
 import { Button, TouchableOpacity, ProgressBar, Dimensions } from 'react-native';
 import ProgressBarAnimated from 'react-native-progress-bar-animated';
 
+import settings from "../config/settings";
+
 export default class PatientPrescriptionList extends React.Component {
   /*onPress = () => {
     this.props.navigation.navigate("PrescriptionInfo");
   };*/
+  /*
+  data PostPrescription = PostPrescription
+  { doctor :: DoctorId
+  , patient :: PatientId
+  , medication :: Text
+  , dosageUnit :: DosageUnit
+  , amountInitial :: Double
+  , dosageSchedule :: [PostRecurringDose]
+  } deriving(Generic)
+instance FromJSON PostPrescription
 
-  render() {
-    return (
-      <View style={styles.container}>
-        <Card>
-        <Text style={styles.medfield}>
-          Medication: <Text style={styles.fieldValue}>
-             Cefixime 400
-          </Text>
+data PostRecurringDose = PostRecurringDose
+  { firstDose :: UTCTime
+  , minutesBetweenDoses :: Int
+  , dosage :: Double
+  } deriving(Generic)
+instance FromJSON PostRecurringDose*/
+  mapPrescriptonToCard = prescription => (
+    <Card>
+      <Text style={styles.medfield}>
+        Medication: <Text style={styles.fieldValue}>
+           {prescription.medication}
         </Text>
-        <Text style={styles.medfield}>
-          Physician: <Text style={styles.fieldValue}>
-             Dr. Saleh
-          </Text>
+      </Text>
+      <Text style={styles.medfield}>
+        Physician: <Text style={styles.fieldValue}>
+            {prescription.doctor}
         </Text>
-        <Text style={styles.medfield}>
-          Frequency: <Text style={styles.fieldValue}>
-             Every 8 hours
-          </Text>
+      </Text>
+      <Text style={styles.medfield}>
+        Frequency: <Text style={styles.fieldValue}>
+           Every 8 hours
         </Text>
-        <Text style={styles.medfield}>
-          Location: <Text style={styles.fieldValue}>
-             Kitchen - Under the sink - in the white box
-          </Text>
+      </Text>
+      <Text style={styles.medfield}>
+        Location: <Text style={styles.fieldValue}>
+           Kitchen - Under the sink - in the white box
         </Text>
-        <View>
+      </Text>
+      <View style={{
+        alignItems : 'center',
+      }}>
           <ProgressBarAnimated
             width={barWidth}
-            value={80}
+            value={prescription.amountRemaining}
             height = {20}
             backgroundColor="#6CC644"
             barAnimationDuration = {0}
@@ -66,15 +83,24 @@ export default class PatientPrescriptionList extends React.Component {
           <Text style = {styles.buttonText}>Edit</Text>
         </TouchableOpacity>
         </View>
-        </View>
-        </Card>
       </View>
-
+    </Card>
+  )
+  render() {
+    console.log(this.props.screenProps);
+    const prescriptions = this.props.screenProps.prescriptions;
+    const prescriptionIDs = this.props.screenProps.user.myPrescriptions;
+    return (
+      <ScrollView style={styles.container}>
+        {prescriptionIDs.map(pres =>
+          this.mapPrescriptonToCard(prescriptions.byId[pres.id])
+        )}
+      </ScrollView>
     );
   }
 }
 
-const barWidth = Dimensions.get('screen').width - 30;
+const barWidth = Dimensions.get('screen').width*0.7;
 const progressCustomStyles = {
       backgroundColor: 'red',
       borderRadius: 0,
@@ -83,7 +109,7 @@ const progressCustomStyles = {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
+    //alignItems: 'center',
     //justifyContent: 'center',
     padding: 10,
     backgroundColor: '#ecf0f1',

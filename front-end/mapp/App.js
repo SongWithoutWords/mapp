@@ -39,8 +39,19 @@ class App extends Component<Props> {
               onSignOut: this.props.clearUser,
               pendingRequests: this.props.pendingRequests,
               fetchDoctors: this.props.fetchDoctors,
-              doctors: this.props.doctors
-            }}
+              doctors: this.props.doctors,
+              prescriptions:  { byId:
+             { '1':
+               { id: 1,
+                 doctor: 1,
+                 patient: 1,
+                 medication: 'Cefixime 400',
+                 dosageUnit: 'Pills',
+                 amountInitial: 100,
+                 amountRemaining: 60 } },
+                 allIds: [ 1 ] }
+          }
+        }
           />
         );
       }
