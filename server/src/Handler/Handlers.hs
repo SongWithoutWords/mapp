@@ -49,6 +49,9 @@ getPatientWithDoctors pid = do
   let rids = doctorPatientRequestDoctor . entityVal <$> requests
   pendingRequests' <- runDB $ mapMaybeM getEntity rids
 
+  prescriptions <- runDB $ selectList [PrescriptionPatient ==. pid] []
+  prescriptions' <- mapM mapPrescription prescriptions
+
   return $ PatientWithDoctors
     { id = pid
     , firstName = fn
@@ -56,7 +59,7 @@ getPatientWithDoctors pid = do
     , dateOfBirth = bd
     , doctors = doctors'
     , pendingRequests = pendingRequests'
-    , prescriptions = [] -- TODO!
+    , prescriptions = prescriptions'
     }
 
 postLoginsR :: Handler Value
@@ -137,9 +140,11 @@ postRelationsR = do
       runDB (insertUniqueEntity relation) >>= returnJson
 
 getPrescription :: PrescriptionId -> Handler GetPrescription
-getPrescription prescriptionId = do
-  Prescription did pid med unit amount <- runDB $ get404 prescriptionId
+getPrescription = dbLookup404 >=> mapPrescription
+  -- Prescription did pid med unit amount <- runDB $ get404 prescriptionId
 
+mapPrescription :: Entity Prescription -> Handler GetPrescription
+mapPrescription (Entity prescriptionId (Prescription did pid med unit amount)) = do
   schedule <- runDB $ selectList [RecurringDosePrescription ==. prescriptionId] []
   let schedule' = (mapRecurringDose . entityVal) <$> schedule
 
