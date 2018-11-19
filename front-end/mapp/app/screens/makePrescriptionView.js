@@ -167,14 +167,14 @@ const styles = StyleSheet.create({
    fieldValue: {
      fontSize: 16,
      fontWeight: "200",
-     fontFamily: 'Poppins',
+    //  fontFamily: 'Poppins',
      textAlign: 'center',
      color: 'black',
    },
    medfield: {
      fontSize: 16,
      fontWeight: '600',
-     fontFamily: 'Circular',
+    //  fontFamily: 'Circular',
      //textAlign: 'center',
      color: '#009CC6',
      marginBottom: 40,

@@ -1,5 +1,5 @@
 import React from "react";
-import { AppRegistry } from 'react-native';
+import { AppRegistry } from "react-native";
 import settings from "../config/settings";
 import { createMaterialBottomTabNavigator } from "react-navigation-material-bottom-tabs";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
@@ -10,7 +10,9 @@ import DoctorInboxScreen from "../screens/DoctorInboxScreen";
 import AccountScreen from "../screens/AccountScreen";
 import PatientListScreen from "../screens/PatientListScreen";
 import PatientInfoScreen from "../screens/PatientInfoScreen";
-import {genTabNavOptions} from "../lib/genNavOptions"
+import { genTabNavOptions } from "../lib/genNavOptions";
+
+import makePrescriptionView from "../screens/makePrescriptionView";
 
 const PatientStackNavigator = createStackNavigator({
   PatientList: {
@@ -26,10 +28,21 @@ const PatientStackNavigator = createStackNavigator({
       title: "Patient Info",
       headerForceInset: { top: "never", bottom: "never" }
     }
+  },
+  MakePrescription: {
+    screen: makePrescriptionView,
+    navigationOptions: {
+      title: "New Prescription",
+      headerForceInset: { top: "never", bottom: "never" }
+    }
   }
 });
 
-const DoctorTabNavOptions = genTabNavOptions("PatientList", ["Inbox", "PatientList", "Account"]);
+const DoctorTabNavOptions = genTabNavOptions("PatientList", [
+  "Inbox",
+  "PatientList",
+  "Account"
+]);
 // tab navigator for doctor
 const DoctorTabNavigator = createMaterialBottomTabNavigator(
   {
@@ -66,8 +79,7 @@ const DoctorTabNavigator = createMaterialBottomTabNavigator(
       }
     }
   },
-  DoctorTabNavOptions 
+  DoctorTabNavOptions
 );
 export default DoctorTabNavigator;
-AppRegistry.registerComponent('DoctorTabNavigator', () => DoctorTabNavigator);
-
+AppRegistry.registerComponent("DoctorTabNavigator", () => DoctorTabNavigator);

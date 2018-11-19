@@ -12,6 +12,7 @@ import DoctorListScreen from "../screens/DoctorListScreen";
 import DoctorInfoScreen from "../screens/DoctorInfoScreen";
 import {genTabNavOptions} from "../lib/genNavOptions"
 
+
 // stack navigators
 const PrescriptionStackNavigator = createStackNavigator({
   PrescriptionList: {
