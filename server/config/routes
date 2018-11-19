@@ -24,6 +24,8 @@
 
 /requests RequestsR POST
 
+/requests/#Int RequestR DELETE
+
 /relations RelationsR POST
 
 /prescriptions PrescriptionsR POST

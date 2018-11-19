@@ -125,6 +125,9 @@ postRequestsR =  do
   requestInserted <- runDB $ insertUniqueEntity request
   returnJson requestInserted
 
+deleteRequestR :: Int -> Handler ()
+deleteRequestR = runDB . delete . requestKey
+
 postRelationsR :: Handler Value
 postRelationsR = do
   relation@(DoctorPatientRelation did pid) <- requireJsonBody
