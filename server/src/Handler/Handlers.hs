@@ -168,5 +168,8 @@ postPrescriptionsR = do
         RecurringDose pid first minutesBetween dosage
 
 postDosesTakenR :: Handler Value
-postDosesTakenR = undefined
+postDosesTakenR = do
+  d::DoseTaken <- requireJsonBody
+  (runDB $ insertEntity d) >>= returnJson
+
 
