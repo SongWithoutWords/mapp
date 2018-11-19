@@ -96,7 +96,7 @@ data PostRecurringDose = PostRecurringDose
   { firstDose :: UTCTime
   , minutesBetweenDoses :: Int
   , dosage :: Double
-  } deriving(Generic)
+  } deriving(Eq, Generic, Show)
 instance FromJSON PostRecurringDose
 instance ToJSON PostRecurringDose
 
@@ -108,7 +108,8 @@ data GetPrescription = GetPrescription
   , dosageUnit :: DosageUnit
   , amountInitial :: Double
   , dosageSchedule :: [PostRecurringDose]
-  } deriving(Generic)
+  , dosesTaken :: [DoseTaken]
+  } deriving(Eq, Generic, Show)
 instance FromJSON GetPrescription
 instance ToJSON GetPrescription
 

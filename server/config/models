@@ -54,4 +54,6 @@ DoseTaken json
     prescription PrescriptionId
     time UTCTime
     amount Double
+    deriving Eq
+    deriving Show
 

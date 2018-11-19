@@ -138,11 +138,14 @@ postRelationsR = do
 getPrescription :: PrescriptionId -> Handler GetPrescription
 getPrescription prescriptionId = do
   Prescription did pid med unit amount <- runDB $ get404 prescriptionId
-  schedule <- runDB $ selectList [RecurringDosePrescription ==. prescriptionId] []
 
+  schedule <- runDB $ selectList [RecurringDosePrescription ==. prescriptionId] []
   let schedule' = (mapRecurringDose . entityVal) <$> schedule
 
-  pure $ GetPrescription prescriptionId did pid med unit amount schedule'
+  dosesTaken <- runDB $ selectList [DoseTakenPrescription ==. prescriptionId] []
+  let dosesTaken' = entityVal <$> dosesTaken
+
+  pure $ GetPrescription prescriptionId did pid med unit amount schedule' dosesTaken'
 
     where
       mapRecurringDose :: RecurringDose -> PostRecurringDose
