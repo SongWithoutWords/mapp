@@ -25,6 +25,7 @@ spec = withApp $ do
         , dateOfBirth = Nothing
         , doctors = []
         , pendingRequests = []
+        , prescriptions = []
         }
 
       -- Attempt to claim this email by a second user

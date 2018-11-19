@@ -56,6 +56,7 @@ getPatientWithDoctors pid = do
     , dateOfBirth = bd
     , doctors = doctors'
     , pendingRequests = pendingRequests'
+    , prescriptions = [] -- TODO!
     }
 
 postLoginsR :: Handler Value

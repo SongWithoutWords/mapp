@@ -77,6 +77,7 @@ data PatientWithDoctors = PatientWithDoctors
   , dateOfBirth :: Maybe Day
   , doctors :: [Entity Doctor]
   , pendingRequests :: [Entity Doctor]
+  , prescriptions :: [GetPrescription]
   } deriving(Eq, Generic, Show)
 instance FromJSON PatientWithDoctors
 instance ToJSON PatientWithDoctors
