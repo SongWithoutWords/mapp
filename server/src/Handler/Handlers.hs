@@ -146,7 +146,7 @@ getPrescription = dbLookup404 >=> mapPrescription
 mapPrescription :: Entity Prescription -> Handler GetPrescription
 mapPrescription (Entity prescriptionId (Prescription did pid med unit amount)) = do
   schedule <- runDB $ selectList [RecurringDosePrescription ==. prescriptionId] []
-  let schedule' = (mapRecurringDose . entityVal) <$> schedule
+  let schedule' = mapRecurringDose . entityVal <$> schedule
 
   dosesTaken <- runDB $ selectList [DoseTakenPrescription ==. prescriptionId] []
   let dosesTaken' = entityVal <$> dosesTaken
@@ -162,12 +162,9 @@ postPrescriptionsR :: Handler Value
 postPrescriptionsR = do
   PostPrescription did pid med unit amount schedule <- requireJsonBody
 
-  prescriptionId <- runDB $ do
-    prescriptionId <- insert $ Prescription did pid med unit amount
+  prescriptionId <- runDB $ insert $ Prescription did pid med unit amount
 
-    _ <- mapM (insert . mapRecurringDose prescriptionId) schedule
-
-    pure prescriptionId
+  _ <- runDB $ mapM (insert . mapRecurringDose prescriptionId) schedule
 
   getPrescription prescriptionId >>= returnJson
 
@@ -179,6 +176,6 @@ postPrescriptionsR = do
 postDosesTakenR :: Handler Value
 postDosesTakenR = do
   d::DoseTaken <- requireJsonBody
-  (runDB $ insertEntity d) >>= returnJson
+  runDB (insertEntity d) >>= returnJson
 
 
