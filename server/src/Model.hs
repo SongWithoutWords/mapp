@@ -90,6 +90,7 @@ data PostPrescription = PostPrescription
   , dosageSchedule :: [PostRecurringDose]
   } deriving(Generic)
 instance FromJSON PostPrescription
+instance ToJSON PostPrescription
 
 data PostRecurringDose = PostRecurringDose
   { firstDose :: UTCTime
@@ -97,6 +98,7 @@ data PostRecurringDose = PostRecurringDose
   , dosage :: Double
   } deriving(Generic)
 instance FromJSON PostRecurringDose
+instance ToJSON PostRecurringDose
 
 -- Utility functions
 doctorKey :: Int -> DoctorId
