@@ -136,4 +136,12 @@ postRelationsR = do
       runDB (insertUniqueEntity relation) >>= returnJson
 
 postPrescriptionsR :: Handler Value
-postPrescriptionsR = undefined
+postPrescriptionsR = do
+  PostPrescription did pid med unit amount schedule <- requireJsonBody
+
+  runDB $ do
+    prescriptionId <- insert $ Prescription did pid med unit amount
+    forM schedule $ \(PostRecurringDose first minutesBetween dosage) ->
+      insertEntity $ RecurringDose prescriptionId first minutesBetween dosage
+
+  undefined
