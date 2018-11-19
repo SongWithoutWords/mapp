@@ -2,22 +2,29 @@ import * as React from 'react';
 import { Text, View, StyleSheet, TextInput, ScrollView, Button, TouchableOpacity, AppRegistry } from 'react-native';
 // or any pure javascript modules available in npm
 import { Card, CheckBox } from 'react-native-elements'; // 0.19.1
+import settings from "../config/settings";
 
 export default class MakePrescriptionView extends React.Component {
-     state = {
-      medName: '',
-      medDose: '',
-      medFreq: '',
-   }
-   handleName = (text) => {
-      this.setState({ medName: text })
-   }
-   handleDose = (text) => {
-      this.setState({ medDose: text })
-   }
-   handleFreq = (text) => {
-      this.setState({ medFreq: text })
-   }
+  /*data PostPrescription = PostPrescription
+  { doctor :: DoctorId
+  , patient :: PatientId
+  , medication :: Text
+  , dosageUnit :: DosageUnit
+  , amountInitial :: Double
+  , dosageSchedule :: [PostRecurringDose]
+} deriving(Generic)*/
+  constructor(props) {
+    super(props);
+    this.state = {
+       medName: '',
+       medDoseUnit: '',
+       medInitialAmount : 0,
+       startDate : new Date(),
+       endDate : new Date(),
+       medFreq: ''
+    };
+  }
+
   render() {
     return (
       <ScrollView style={{padding: 20,}}>
@@ -34,19 +41,37 @@ export default class MakePrescriptionView extends React.Component {
              placeholder = "Medication Name"
              placeholderTextColor = "#009CC6"
              autoCapitalize = "none"
-             onChangeText = {this.handleName}/>
+             onChangeText={value => this.setState({ medName: value })}/>
           <TextInput style = {styles.input}
              underlineColorAndroid = "transparent"
-             placeholder = "Medication Dosage"
+             placeholder = "Dosage Unit"
              placeholderTextColor = "#009CC6"
              autoCapitalize = "none"
-             onChangeText = {this.handleDose}/>
+             onChangeText={value => this.setState({ medDoseUnit: value })}/>
+          <TextInput style = {styles.input}
+            underlineColorAndroid = "transparent"
+            placeholder = "Initial Amount"
+            placeholderTextColor = "#009CC6"
+            autoCapitalize = "none"
+            onChangeText={value => this.setState({ medInitialAmount: value })}/>
           <TextInput style = {styles.input}
              underlineColorAndroid = "transparent"
-             placeholder = "Medication Frequency"
+             placeholder = "Start Date"
              placeholderTextColor = "#009CC6"
              autoCapitalize = "none"
-             onChangeText = {this.handleFreq}/>
+             onChangeText={value => this.setState({ startDate: value })}/>
+          <TextInput style = {styles.input}
+              underlineColorAndroid = "transparent"
+              placeholder = "End Date"
+              placeholderTextColor = "#009CC6"
+              autoCapitalize = "none"
+              onChangeText={value => this.setState({ endDate: value })}/>
+          <TextInput style = {styles.input}
+             underlineColorAndroid = "transparent"
+             placeholder = "Frequency"
+             placeholderTextColor = "#009CC6"
+             autoCapitalize = "none"
+             onChangeText={value => this.setState({ medFreq: value })}/>
           <Text
             style={styles.formSection}>
             Patient Information
@@ -56,9 +81,8 @@ export default class MakePrescriptionView extends React.Component {
              Sina Saleh
             </Text>
           </Text>
-
           <Text style={styles.medfield}>
-            Patient SSN    <Text style={styles.fieldValue}>
+            Patient ID    <Text style={styles.fieldValue}>
              50060070
             </Text>
           </Text>
@@ -67,68 +91,19 @@ export default class MakePrescriptionView extends React.Component {
              10/8/1997
             </Text>
           </Text>
-
           <Text
             style={styles.formSection}>
-            Mailing and Contact Information
+            Contact Information
           </Text>
           <Text style={styles.medfield}>
-            Mailing Address    <Text style={styles.fieldValue}>
-             2415 E 29th Ave Vancouver BC
+            Email Address    <Text style={styles.fieldValue}>
+             sina@sina.com
             </Text>
           </Text>
           <Text style={styles.medfield}>
-            Home Phone    <Text style={styles.fieldValue}>
-             66677886
-            </Text>
-          </Text>
-          <Text style={styles.medfield}>
-            Cell Phone    <Text style={styles.fieldValue}>
+             Phone    <Text style={styles.fieldValue}>
              777-778-8690
             </Text>
-          </Text>
-          <Text
-            style={{fontSize: 15, padding: 5 , marginLeft:15}}>
-            Medication Allergies
-          </Text>
-          <CheckBox
-            title='Other (specify)'
-            checked={this.state.checked}
-            checkedColor = '#009CC6'
-            onPress={() => this.setState({checked: !this.state.checked})}
-          />
-          <TextInput style = {styles.input}
-             underlineColorAndroid = "transparent"
-             placeholderTextColor = "#009CC6"
-             autoCapitalize = "none"
-             onChangeText = {this.handlePhID}/>
-          <Text
-            style={{fontSize: 15, padding: 5 , marginLeft:15}}>
-            Health Conditions
-          </Text>
-          <CheckBox
-            title='Other (specify)'
-            checked={this.state.checked}
-            checkedColor = '#009CC6'
-            onPress={() => this.setState({checked: !this.state.checked})}
-          />
-          <TextInput style = {styles.input}
-             underlineColorAndroid = "transparent"
-             placeholderTextColor = "#009CC6"
-             autoCapitalize = "none"
-             onChangeText = {this.handlePhID}/>
-
-          <TouchableOpacity
-             style = {styles.submitButton}
-             onPress = {
-                () => this.login(this.state.email, this.state.password)
-             }>
-             <Text style = {styles.submitButtonText}> Sign up </Text>
-          </TouchableOpacity>
-
-          <Text
-            style={{fontSize: 18, color: 'red', padding: 5 , marginLeft:15}}>
-            {this.state.message}
           </Text>
           </ScrollView>
     );
@@ -167,14 +142,14 @@ const styles = StyleSheet.create({
    fieldValue: {
      fontSize: 16,
      fontWeight: "200",
-    //  fontFamily: 'Poppins',
+     //fontFamily: 'Poppins',
      textAlign: 'center',
      color: 'black',
    },
    medfield: {
      fontSize: 16,
      fontWeight: '600',
-    //  fontFamily: 'Circular',
+     //fontFamily: 'Circular',
      //textAlign: 'center',
      color: '#009CC6',
      marginBottom: 40,
