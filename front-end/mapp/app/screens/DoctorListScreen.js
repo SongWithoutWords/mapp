@@ -47,14 +47,3 @@ class DoctorListScreen extends Component {
 
 export default DoctorListScreen;
 AppRegistry.registerComponent("DoctorListScreen", () => DoctorListScreen);
-
-// {/* {doctors.map(doctor => (
-//   <ListItem
-//     key={doctor.id}
-//     roundAvatar
-//     avatar={{ uri: doctor.avatar_url }}
-//     title={"Dr. " + doctor.firstName + " " + doctor.lastName}
-//     subtitle={doctor.subtitle}
-//     onPress={this.onPress.bind(this, doctor)}
-//   />
-// ))} */}

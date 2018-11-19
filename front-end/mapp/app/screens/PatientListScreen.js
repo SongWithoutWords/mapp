@@ -6,16 +6,29 @@ import {
   StyleSheet,
   AppRegistry,
   RefreshControl,
-  ScrollView
+  FlatList
 } from "react-native";
-import { List, ListItem } from "react-native-elements";
-import genAlert from "../components/generalComponents/genAlert";
-import getDoctorData from "../lib/getDoctorData";
+import { List, ListItem, SearchBar } from "react-native-elements";
 
 // note that this class now is actually "my patients" screen
 // cuz unlike doctor list screen, patients' info can only accessed
 // by their doctors
 class PatientListScreen extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      patients: []
+      // state used by search bar
+      // an array of patients connected to this doctor
+      // invariant: consistent with the patient states in redux store
+    };
+  }
+
+  componentDidMount() {
+    this.updateState();
+  }
+
   onPress = id => {
     console.log(id);
     this.props.navigation.navigate("PatientInfo", {
@@ -24,13 +37,84 @@ class PatientListScreen extends Component {
     });
   };
 
-  render() {
-    // right now these are patients associated with each doctor
-    const myPatients = this.props.screenProps.patients;
+  renderHeader = () => {
+    return (
+      <SearchBar
+        round
+        placeholder="Type Here..."
+        lightTheme
+        onChangeText={text => this.searchFilterFunction(text)}
+        onClearText={() => this.searchFilterFunction("")}
+        autoCorrect={false}
+        clearIcon
+      />
+    );
+  };
+
+  renderSeparator = () => {
+    return (
+      <View
+        style={{
+          height: 1,
+          width: "100%",
+          backgroundColor: "#CED0CE"
+        }}
+      />
+    );
+  };
+
+  renderItem = ({ item }) => {
+    return (
+      <View style={{ backgroundColor: "white" }}>
+        <ListItem
+          roundAvatar
+          title={`${item.firstName} ${item.lastName}`}
+          subtitle={item.email}
+          // avatar={{ uri: item.picture.thumbnail }}
+          containerStyle={{ borderBottomWidth: 0 }}
+          onPress={() => this.onPress(item.id)}
+          style={{
+            backgroundColor: "white"
+          }}
+        />
+      </View>
+    );
+  };
+
+  updateState = () => {
     const myPatientIDs = this.props.screenProps.user.myPatients;
+    const patients = [];
+    myPatientIDs.forEach(id => {
+      patients.push(this.props.screenProps.patients.byId[id]);
+    });
+    this.setState({
+      patients: patients
+    });
+  };
+
+  searchFilterFunction = text => {
+    const myPatientIDs = this.props.screenProps.user.myPatients;
+    const patients = [];
+    myPatientIDs.forEach(id => {
+      patients.push(this.props.screenProps.patients.byId[id]);
+    });
+    const filteredPatients = patients.filter(patient => {
+      const patientNameData = `${patient.firstName.toUpperCase()} ${patient.lastName.toUpperCase()}`;
+      const textData = text.toUpperCase();
+      return patientNameData.indexOf(textData) > -1; // check if query text is found inside patient's name
+    });
+    this.setState({ patients: filteredPatients });
+  };
+
+  render() {
     return (
       <View style={styles.container}>
-        <ScrollView
+        <FlatList
+          data={this.state.patients}
+          renderItem={this.renderItem}
+          keyExtractor={item => item.id.toString()}
+          ItemSeparatorComponent={this.renderSeparator}
+          ListHeaderComponent={this.renderHeader}
           refreshControl={
             <RefreshControl
               refreshing={this.props.screenProps.isFetchingUser}
@@ -39,25 +123,11 @@ class PatientListScreen extends Component {
                 const form = { email, password };
                 const url = settings.REMOTE_SERVER_URL + settings.LOGIN_RES;
                 this.props.screenProps.onSignIn(url, form);
+                this.updateState();
               }}
             />
           }
-        >
-          <List>
-            {myPatientIDs.map(id => (
-              <ListItem
-                key={id}
-                title={
-                  "Patient " +
-                  myPatients["byId"][id]["firstName"] +
-                  " " +
-                  myPatients["byId"][id]["lastName"]
-                }
-                onPress={() => this.onPress(id)}
-              />
-            ))}
-          </List>
-        </ScrollView>
+        />
       </View>
     );
   }
@@ -68,5 +138,6 @@ const styles = StyleSheet.create({
     flex: 1
   }
 });
+
 export default PatientListScreen;
 AppRegistry.registerComponent("PatientListScreen", () => PatientListScreen);

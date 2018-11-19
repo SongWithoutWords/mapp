@@ -8,10 +8,6 @@ import postData from "../lib/postData";
 import getDoctorData from "../lib/getDoctorData";
 
 export default class DoctorInboxScreen extends React.Component {
-  // declinePatientRequest = () => {
-  //   this.setState({ text: "You decline" });
-  // };
-
   acceptOnPress = patientID => {
     const url = settings.REMOTE_SERVER_URL + settings.RELAITON_RES;
     const json = { patient: patientID, doctor: this.props.screenProps.user.id };
