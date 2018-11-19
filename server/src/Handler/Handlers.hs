@@ -144,7 +144,6 @@ postRelationsR = do
 
 getPrescription :: PrescriptionId -> Handler GetPrescription
 getPrescription = dbLookup404 >=> mapPrescription
-  -- Prescription did pid med unit amount <- runDB $ get404 prescriptionId
 
 mapPrescription :: Entity Prescription -> Handler GetPrescription
 mapPrescription (Entity prescriptionId (Prescription did pid med unit amount)) = do
