@@ -43,7 +43,6 @@ Prescription json
     medication Text
     dosageUnit DosageUnit
     amountInitial Double
-    amountRemaining Double
 
 RecurringDose json
     prescription PrescriptionId
