@@ -94,6 +94,9 @@ instance Yesod App where
     isAuthorized RequestsR _ = return Authorized
     isAuthorized RelationsR _ = return Authorized
 
+    isAuthorized PrescriptionsR _ = return Authorized
+    isAuthorized DosesTakenR _ = return Authorized
+
 -- How to run database actions.
 instance YesodPersist App where
     type YesodPersistBackend App = SqlBackend
