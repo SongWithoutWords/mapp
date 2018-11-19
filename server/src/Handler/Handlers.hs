@@ -49,6 +49,9 @@ getPatientWithDoctors pid = do
   let rids = doctorPatientRequestDoctor . entityVal <$> requests
   pendingRequests' <- runDB $ mapMaybeM getEntity rids
 
+  prescriptions <- runDB $ selectList [PrescriptionPatient ==. pid] []
+  prescriptions' <- mapM mapPrescription prescriptions
+
   return $ PatientWithDoctors
     { id = pid
     , firstName = fn
@@ -56,6 +59,7 @@ getPatientWithDoctors pid = do
     , dateOfBirth = bd
     , doctors = doctors'
     , pendingRequests = pendingRequests'
+    , prescriptions = prescriptions'
     }
 
 postLoginsR :: Handler Value
@@ -75,7 +79,7 @@ getDoctorR :: Int -> Handler Value
 getDoctorR = getDoctorWithPatients . doctorKey >=> returnJson
 
 getPatientR :: Int -> Handler Value
-getPatientR = dbLookup404 . patientKey >=> returnJson
+getPatientR = getPatientWithDoctors . patientKey >=> returnJson
 
 getDoctorsR :: Handler Value
 getDoctorsR = do
@@ -134,3 +138,44 @@ postRelationsR = do
     else do
       _ <- runDB $ mapM (delete . entityKey) pendingRequests
       runDB (insertUniqueEntity relation) >>= returnJson
+
+getPrescription :: PrescriptionId -> Handler GetPrescription
+getPrescription = dbLookup404 >=> mapPrescription
+  -- Prescription did pid med unit amount <- runDB $ get404 prescriptionId
+
+mapPrescription :: Entity Prescription -> Handler GetPrescription
+mapPrescription (Entity prescriptionId (Prescription did pid med unit amount)) = do
+  schedule <- runDB $ selectList [RecurringDosePrescription ==. prescriptionId] []
+  let schedule' = mapRecurringDose . entityVal <$> schedule
+
+  dosesTaken <- runDB $ selectList [DoseTakenPrescription ==. prescriptionId] []
+  let dosesTaken' = entityVal <$> dosesTaken
+
+  pure $ GetPrescription prescriptionId did pid med unit amount schedule' dosesTaken'
+
+    where
+      mapRecurringDose :: RecurringDose -> PostRecurringDose
+      mapRecurringDose (RecurringDose _ first minutesBetween dosage) =
+          PostRecurringDose first minutesBetween dosage
+
+postPrescriptionsR :: Handler Value
+postPrescriptionsR = do
+  PostPrescription did pid med unit amount schedule <- requireJsonBody
+
+  prescriptionId <- runDB $ insert $ Prescription did pid med unit amount
+
+  _ <- runDB $ mapM (insert . mapRecurringDose prescriptionId) schedule
+
+  getPrescription prescriptionId >>= returnJson
+
+    where
+      mapRecurringDose :: PrescriptionId -> PostRecurringDose -> RecurringDose
+      mapRecurringDose pid (PostRecurringDose first minutesBetween dosage) =
+        RecurringDose pid first minutesBetween dosage
+
+postDosesTakenR :: Handler Value
+postDosesTakenR = do
+  d::DoseTaken <- requireJsonBody
+  runDB (insertEntity d) >>= returnJson
+
+

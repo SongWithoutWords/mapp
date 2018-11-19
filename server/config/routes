@@ -25,3 +25,7 @@
 /requests RequestsR POST
 
 /relations RelationsR POST
+
+/prescriptions PrescriptionsR POST
+
+/doses-taken DosesTakenR POST

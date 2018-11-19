@@ -68,6 +68,7 @@ spec = withApp $ do
         , dateOfBirth = Nothing
         , doctors = []
         , pendingRequests = []
+        , prescriptions = []
         }
 
     it "doctor account logins with correct password and email return correct info" $ do
