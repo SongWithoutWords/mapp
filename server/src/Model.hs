@@ -100,6 +100,18 @@ data PostRecurringDose = PostRecurringDose
 instance FromJSON PostRecurringDose
 instance ToJSON PostRecurringDose
 
+data GetPrescription = GetPrescription
+  { id :: PrescriptionId
+  , doctor :: DoctorId
+  , patient :: PatientId
+  , medication :: Text
+  , dosageUnit :: DosageUnit
+  , amountInitial :: Double
+  , dosageSchedule :: [PostRecurringDose]
+  } deriving(Generic)
+instance FromJSON GetPrescription
+instance ToJSON GetPrescription
+
 -- Utility functions
 doctorKey :: Int -> DoctorId
 doctorKey = DoctorKey . fromIntegral
