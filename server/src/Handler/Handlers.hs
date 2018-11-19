@@ -79,7 +79,7 @@ getDoctorR :: Int -> Handler Value
 getDoctorR = getDoctorWithPatients . doctorKey >=> returnJson
 
 getPatientR :: Int -> Handler Value
-getPatientR = dbLookup404 . patientKey >=> returnJson
+getPatientR = getPatientWithDoctors . patientKey >=> returnJson
 
 getDoctorsR :: Handler Value
 getDoctorsR = do
