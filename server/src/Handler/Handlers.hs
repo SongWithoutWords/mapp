@@ -167,3 +167,6 @@ postPrescriptionsR = do
       mapRecurringDose pid (PostRecurringDose first minutesBetween dosage) =
         RecurringDose pid first minutesBetween dosage
 
+postDosesTakenR :: Handler Value
+postDosesTakenR = undefined
+

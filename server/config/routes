@@ -28,3 +28,5 @@
 /relations RelationsR POST
 
 /prescriptions PrescriptionsR POST
+
+/doses-taken DosesTakenR POST

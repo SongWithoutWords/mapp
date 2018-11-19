@@ -50,3 +50,8 @@ RecurringDose json
     minutesBetweenDoses Int
     dosage Double
 
+DoseTaken json
+    prescription PrescriptionId
+    time UTCTime
+    amount Double
+
