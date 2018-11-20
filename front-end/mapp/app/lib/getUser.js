@@ -29,7 +29,16 @@ function getUser(url, form) {
       let { doctors = [], patients = [], pendingRequests = [] } = user;
       const myDoctors = doctors.map(x => x.id);
       const myPatients = patients.map(x => x.id);
-      const myPendingRequests = pendingRequests.map(x => x.id);
+
+      // change requestid to id
+      const pendingRequests = pendingRequests.map(x => {
+        x.id = x.requestId;
+        delete x['requestId'];
+        return x;
+      }); 
+      console.log(pendingRequests);
+
+      const myPendingRequests = pendingRequests.map(x => x.id); 
       delete user.doctors;
       delete user.patients;
       delete user.pendingRequests;
@@ -37,7 +46,7 @@ function getUser(url, form) {
       user.myPatients = myPatients;
       user.myPendingRequests = myPendingRequests;
       user.userType = userTypeString;
-      user.myPrescriptions = [{ id : 1
+      user.myPrescriptions = [{ id : 1 // TODO
       , doctor : 1
       , patient : 1
       , medication : "Cefixime 400"
@@ -52,7 +61,10 @@ function getUser(url, form) {
       doctors = arrayToObj(doctors);
 
       // pendingRequests
-      pendingRequests = arrayToObj(pendingRequests);
+      pendingRequests = arrayToObj(pendingRequests); 
+      // TODO: duplication of patient obj and doctor obj (should be single source of truth)
+      // need to change inbox screen
+
       let prescriptions = arrayToObj(user.myPrescriptions);
       // prescriptions
       result = {

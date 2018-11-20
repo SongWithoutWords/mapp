@@ -1,6 +1,13 @@
 import * as React from "react";
 import settings from "../config/settings";
-import { Text, View, StyleSheet, AppRegistry, RefreshControl, ScrollView } from "react-native";
+import {
+  Text,
+  View,
+  StyleSheet,
+  AppRegistry,
+  RefreshControl,
+  ScrollView
+} from "react-native";
 import { Card, Button } from "react-native-elements"; //0.19.1
 import { TouchableOpacity } from "react-native";
 import genAlert from "../components/generalComponents/genAlert";
@@ -23,14 +30,35 @@ export default class DoctorInboxScreen extends React.Component {
       });
   };
 
+  declineOnPress = requestID => {
+    const url = settings.REMOTE_SERVER_URL + settings.REQUESTS_RES + '/' + requestID;
+    return fetch(url, {
+      method: "DELETE",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json"
+      },
+    })
+      .then(checkRequestErrors)
+      .then(response => {
+        const { email, password } = this.props.screenProps.user;
+        const form = { email, password };
+        const url = settings.REMOTE_SERVER_URL + settings.LOGIN_RES;
+        this.props.screenProps.onSignIn(url, form);
+      })
+      .catch(error => {
+        genAlert("Failed to decline the request", error.message);
+      });
+  };
+
   mapRequestToCard = request => (
     <Card key={request.id}>
       <Text style={styles.text}>
         {request.firstName + " " + request.lastName}
       </Text>
       <View style={styles.buttonGroup}>
-        <Button title="Accept" onPress={() => this.acceptOnPress(request.id)} />
-        <Button title="Decline" />
+        <Button title="Accept" onPress={() => this.acceptOnPress(request.patient.id)} />
+        <Button title="Decline" onPress={() => this.declineOnPress(request.id)}/>
       </View>
     </Card>
   );

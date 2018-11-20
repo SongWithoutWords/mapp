@@ -23,8 +23,8 @@ class DoctorListScreen extends Component {
     const doctors = this.props.screenProps.doctors;
     console.log("Doctors: " + JSON.stringify(doctors))
     return (
-      <View>
-        <ScrollView>
+      <View style={{flex: 1}}>
+        <ScrollView style={{flex: 1}}>
           <List>
             {doctors.allIds.map(id => (
               <ListItem
