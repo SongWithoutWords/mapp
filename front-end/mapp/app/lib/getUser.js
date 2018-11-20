@@ -26,47 +26,39 @@ function getUser(url, form) {
       const userTypeString =
         "doctors" in responseJson ? USER_TYPE.PATIENT : USER_TYPE.DOCTOR;
       const user = _.merge({}, form, responseJson); // response json may overwrite attributes in form
-      let { doctors = [], patients = [], pendingRequests = [] } = user;
+      let { doctors = [], patients = [], pendingRequests = [], prescriptions = []} = user;
       const myDoctors = doctors.map(x => x.id);
       const myPatients = patients.map(x => x.id);
+      const myPrescriptions = prescriptions.map(x => x.id);
 
       // change requestid to id
-      const pendingRequests = pendingRequests.map(x => {
-        x.id = x.requestId;
-        delete x['requestId'];
-        return x;
-      }); 
-      console.log(pendingRequests);
-
+      // const pendingRequests = pendingRequests.map(x => {
+      //   x.id = x.requestId;
+      //   delete x['requestId'];
+      //   return x;
+      // }); 
+      // console.log(pendingRequests);
       const myPendingRequests = pendingRequests.map(x => x.id); 
+
       delete user.doctors;
       delete user.patients;
       delete user.pendingRequests;
+      delete user.prescriptions;
+
       user.myDoctors = myDoctors;
       user.myPatients = myPatients;
       user.myPendingRequests = myPendingRequests;
+      user.myPrescriptions = myPrescriptions;
       user.userType = userTypeString;
-      user.myPrescriptions = [{ id : 1 // TODO
-      , doctor : 1
-      , patient : 1
-      , medication : "Cefixime 400"
-      , dosageUnit : "Pills"
-      , amountInitial : 100
-      , amountRemaining : 60
-      }];
       console.log(user);
 
-      // patients and doctors
       patients = arrayToObj(patients);
       doctors = arrayToObj(doctors);
-
-      // pendingRequests
+      prescriptions = arrayToObj(prescriptions);
       pendingRequests = arrayToObj(pendingRequests); 
       // TODO: duplication of patient obj and doctor obj (should be single source of truth)
       // need to change inbox screen
 
-      let prescriptions = arrayToObj(user.myPrescriptions);
-      // prescriptions
       result = {
         user,
         patients,

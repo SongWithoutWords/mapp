@@ -3,13 +3,11 @@ import { Button, Text, View, StyleSheet, AppRegistry } from "react-native";
 
 class PrescriptionInfoScreen extends Component {
   render() {
+    const prescription = this.props.navigation.getParam("prescription", {});
     return (
       <View style={styles.container}>
         <Text>Detail info about a prescription.</Text>
-        <Button
-          title="Go back to prescription list"
-          onPress={() => this.props.navigation.goBack()}
-        />
+        <Text>{JSON.stringify(prescription)}</Text>
       </View>
     );
   }
@@ -18,8 +16,8 @@ class PrescriptionInfoScreen extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "center",
+    margin: 10,
   }
 });
 

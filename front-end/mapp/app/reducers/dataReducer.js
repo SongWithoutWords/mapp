@@ -72,6 +72,10 @@ export default function dataReducer(state=initialState, action) {
                     byId: _.merge({}, state.pendingRequests.byId, action.payload.pendingRequests.byId), 
                     allIds: _.union([], state.pendingRequests.allIds, action.payload.pendingRequests.allIds)
                 },
+                prescriptions: { 
+                    byId: _.merge({}, state.prescriptions.byId, action.payload.prescriptions.byId), 
+                    allIds: _.union([], state.prescriptions.allIds, action.payload.prescriptions.allIds)
+                },
                 isFetchingUser: false,
                 isLoggedIn: true,
             }

@@ -1,60 +1,64 @@
 import React, { Component } from "react";
-import { View, StyleSheet, ScrollView, AppRegistry } from "react-native";
-import PrescriptionCardComponent from "../components/cardComponents/PrescriptionCardComponent";
-
-const fake_prescriptions = [
-  {
-    name: "divalproex",
-    avatar_url: "https://bit.ly/2yhPJY0",
-    subtitle: "..",
-    image_name: "divalproex" // index into the images array in the card component
-  },
-  {
-    name: "amoxicillin",
-    avatar_url: "https://bit.ly/2yhPJY0",
-    subtitle: "..",
-    image_name: "amoxicillin"
-  },
-  {
-    name: "divalproex",
-    avatar_url: "https://bit.ly/2yhPJY0",
-    subtitle: "..",
-    image_name: "divalproex" // index into the images array in the card component
-  },
-  {
-    name: "amoxicillin",
-    avatar_url: "https://bit.ly/2yhPJY0",
-    subtitle: "..",
-    image_name: "amoxicillin"
-  },
-];
+import {
+  Text,
+  View,
+  TouchableWithoutFeedback,
+  AppRegistry,
+  ScrollView,
+  StyleSheet
+} from "react-native";
+import { Card, CardItem, Body } from "native-base";
 
 class PrescriptionListScreen extends Component {
-  onPress = () => {
-    this.props.navigation.navigate("PrescriptionInfo");
+  onPress = id => {
+    this.props.navigation.navigate("PrescriptionInfo", {
+      prescription: this.props.screenProps.prescriptions.byId[id],
+    });
   };
 
+  mapPrescriptionToCard = prescrption =>{
+    const doctor = this.props.screenProps.doctors.byId[prescrption.doctor];
+    return <TouchableWithoutFeedback onPress={() => this.onPress(prescrption.id)} key={prescrption.id}>
+      <Card>
+        <CardItem header bordered>
+          <Text style={styles.text}>{prescrption.medication}</Text>
+        </CardItem>
+        <CardItem bordered>
+          <Body>
+            <View>
+              <Text>Doctor: {doctor.firstName + ' ' + doctor.lastName}</Text>
+              <Text>Dosage Unit: {prescrption.dosageUnit}</Text>
+              <Text>Amount Initial: {prescrption.amountInitial}</Text>
+            </View>
+          </Body>
+        </CardItem>
+      </Card>
+    </TouchableWithoutFeedback>
+  } 
+
   render() {
+    const prescriptions = this.props.screenProps.prescriptions;
+    const prescriptionIDs = this.props.screenProps.user.myPrescriptions;
     return (
-      <View>
-        <ScrollView>
-          {fake_prescriptions.map((prescription,i) => {
-            return (
-              <PrescriptionCardComponent
-                title={prescription.name}
-                subtitle={prescription.subtitle}
-                image_name={prescription.image_name}
-                onPress={this.onPress}
-                key={i}
-              />
-            );
-          })}
+      <View style={{flex: 1}}>
+        <ScrollView style={{flex: 1}}>
+          {prescriptionIDs.map(id =>
+            this.mapPrescriptionToCard(prescriptions.byId[id])
+          )}
         </ScrollView>
       </View>
     );
   }
 }
 
-
+const styles = StyleSheet.create({
+  text: {
+    color: "#694fad",
+    fontSize: 20
+  }
+});
 export default PrescriptionListScreen;
-AppRegistry.registerComponent('PrescriptionListScreen', () => PrescriptionListScreen);
+AppRegistry.registerComponent(
+  "PrescriptionListScreen",
+  () => PrescriptionListScreen
+);

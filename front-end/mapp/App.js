@@ -43,20 +43,7 @@ class App extends Component<Props> {
               pendingRequests: this.props.pendingRequests,
               fetchDoctors: this.props.fetchDoctors,
               doctors: this.props.doctors,
-              prescriptions: {
-                byId: {
-                  "1": {
-                    id: 1,
-                    doctor: 1,
-                    patient: 1,
-                    medication: "Cefixime 400",
-                    dosageUnit: "Pills",
-                    amountInitial: 100,
-                    amountRemaining: 60
-                  }
-                },
-                allIds: [1]
-              }
+              prescriptions: this.props.prescriptions
             }}
           />
         );
@@ -86,7 +73,8 @@ function mapStateToProps(state) {
     user: state.user,
     patients: state.patients,
     doctors: state.doctors,
-    pendingRequests: state.pendingRequests
+    pendingRequests: state.pendingRequests,
+    prescriptions: state.prescriptions
   };
 }
 
