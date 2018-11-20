@@ -18,7 +18,9 @@ let RELAITON_RES = "/relations";
 // accept a pending request
 
 let LOGIN_RES = "/logins";
-// post email and password to login 
+// post email and password to login
+
+let PRESCRIPTION_RES = "/prescriptions";
 
 let THEME_COLOR = "#694fad";
 let THEME_COLOR_LIGHT = "#9a7cdf";
@@ -32,7 +34,9 @@ export const settings = {
   PATIENT_RES,
   REQUESTS_RES,
   RELAITON_RES,
+  PRESCRIPTION_RES,
   THEME_COLOR,
+  THEME_COLOR_LIGHT,
   INACTIVE_COLOR,
   ACTIVE_COLOR,
   LOGIN_RES
