@@ -48,10 +48,6 @@ class DoctorInfoScreen extends Component {
           Dr. {doctor.firstName} {doctor.lastName}
         </Text>
         <Text style={styles.text}> ID: {doctor.id}</Text>
-        <Button
-          title="Go back to doctor list"
-          onPress={() => this.props.navigation.goBack()}
-        />
         <TouchableOpacity
           style={styles.submitButton}
           onPress={this.requestDoctor}

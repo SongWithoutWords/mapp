@@ -27,11 +27,7 @@ export default class MakePrescriptionView extends React.Component {
 
   render() {
     return (
-      <ScrollView style={{padding: 20,}}>
-          <Text
-            style={{fontSize: 27, marginLeft:15}}>
-            New Prescription
-          </Text>
+      <ScrollView style={{padding: 20}}>
           <Text
             style={styles.formSection}>
             Medication Information
@@ -72,39 +68,6 @@ export default class MakePrescriptionView extends React.Component {
              placeholderTextColor = "#009CC6"
              autoCapitalize = "none"
              onChangeText={value => this.setState({ medFreq: value })}/>
-          <Text
-            style={styles.formSection}>
-            Patient Information
-          </Text>
-          <Text style={styles.medfield}>
-            Patient Name    <Text style={styles.fieldValue}>
-             Sina Saleh
-            </Text>
-          </Text>
-          <Text style={styles.medfield}>
-            Patient ID    <Text style={styles.fieldValue}>
-             50060070
-            </Text>
-          </Text>
-          <Text style={styles.medfield}>
-            Date of Birth    <Text style={styles.fieldValue}>
-             10/8/1997
-            </Text>
-          </Text>
-          <Text
-            style={styles.formSection}>
-            Contact Information
-          </Text>
-          <Text style={styles.medfield}>
-            Email Address    <Text style={styles.fieldValue}>
-             sina@sina.com
-            </Text>
-          </Text>
-          <Text style={styles.medfield}>
-             Phone    <Text style={styles.fieldValue}>
-             777-778-8690
-            </Text>
-          </Text>
           </ScrollView>
     );
   }

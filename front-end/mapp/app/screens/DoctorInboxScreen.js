@@ -12,7 +12,7 @@ import { Card, Button } from "react-native-elements"; //0.19.1
 import { TouchableOpacity } from "react-native";
 import genAlert from "../components/generalComponents/genAlert";
 import postData from "../lib/postData";
-import getDoctorData from "../lib/getDoctorData";
+import checkRequestErrors from "../lib/errors";
 
 export default class DoctorInboxScreen extends React.Component {
   acceptOnPress = patientID => {
