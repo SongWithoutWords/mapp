@@ -54,10 +54,10 @@ export default class DoctorInboxScreen extends React.Component {
   mapRequestToCard = request => (
     <Card key={request.id}>
       <Text style={styles.text}>
-        {request.firstName + " " + request.lastName}
+        {"Request from " + request.firstName + " " + request.lastName}
       </Text>
       <View style={styles.buttonGroup}>
-        <Button title="Accept" onPress={() => this.acceptOnPress(request.patient.id)} />
+        <Button title="Accept" onPress={() => this.acceptOnPress(request.id)} />
         <Button title="Decline" onPress={() => this.declineOnPress(request.id)}/>
       </View>
     </Card>

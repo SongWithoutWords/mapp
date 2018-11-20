@@ -11,10 +11,10 @@ export default class PatientInboxScreen extends React.Component {
   mapRequestToCard = request => (
     <Card key={request.id}>
       <Text style={styles.text}>
-        {"a pending request to Dr. " +
-          request.doctor.firstName +
+        {"Sent Request to Dr. " +
+          request.firstName +
           " " +
-          request.doctor.lastName}
+          request.lastName}
       </Text>
     </Card>
   );
