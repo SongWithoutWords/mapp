@@ -90,7 +90,9 @@ instance Yesod App where
     isAuthorized (PatientR _) _ = return Authorized
     isAuthorized PatientsR _ = return Authorized
 
+    isAuthorized (RequestR _) _ = return Authorized
     isAuthorized RequestsR _ = return Authorized
+
     isAuthorized RelationsR _ = return Authorized
 
     isAuthorized PrescriptionsR _ = return Authorized
