@@ -31,13 +31,15 @@ export default class DoctorInboxScreen extends React.Component {
   };
 
   declineOnPress = requestID => {
-    const url = settings.REMOTE_SERVER_URL + settings.REQUESTS_RES + '/' + requestID;
+    console.log(requestID);
+    const url =
+      settings.REMOTE_SERVER_URL + settings.REQUESTS_RES + "/" + requestID;
     return fetch(url, {
       method: "DELETE",
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json"
-      },
+      }
     })
       .then(checkRequestErrors)
       .then(response => {
@@ -54,11 +56,17 @@ export default class DoctorInboxScreen extends React.Component {
   mapRequestToCard = request => (
     <Card key={request.id}>
       <Text style={styles.text}>
-        {"Request from " + request.firstName + " " + request.lastName}
+        {"Request from " + request.patient.firstName + " " + request.patient.lastName}
       </Text>
       <View style={styles.buttonGroup}>
-        <Button title="Accept" onPress={() => this.acceptOnPress(request.id)} />
-        <Button title="Decline" onPress={() => this.declineOnPress(request.id)}/>
+        <Button
+          title="Accept"
+          onPress={() => this.acceptOnPress(request.patient.id)}
+        />
+        <Button
+          title="Decline"
+          onPress={() => this.declineOnPress(request.id)}
+        />
       </View>
     </Card>
   );

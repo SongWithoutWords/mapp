@@ -12,9 +12,9 @@ export default class PatientInboxScreen extends React.Component {
     <Card key={request.id}>
       <Text style={styles.text}>
         {"Sent Request to Dr. " +
-          request.firstName +
+          request.doctor.firstName +
           " " +
-          request.lastName}
+          request.doctor.lastName}
       </Text>
     </Card>
   );

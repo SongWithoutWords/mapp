@@ -62,7 +62,7 @@ export default function dataReducer(state=initialState, action) {
                 user: action.payload.user,
                 patients: { 
                     byId: _.merge({}, state.patients.byId, action.payload.patients.byId), 
-                    allIds: _.union([], state.patients.allIds, action.payload.allIds)
+                    allIds: _.union([], state.patients.allIds, action.payload.patients.allIds)
                 },
                 doctors: { 
                     byId: _.merge({}, state.doctors.byId, action.payload.doctors.byId), 

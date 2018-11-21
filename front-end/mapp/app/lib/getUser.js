@@ -32,12 +32,13 @@ function getUser(url, form) {
       const myPrescriptions = prescriptions.map(x => x.id);
 
       // change requestid to id
-      // const pendingRequests = pendingRequests.map(x => {
-      //   x.id = x.requestId;
-      //   delete x['requestId'];
-      //   return x;
-      // }); 
-      // console.log(pendingRequests);
+      pendingRequests = pendingRequests.map(x => {
+        x.id = x.requestId;
+        delete x['requestId'];
+        return x;
+      }); 
+      console.log(pendingRequests);
+
       const myPendingRequests = pendingRequests.map(x => x.id); 
 
       delete user.doctors;
@@ -53,6 +54,7 @@ function getUser(url, form) {
       console.log(user);
 
       patients = arrayToObj(patients);
+      console.log(patients);
       doctors = arrayToObj(doctors);
       prescriptions = arrayToObj(prescriptions);
       pendingRequests = arrayToObj(pendingRequests); 

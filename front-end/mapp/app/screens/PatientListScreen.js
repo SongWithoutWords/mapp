@@ -17,16 +17,32 @@ class PatientListScreen extends Component {
   constructor(props) {
     super(props);
 
+    // get patient array
+    const myPatientIDs = this.props.screenProps.user.myPatients;
+    const patients = [];
+    myPatientIDs.forEach(id => {
+      patients.push(this.props.screenProps.patients.byId[id]);
+    });
+
     this.state = {
-      patients: []
+      patients: patients
       // state used by search bar
       // an array of patients connected to this doctor
       // invariant: consistent with the patient states in redux store
     };
   }
 
-  componentDidMount() {
-    this.updateState();
+  // everytime props changes update internal state: patients to
+  // conform to the invariant
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.screenProps.user.myPatients !== this.props.screenProps.user.myPatients) {
+      const myPatientIDs = nextProps.screenProps.user.myPatients;
+      const patients = [];
+      myPatientIDs.forEach(id => {
+        patients.push(nextProps.screenProps.patients.byId[id]);
+      });
+      this.setState({ patients: patients });
+    }
   }
 
   onPress = id => {
@@ -70,7 +86,6 @@ class PatientListScreen extends Component {
           roundAvatar
           title={`${item.firstName} ${item.lastName}`}
           subtitle={item.email}
-          // avatar={{ uri: item.picture.thumbnail }}
           containerStyle={{ borderBottomWidth: 0 }}
           onPress={() => this.onPress(item.id)}
           style={{
@@ -79,17 +94,6 @@ class PatientListScreen extends Component {
         />
       </View>
     );
-  };
-
-  updateState = () => {
-    const myPatientIDs = this.props.screenProps.user.myPatients;
-    const patients = [];
-    myPatientIDs.forEach(id => {
-      patients.push(this.props.screenProps.patients.byId[id]);
-    });
-    this.setState({
-      patients: patients
-    });
   };
 
   searchFilterFunction = text => {
@@ -123,7 +127,6 @@ class PatientListScreen extends Component {
                 const form = { email, password };
                 const url = settings.REMOTE_SERVER_URL + settings.LOGIN_RES;
                 this.props.screenProps.onSignIn(url, form);
-                this.updateState();
               }}
             />
           }
