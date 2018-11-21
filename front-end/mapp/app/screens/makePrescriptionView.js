@@ -32,6 +32,7 @@ export default class MakePrescriptionView extends React.Component {
     const patient = this.props.navigation.getParam("patient", {});
     const user = this.props.navigation.getParam("user", {});
     const url = settings.REMOTE_SERVER_URL + settings.PRESCRIPTION_RES;
+
     const json = {
       patient: patient.id,
       doctor: user.id,
@@ -40,12 +41,13 @@ export default class MakePrescriptionView extends React.Component {
       amountInitial: 20,
       dosageSchedule: [
         {
-          firstDose: "2018-11-20T17:13:45.725Z",
-          minutesBetweenDoses: 1440,
+          firstDose: new Date(Date.now() + (30 * 1000)),
+          minutesBetweenDoses: 1,
           dosage: 0.5
         }
       ]
     };
+
     return postData(url, json)
       .then(response => {
         genAlert(
