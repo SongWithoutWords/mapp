@@ -127,13 +127,19 @@ spec = withApp $ do
       postJson RelationsR $ doctorPatientRelation 1 1
       jsonResponseIs $ Entity (doctorPatientRelationKey 1) $ doctorPatientRelation 1 1
 
-      -- Get the doctor account, ensure that they have the patient
+      -- Ensure that the doctor has the patient
       get $ DoctorR 1
       jsonResponseIs $ DoctorWithPatients
         { id = doctorKey 1
         , firstName = "James"
         , lastName = "Hill"
-        , patients = [Entity (patientKey 1) $ Patient "Bobby" "Lee" Nothing]
+        , patients =
+          [ Entity (patientKey 1) $ Patient
+              { patientFirstName = "Bobby"
+              , patientLastName = "Lee"
+              , patientDateOfBirth = Nothing
+              }
+          ]
         , pendingRequests = []
         }
 
