@@ -84,6 +84,45 @@ spec = withApp $ do
       postJson RequestsR $ doctorPatientRequest 1 1
       jsonResponseIs $ Entity (doctorPatientRequestKey 1) $ doctorPatientRequest 1 1
 
+      -- Ensure that the doctor has the request
+      get $ DoctorR 1
+      jsonResponseIs $ DoctorWithPatients
+        { id = doctorKey 1
+        , firstName = "James"
+        , lastName = "Hill"
+        , patients = []
+        , pendingRequests =
+          [ PendingRequestForDoctor
+            { requestId = requestKey 1
+            , patient = Entity (patientKey 1) $ Patient
+              { patientFirstName = "Bobby"
+              , patientLastName = "Lee"
+              , patientDateOfBirth = Nothing
+              }
+            }
+          ]
+        }
+
+      -- Ensure that the patient has the request
+      get $ PatientR 1
+      jsonResponseIs $ PatientWithDoctors
+        { id = patientKey 1
+        , firstName = "Bobby"
+        , lastName = "Lee"
+        , dateOfBirth = Nothing
+        , doctors = []
+        , pendingRequests =
+          [ PendingRequestForPatient
+            { requestId = requestKey 1
+            , doctor = Entity (doctorKey 1) $ Doctor
+              { doctorFirstName = "James"
+              , doctorLastName = "Hill"
+              }
+            }
+          ]
+        , prescriptions = []
+        }
+
       -- Confirm the patient's request
       postJson RelationsR $ doctorPatientRelation 1 1
       jsonResponseIs $ Entity (doctorPatientRelationKey 1) $ doctorPatientRelation 1 1
