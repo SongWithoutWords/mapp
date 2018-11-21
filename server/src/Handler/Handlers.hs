@@ -26,8 +26,7 @@ getDoctorWithPatients did = do
   patients' <- runDB $ mapMaybeM getEntity pids
 
   requests <- runDB $ selectList [DoctorPatientRequestDoctor ==. did] []
-  let rids = doctorPatientRequestPatient . entityVal <$> requests
-  pendingRequests' <- runDB $ mapMaybeM getEntity rids
+  pendingRequests' <- runDB $ mapMaybeM getRequestForDoctor requests
 
   return $ DoctorWithPatients
     { id = did
@@ -36,6 +35,16 @@ getDoctorWithPatients did = do
     , patients = patients'
     , pendingRequests = pendingRequests'
     }
+
+  where
+    getRequestForDoctor
+      :: Entity DoctorPatientRequest
+      -> SqlPersistT Handler (Maybe PendingRequestForDoctor)
+    getRequestForDoctor (Entity key (DoctorPatientRequest _ pid)) = do
+      mpatient <- getEntity pid
+      pure $ case mpatient of
+        Nothing -> Nothing
+        Just patient -> Just $ PendingRequestForDoctor key patient
 
 getPatientWithDoctors :: PatientId -> Handler PatientWithDoctors
 getPatientWithDoctors pid = do
@@ -46,8 +55,7 @@ getPatientWithDoctors pid = do
   doctors' <- runDB $ mapMaybeM getEntity dids
 
   requests <- runDB $ selectList [DoctorPatientRequestPatient ==. pid] []
-  let rids = doctorPatientRequestDoctor . entityVal <$> requests
-  pendingRequests' <- runDB $ mapMaybeM getEntity rids
+  pendingRequests' <- runDB $ mapMaybeM getRequestForPatient requests
 
   prescriptions <- runDB $ selectList [PrescriptionPatient ==. pid] []
   prescriptions' <- mapM mapPrescription prescriptions
@@ -61,6 +69,16 @@ getPatientWithDoctors pid = do
     , pendingRequests = pendingRequests'
     , prescriptions = prescriptions'
     }
+
+  where
+    getRequestForPatient
+      :: Entity DoctorPatientRequest
+      -> SqlPersistT Handler (Maybe PendingRequestForPatient)
+    getRequestForPatient (Entity key (DoctorPatientRequest did _)) = do
+      mdoctor <- getEntity did
+      pure $ case mdoctor of
+        Nothing -> Nothing
+        Just doctor -> Just $ PendingRequestForPatient key doctor
 
 postLoginsR :: Handler Value
 postLoginsR = do
