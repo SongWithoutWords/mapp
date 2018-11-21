@@ -19,11 +19,27 @@ spec = withApp $ do
         , password = "blee"
         , dateOfBirth = Nothing
         }
-      jsonResponseIs $ Entity (patientKey 1) $ Patient "Bobby" "Lee" Nothing
+      jsonResponseIs $ PatientWithDoctors
+        { id = patientKey 1
+        , firstName = "Bobby"
+        , lastName = "Lee"
+        , dateOfBirth = Nothing
+        , doctors = []
+        , pendingRequests = []
+        , prescriptions = []
+        }
 
       -- Verify that the patient account exists
       get $ PatientR 1
-      jsonResponseIs $ Entity (patientKey 1) $ Patient "Bobby" "Lee" Nothing
+      jsonResponseIs $ PatientWithDoctors
+        { id = patientKey 1
+        , firstName = "Bobby"
+        , lastName = "Lee"
+        , dateOfBirth = Nothing
+        , doctors = []
+        , pendingRequests = []
+        , prescriptions = []
+        }
 
       -- Create a doctor account
       postJson DoctorsR $ PostDoctor

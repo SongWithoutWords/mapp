@@ -19,7 +19,15 @@ spec = withApp $ do
         , password = "blee"
         , dateOfBirth = Nothing
         }
-      jsonResponseIs $ Entity (patientKey 1) $ Patient "Bobby" "Lee" Nothing
+      jsonResponseIs $ PatientWithDoctors
+        { id = patientKey 1
+        , firstName = "Bobby"
+        , lastName = "Lee"
+        , dateOfBirth = Nothing
+        , doctors = []
+        , pendingRequests = []
+        , prescriptions = []
+        }
 
       postJson LoginsR $ PostLogin
         { email = "rob@lee.com"
@@ -37,7 +45,15 @@ spec = withApp $ do
         , password = "blee"
         , dateOfBirth = Nothing
         }
-      jsonResponseIs $ Entity (patientKey 1) $ Patient "Bobby" "Lee" Nothing
+      jsonResponseIs $ PatientWithDoctors
+        { id = patientKey 1
+        , firstName = "Bobby"
+        , lastName = "Lee"
+        , dateOfBirth = Nothing
+        , doctors = []
+        , pendingRequests = []
+        , prescriptions = []
+        }
 
       postJson LoginsR $ PostLogin
         { email = "boby@lee.com"
@@ -55,7 +71,15 @@ spec = withApp $ do
         , password = "blee"
         , dateOfBirth = Nothing
         }
-      jsonResponseIs $ Entity (patientKey 1) $ Patient "Bobby" "Lee" Nothing
+      jsonResponseIs $ PatientWithDoctors
+        { id = patientKey 1
+        , firstName = "Bobby"
+        , lastName = "Lee"
+        , dateOfBirth = Nothing
+        , doctors = []
+        , pendingRequests = []
+        , prescriptions = []
+        }
 
       postJson LoginsR $ PostLogin
         { email = "boby@lee.com"
