@@ -26,7 +26,6 @@ getDoctorWithPatients did = do
   patients' <- runDB $ mapMaybeM getEntity pids
 
   requests <- runDB $ selectList [DoctorPatientRequestDoctor ==. did] []
-  -- let rids = entityKey <$> requests
   pendingRequests' <- runDB $ mapMaybeM getRequestForDoctor requests
 
   return $ DoctorWithPatients
@@ -38,11 +37,14 @@ getDoctorWithPatients did = do
     }
 
   where
-    -- getRequestForDoctor :: DoctorPatientRequestId -> Handler PendingRequestForDoctor
     getRequestForDoctor
-      :: Entity DoctorPatientRequestId
+      :: Entity DoctorPatientRequest
       -> SqlPersistT Handler (Maybe PendingRequestForDoctor)
-    getRequestForDoctor = undefined
+    getRequestForDoctor (Entity key (DoctorPatientRequest _ pid)) = do
+      mpatient <- getEntity pid
+      pure $ case mpatient of
+        Nothing -> Nothing
+        Just patient -> Just $ PendingRequestForDoctor key patient
 
 getPatientWithDoctors :: PatientId -> Handler PatientWithDoctors
 getPatientWithDoctors pid = do
