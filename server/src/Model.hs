@@ -64,10 +64,17 @@ data DoctorWithPatients = DoctorWithPatients
   , firstName :: Text
   , lastName :: Text
   , patients :: [Entity Patient]
-  , pendingRequests :: [Entity Patient]
+  , pendingRequests :: [PendingRequestForDoctor]
   } deriving(Eq, Generic, Show)
 instance FromJSON DoctorWithPatients
 instance ToJSON DoctorWithPatients
+
+data PendingRequestForDoctor = PendingRequestForDoctor
+  { requestId :: DoctorPatientRequestId
+  , patient :: Entity Patient
+  } deriving(Eq, Generic, Show)
+instance FromJSON PendingRequestForDoctor
+instance ToJSON PendingRequestForDoctor
 
 -- Information returned for use by the doctors' app
 data PatientWithDoctors = PatientWithDoctors
@@ -76,11 +83,18 @@ data PatientWithDoctors = PatientWithDoctors
   , lastName :: Text
   , dateOfBirth :: Maybe Day
   , doctors :: [Entity Doctor]
-  , pendingRequests :: [Entity Doctor]
+  , pendingRequests :: [PendingRequestForPatient]
   , prescriptions :: [GetPrescription]
   } deriving(Eq, Generic, Show)
 instance FromJSON PatientWithDoctors
 instance ToJSON PatientWithDoctors
+
+data PendingRequestForPatient = PendingRequestForPatient
+  { requestId :: DoctorPatientRequestId
+  , doctor :: Entity Doctor
+  } deriving(Eq, Generic, Show)
+instance FromJSON PendingRequestForPatient
+instance ToJSON PendingRequestForPatient
 
 data PostPrescription = PostPrescription
   { doctor :: DoctorId
