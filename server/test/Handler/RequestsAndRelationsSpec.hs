@@ -143,12 +143,19 @@ spec = withApp $ do
         , pendingRequests = []
         }
 
-      -- Get the patient account and ensure that they have the doctor
-      -- get $ PatientR 1
-      -- jsonResponseIs $ DoctorWithPatients
-      --   { id = doctorKey 1
-      --   , firstName = "James"
-      --   , lastName = "Hill"
-      --   , patients = [Entity (patientKey 1) $ Patient "Bobby" "Lee" Nothing]
-      --   , pendingRequests = []
-      --   }
+      -- Ensure that the patient has the doctor
+      get $ PatientR 1
+      jsonResponseIs $ PatientWithDoctors
+        { id = patientKey 1
+        , firstName = "Bobby"
+        , lastName = "Lee"
+        , dateOfBirth = Nothing
+        , doctors =
+          [ Entity (doctorKey 1) $ Doctor
+              { doctorFirstName = "James"
+              , doctorLastName = "Hill"
+              }
+          ]
+        , pendingRequests = []
+        , prescriptions = []
+        }
