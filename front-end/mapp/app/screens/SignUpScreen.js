@@ -4,7 +4,13 @@ import React, { Component } from "react";
 import { StyleSheet, Text, View, ScrollView, AppRegistry } from "react-native";
 import genAlert from "../components/generalComponents/genAlert";
 import validate from "validate.js";
-import { Button, Card, FormLabel, FormInput } from "react-native-elements";
+import {
+  Button,
+  Card,
+  FormLabel,
+  FormInput,
+  FormValidationMessage
+} from "react-native-elements";
 
 class SignUpScreen extends Component {
   constructor(props) {
@@ -14,17 +20,43 @@ class SignUpScreen extends Component {
       lastName: "",
       email: "",
       password: "",
-      confirmPassword: ""
+      confirmPassword: "",
+      firstNameValidateMsg: null,
+      lastNameValidateMsg: null,
+      emailValidateMsg: null,
+      passwordValidateMsg: null,
+      confirmPasswordValidateMsg: null
     };
   }
 
   onSignUp = userTypeString => {
-    const { email, password, confirmPassword } = this.state;
-    const fields = { email, password, confirmPassword };
+    const {
+      email,
+      password,
+      confirmPassword,
+      firstName,
+      lastName
+    } = this.state;
+    const fields = { email, password, confirmPassword, firstName, lastName };
     const result = validate(fields, constraints);
 
     if (typeof result !== "undefined") {
-      genAlert("Sign up failed", JSON.stringify(result)); // TODO: making the form display errors rather than an alert
+      const newState = {
+        firstNameValidateMsg: null,
+        lastNameValidateMsg: null,
+        emailValidateMsg: null,
+        passwordValidateMsg: null,
+        confirmPasswordValidateMsg: null
+      };
+      Object.keys(result).forEach(
+        function(key) {
+          msg = result[key].join(", ");
+          key = key + "ValidateMsg";
+          newState[key] = msg;
+        }
+      );
+      this.setState(newState);
+
     } else {
       const { firstName, lastName, email, password } = this.state;
       const form = { firstName, lastName, email, password };
@@ -41,17 +73,25 @@ class SignUpScreen extends Component {
   // https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
   // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Using_promises
 
-  formItem = ({ itemLabel, key, isSecureEntry = false }) => (
-    <>
-      <FormLabel>{itemLabel}</FormLabel>
-      <FormInput
-        autoCapitalize="none"
-        secureTextEntry={isSecureEntry}
-        placeholder={itemLabel}
-        onChangeText={value => this.setState({ [key]: value })}
-      />
-    </>
-  );
+  formItem = ({
+    itemLabel,
+    key,
+    isSecureEntry = false,
+    validationMsg = null
+  }) => {
+    return (
+      <>
+        <FormLabel>{itemLabel}</FormLabel>
+        <FormInput
+          autoCapitalize="none"
+          secureTextEntry={isSecureEntry}
+          placeholder={itemLabel}
+          onChangeText={value => this.setState({ [key]: value })}
+        />
+        <FormValidationMessage>{validationMsg}</FormValidationMessage>
+      </>
+    );
+  };
 
   render() {
     const userTypeString = this.props.navigation.getParam("userType", "");
@@ -59,18 +99,32 @@ class SignUpScreen extends Component {
       <View style={styles.container}>
         <ScrollView>
           <Card>
-            {this.formItem({ itemLabel: "Email", key: "email" })}
-            {this.formItem({ itemLabel: "First Name", key: "firstName" })}
-            {this.formItem({ itemLabel: "Last Name", key: "lastName" })}
+            {this.formItem({
+              itemLabel: "Email",
+              key: "email",
+              validationMsg: this.state.emailValidateMsg
+            })}
+            {this.formItem({
+              itemLabel: "First Name",
+              key: "firstName",
+              validationMsg: this.state.firstNameValidateMsg
+            })}
+            {this.formItem({
+              itemLabel: "Last Name",
+              key: "lastName",
+              validationMsg: this.state.lastNameValidateMsg
+            })}
             {this.formItem({
               itemLabel: "Password",
               key: "password",
-              isSecureEntry: true
+              isSecureEntry: true,
+              validationMsg: this.state.passwordValidateMsg
             })}
             {this.formItem({
               itemLabel: "Confirm Password",
               key: "confirmPassword",
-              isSecureEntry: true
+              isSecureEntry: true,
+              validationMsg: this.state.confirmPasswordValidateMsg
             })}
             <Button
               buttonStyle={{ marginTop: 20 }}
@@ -114,7 +168,23 @@ var constraints = {
     }
   },
   email: {
-    email: true
+    email: {
+      message: "doesn't look like a valid email"
+    }
+  },
+  firstName: {
+    format: {
+      pattern: "[a-zA-Z]+",
+      flags: "i",
+      message: "can only contain a-z and A-Z"
+    }
+  },
+  lastName: {
+    format: {
+      pattern: "[a-zA-Z]+",
+      flags: "i",
+      message: "can only contain a-z and A-Z"
+    }
   }
 };
 
