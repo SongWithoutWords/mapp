@@ -2,10 +2,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Handler.PrescriptionsAndDosesSpec(spec) where
 
--- import Data.UTC
--- import Data.UTCTime
-import Data.Time
-
 import TestImport
 import Model.DosageUnit
 
@@ -41,8 +37,6 @@ spec = withApp $ do
         , pendingRequests = []
         }
 
-      let timeFromString = parseTimeOrError True defaultTimeLocale "%Y-%m-%d %l:%M"
-
       -- Add a prescription with POST /prescription
       postJson PrescriptionsR $ PostPrescription
         { doctor = doctorKey 1
@@ -52,7 +46,7 @@ spec = withApp $ do
         , amountInitial = 5
         , dosageSchedule =
           [ PostRecurringDose
-            { firstDose = timeFromString "2019-01-01 09:00"
+            { firstDose = 10
             , minutesBetweenDoses = 24 * 60
             , dosage = 0.5
             }
@@ -67,7 +61,7 @@ spec = withApp $ do
         , amountInitial = 5
         , dosageSchedule =
           [ PostRecurringDose
-            { firstDose = timeFromString "2019-01-01 09:00"
+            { firstDose = 10
             , minutesBetweenDoses = 24 * 60
             , dosage = 0.5
             }
@@ -78,7 +72,7 @@ spec = withApp $ do
       -- Indicate that a dose has been taken with POST /doses-taken
       postJson DosesTakenR $ DoseTaken
         { doseTakenPrescription = PrescriptionKey 1
-        , doseTakenTime = timeFromString "2019-01-01 09:07"
+        , doseTakenTime = 100
         , doseTakenAmount = 0.5
         }
 
@@ -101,7 +95,7 @@ spec = withApp $ do
             , amountInitial = 5
             , dosageSchedule =
               [ PostRecurringDose
-                { firstDose = timeFromString "2019-01-01 09:00"
+                { firstDose = 10
                 , minutesBetweenDoses = 24 * 60
                 , dosage = 0.5
                 }
@@ -109,7 +103,7 @@ spec = withApp $ do
             , dosesTaken =
               [ DoseTaken
                 { doseTakenPrescription = PrescriptionKey 1
-                , doseTakenTime = timeFromString "2019-01-01 09:07"
+                , doseTakenTime = 100
                 , doseTakenAmount = 0.5
                 }
               ]

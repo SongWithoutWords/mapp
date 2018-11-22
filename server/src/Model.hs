@@ -108,7 +108,7 @@ instance FromJSON PostPrescription
 instance ToJSON PostPrescription
 
 data PostRecurringDose = PostRecurringDose
-  { firstDose :: UTCTime
+  { firstDose :: Word64
   , minutesBetweenDoses :: Int
   , dosage :: Double
   } deriving(Eq, Generic, Show)

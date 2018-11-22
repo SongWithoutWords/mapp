@@ -46,13 +46,13 @@ Prescription json
 
 RecurringDose json
     prescription PrescriptionId
-    firstDose UTCTime
+    firstDose Word64
     minutesBetweenDoses Int
     dosage Double
 
 DoseTaken json
     prescription PrescriptionId
-    time UTCTime
+    time Word64
     amount Double
     deriving Eq
     deriving Show
