@@ -1,14 +1,49 @@
 import * as React from 'react';
 import { Text, View, StyleSheet, TextInput, Image, ScrollView, Button, TouchableOpacity, AppRegistry } from 'react-native';
 import { Card, CheckBox } from 'react-native-elements'; // 0.19.1
+import checkRequestErrors from "../lib/errors";
+import genAlert from "../components/generalComponents/genAlert";
 
 import settings from "../config/settings";
 // or any pure javascript modules available in npm
 
 export default class PatientNotificationsView extends React.Component  {
-  render() {
-    return (
-      <View>
+
+  takeMed = prescription => {
+    /*{ doseTakenPrescription = PrescriptionKey 1
+         , doseTakenTime = timeFromString "2019-01-01 09:07"
+         , doseTakenAmount = 0.5
+       }*/
+
+   return fetch(settings.REMOTE_SERVER_URL + settings.DOSES_RES, {
+     method: "POST",
+     headers: {
+       Accept: "application/json",
+       "Content-Type": "application/json"
+     },
+     body: JSON.stringify({
+       doseTakenPrescription: prescription.id,
+       doseTakenTime: new Date(),
+       doseTakenAmount : 1
+     })
+   })
+     .then(checkRequestErrors)
+     .then(response => response.json())
+     .then(responseJson => {
+       this.setState(
+         {
+           response: responseJson
+         },
+         function() {}
+       );
+     })
+     .catch(error => {
+       //genAlert(error.name, error.message);
+       alert(this);
+     });
+  }
+  mapNotificationToCard = (prescription, mins) => (
+
       <Card flexDirection= 'row'>
 
           <View style = {[{width: 80, height: 80, borderColor : 'black', alignItems: 'center', justifyContent: 'center', padding: 10}, styles.withBottomBorder]}>
@@ -16,9 +51,9 @@ export default class PatientNotificationsView extends React.Component  {
           </View>
           <View style = {{width: '75%', height: 100, padding: 5}}>
             <Text style={styles.fieldValue}>
-              <Text style={styles.medfield}>Dr. Saleh</Text> renewed your <Text style={styles.medfield}>Cefixime 400</Text> prescription
+              You must take your <Text style={styles.medfield, {color: '#C60000'}}>{prescription.medName}</Text> prescription <Text style={styles.medfield, {color: '#C60000'}}>now</Text>
             </Text>
-            <Text style={styles.notificationDate}>an hour ago</Text>
+            <Text style={styles.notificationDate}>{mins} minutes ago</Text>
             <View style={{
                       alignItems : 'center',
                       justifyContent : 'center',
@@ -26,7 +61,7 @@ export default class PatientNotificationsView extends React.Component  {
                       marginLeft: 0
                     }}>
               <View style={{width: '40%'}}>
-              <TouchableOpacity style={styles.RenewButton}>
+              <TouchableOpacity style={styles.RenewButton} onPress = {this.takeMed.bind(this, prescription)}>
                 <Text style = {styles.buttonText}>Take Now</Text>
               </TouchableOpacity>
               </View>
@@ -38,7 +73,38 @@ export default class PatientNotificationsView extends React.Component  {
             </View>
           </View>
         </Card>
-      </View>
+      //</View>
+    );
+
+  render() {
+    const prescriptions = {byId : {1 : {  medName: "Cefixime",
+      medDoseUnit: "Gram",
+      medInitialAmount: 10,
+      medRemainingAmoount: 6,
+      startDate: new Date() ,
+      endDate: new Date(),
+      medFreq: 480},
+      2 : {  medName: "Amoxicillin",
+        medDoseUnit: "Gram",
+        medInitialAmount: 10,
+        medRemainingAmoount: 6,
+        startDate: new Date().setMinutes(35) ,
+        endDate: new Date(),
+        medFreq: 480}},
+    allIds:[1, 2]};
+    const requestIDs = [1, 2];
+    const one_min= 1000*60 ;
+    const notificationInterval = 10;
+    return (
+      <ScrollView>
+      {requestIDs.map(id => {
+        alert((new Date() - prescriptions.byId[id].startDate)/one_min);
+        if(((new Date() - prescriptions.byId[id].startDate)/one_min %  prescriptions.byId[id].medFreq) <= notificationInterval){
+          let mins = (new Date() - prescriptions.byId[id].startDate)/one_min %  prescriptions.byId[id].medFreq;
+          return this.mapNotificationToCard(prescriptions.byId[id], Math.round(mins));
+        }
+      })}
+      </ScrollView>
     );
   }
 }
@@ -92,7 +158,7 @@ const styles = StyleSheet.create({
     //textAlign: 'center'
     color:'#5A5A5A',
     marginTop : 3,
-    marginLeft: 15
+    marginLeft: 5
   },
   withBottomBorder: {
     borderColor: '#009CC6',

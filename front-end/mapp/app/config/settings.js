@@ -22,6 +22,8 @@ let LOGIN_RES = "/logins";
 
 let PRESCRIPTION_RES = "/prescriptions";
 
+let DOSES_RES = "/doses-taken";
+
 let THEME_COLOR = "#694fad";
 let THEME_COLOR_LIGHT = "#9a7cdf";
 let INACTIVE_COLOR = "#3e2465";
@@ -39,7 +41,8 @@ export const settings = {
   THEME_COLOR_LIGHT,
   INACTIVE_COLOR,
   ACTIVE_COLOR,
-  LOGIN_RES
+  LOGIN_RES,
+  DOSES_RES
 };
 
 export default settings;
