@@ -22,9 +22,9 @@ export default class PatientNotificationsView extends React.Component  {
        "Content-Type": "application/json"
      },
      body: JSON.stringify({
-       doseTakenPrescription: prescription.id,
-       doseTakenTime: new Date(),
-       doseTakenAmount : 1
+       prescription: prescription.id,
+       time: new Date(Date.now()),
+       amount : 3
      })
    })
      .then(checkRequestErrors)
@@ -38,8 +38,13 @@ export default class PatientNotificationsView extends React.Component  {
        );
      })
      .catch(error => {
-       //genAlert(error.name, error.message);
-       alert(this);
+       genAlert(error.name, error.message, error.errors);
+       console.log(JSON.stringify({
+         prescription: prescription.id,
+         time: new Date(Date.now()),
+         amount : 1
+       }));
+       //alert(this);
      });
   }
   mapNotificationToCard = (prescription, mins) => (
@@ -51,7 +56,7 @@ export default class PatientNotificationsView extends React.Component  {
           </View>
           <View style = {{width: '75%', height: 100, padding: 5}}>
             <Text style={styles.fieldValue}>
-              You must take your <Text style={styles.medfield, {color: '#C60000'}}>{prescription.medName}</Text> prescription <Text style={styles.medfield, {color: '#C60000'}}>now</Text>
+              You must take your <Text style={styles.medfield, {color: '#C60000'}}>{prescription.medication}</Text> prescription <Text style={styles.medfield, {color: '#C60000'}}>now</Text>
             </Text>
             <Text style={styles.notificationDate}>{mins} minutes ago</Text>
             <View style={{
@@ -77,30 +82,69 @@ export default class PatientNotificationsView extends React.Component  {
     );
 
   render() {
-    const prescriptions = {byId : {1 : {  medName: "Cefixime",
-      medDoseUnit: "Gram",
-      medInitialAmount: 10,
-      medRemainingAmoount: 6,
-      startDate: new Date() ,
-      endDate: new Date(),
-      medFreq: 480},
-      2 : {  medName: "Amoxicillin",
-        medDoseUnit: "Gram",
-        medInitialAmount: 10,
-        medRemainingAmoount: 6,
-        startDate: new Date().setMinutes(35) ,
-        endDate: new Date(),
-        medFreq: 480}},
-    allIds:[1, 2]};
-    const requestIDs = [1, 2];
+    /*const prescriptions = {byId :
+      {2 : {
+            amountInitial: 20,
+            doctor: 3,
+            dosageSchedule: [
+                {
+                    dosage: 0.5,
+                    firstDose: "2018-11-21T18:51:47.928Z",
+                    minutesBetweenDoses: 10
+                }
+            ],
+            dosageUnit: "Gram",
+            dosesTaken: [
+                {
+                    amount: 5,
+                    prescription: 2,
+                    time: "2018-11-21T18:51:47.928Z"
+                },
+                {
+                    amount: 1,
+                    prescription: 2,
+                    time: "2018-11-22T23:48:44.321Z"
+                },
+                {
+                    amount: 3,
+                    prescription: 2,
+                    time: "2018-11-22T23:54:06.837Z"
+                }
+            ],
+            id: 2,
+            medication: "Amoxicillin",
+            patient: 2
+        }
+        },
+    allIds:[2]};*/
+    const prescriptions = this.props.screenProps.prescriptions;
+    const requestIDs = this.props.screenProps.user.myPrescriptions;
+    //console.log(prescriptions.byId[2].dosesTaken);
+    //console.log( prescriptions.byId[2].dosesTaken[prescriptions.byId[2].dosesTaken.length-1]);
+    console.log(requestIDs);
     const one_min= 1000*60 ;
     const notificationInterval = 10;
     return (
       <ScrollView>
       {requestIDs.map(id => {
-        alert((new Date() - prescriptions.byId[id].startDate)/one_min);
-        if(((new Date() - prescriptions.byId[id].startDate)/one_min %  prescriptions.byId[id].medFreq) <= notificationInterval){
-          let mins = (new Date() - prescriptions.byId[id].startDate)/one_min %  prescriptions.byId[id].medFreq;
+        //alert((new Date() - startDate)/one_min);
+        console.log( prescriptions.byId[id].dosesTaken);
+        console.log( prescriptions.byId[id].dosesTaken[prescriptions.byId[id].dosesTaken.length-1]);
+
+        let startDate = new Date(prescriptions.byId[id].dosageSchedule[0].firstDose);
+        let freq = prescriptions.byId[id].dosageSchedule[0].minutesBetweenDoses;
+        let lastDose = undefined;
+        if(prescriptions.byId[id].dosesTaken.length != 0)
+          lastDose = prescriptions.byId[id].dosesTaken[prescriptions.byId[id].dosesTaken.length-1];
+
+        let numOfDose = Math.floor((new Date() - startDate)/(one_min*freq));
+        let numOfLastDose = -1;
+        if(lastDose !== undefined)
+          numOfLastDose = Math.floor((new Date(lastDose.time) - startDate)/(one_min*freq));
+
+        if(numOfLastDose != numOfDose){
+          alert(numOfLastDose + " " + numOfDose);
+          let mins = (new Date() - startDate)/one_min - numOfDose*freq;
           return this.mapNotificationToCard(prescriptions.byId[id], Math.round(mins));
         }
       })}
@@ -108,25 +152,6 @@ export default class PatientNotificationsView extends React.Component  {
     );
   }
 }
-
-/*<View style={{
-          alignItems : 'center',
-          justifyContent : 'center',
-          flexDirection: 'row',
-          marginLeft: 0
-        }}>
-        <View style={{width: '40%'}}>
-        <TouchableOpacity style={styles.RenewButton}>
-          <Text style = {styles.buttonText}>Take Now</Text>
-        </TouchableOpacity>
-        </View>
-        <View style={{width: '40%'}}>
-        <TouchableOpacity style={styles.EditButton}>
-          <Text style = {styles.buttonText}>Snooze</Text>
-        </TouchableOpacity>
-        </View>
-        </View>*/
-
 
 const styles = StyleSheet.create({
   container: {
