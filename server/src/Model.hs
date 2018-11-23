@@ -97,7 +97,7 @@ instance FromJSON PendingRequestForPatient
 instance ToJSON PendingRequestForPatient
 
 data PostPrescription = PostPrescription
-  { doctor :: DoctorId
+  { doctor :: Maybe DoctorId -- optional because the patient may prescribe to themselves
   , patient :: PatientId
   , medication :: Text
   , dosageUnit :: DosageUnit
@@ -117,7 +117,7 @@ instance ToJSON PostRecurringDose
 
 data GetPrescription = GetPrescription
   { id :: PrescriptionId
-  , doctor :: DoctorId
+  , doctor :: Maybe DoctorId
   , patient :: PatientId
   , medication :: Text
   , dosageUnit :: DosageUnit
