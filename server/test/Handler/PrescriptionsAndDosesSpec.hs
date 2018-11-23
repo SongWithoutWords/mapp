@@ -45,7 +45,7 @@ spec = withApp $ do
 
       -- Add a prescription with POST /prescription
       postJson PrescriptionsR $ PostPrescription
-        { doctor = doctorKey 1
+        { doctor = Just $ doctorKey 1
         , patient = patientKey 1
         , medication = "amoxicillin"
         , dosageUnit = Gram
@@ -60,7 +60,7 @@ spec = withApp $ do
         }
       jsonResponseIs $ GetPrescription
         { id = PrescriptionKey 1
-        , doctor = doctorKey 1
+        , doctor = Just $ doctorKey 1
         , patient = patientKey 1
         , medication = "amoxicillin"
         , dosageUnit = Gram
@@ -94,7 +94,7 @@ spec = withApp $ do
         , prescriptions =
           [ GetPrescription
             { id = PrescriptionKey 1
-            , doctor = doctorKey 1
+            , doctor = Just $ doctorKey 1
             , patient = patientKey 1
             , medication = "amoxicillin"
             , dosageUnit = Gram

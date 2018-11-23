@@ -38,7 +38,7 @@ DoctorPatientRelation json
     deriving Show
 
 Prescription json
-    doctor DoctorId
+    doctor DoctorId Maybe
     patient PatientId
     medication Text
     dosageUnit DosageUnit
