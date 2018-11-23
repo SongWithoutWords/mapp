@@ -41,7 +41,7 @@ export default class MakePrescriptionView extends React.Component {
       amountInitial: 20,
       dosageSchedule: [
         {
-          firstDose: new Date(Date.now() + (30 * 1000)),
+          firstDose: new Date(Date.now()),
           minutesBetweenDoses: 1,
           dosage: 0.5
         }
