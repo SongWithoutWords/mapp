@@ -1,12 +1,9 @@
 import * as React from "react";
 import {
-  Text,
   View,
   StyleSheet,
   TextInput,
   ScrollView,
-  Button,
-  TouchableOpacity,
   AppRegistry
 } from "react-native";
 // or any pure javascript modules available in npm
@@ -14,19 +11,49 @@ import { Card, CheckBox } from "react-native-elements"; // 0.19.1
 import settings from "../config/settings";
 import postData from "../lib/postData";
 import genAlert from "../components/generalComponents/genAlert";
+import DateTimePicker from "react-native-modal-datetime-picker";
+import { Picker, Header, Content, Button, Text } from "native-base";
 
 export default class MakePrescriptionView extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      medName: "",
-      medDoseUnit: "",
-      medInitialAmount: 0,
-      startDate: new Date(),
-      endDate: new Date(),
-      medFreq: ""
+      medication: "",
+      dosage: 0,
+      dosageUnit: "",
+      amountInitial: 0,
+      startDate: null,
+      endDate: null,
+      frequency: 0,
+      isStartDateTimePickerVisible: false,
+      isEndDateTimePickerVisible: false
     };
   }
+
+  // date time picker handlers
+  _showStartDateTimePicker = () =>
+    this.setState({ isStartDateTimePickerVisible: true });
+  _hideStartDateTimePicker = () =>
+    this.setState({ isStartDateTimePickerVisible: false });
+  _handleStartDatePicked = date => {
+    console.log("A start date has been picked: ", date);
+    this.setState({ startDate: date });
+    this._hideStartDateTimePicker();
+  };
+
+  _showEndDateTimePicker = () =>
+    this.setState({ isEndDateTimePickerVisible: true });
+  _hideEndDateTimePicker = () =>
+    this.setState({ isEndDateTimePickerVisible: false });
+  _handleEndDatePicked = date => {
+    console.log("An end date has been picked: ", date);
+    this.setState({ endDate: date });
+    this._hideEndDateTimePicker();
+  };
+
+  mockOnPress = () => {
+    genAlert(JSON.stringify(this.state));
+  };
 
   createPrescriptionOnPress = () => {
     const patient = this.props.navigation.getParam("patient", {});
@@ -41,8 +68,10 @@ export default class MakePrescriptionView extends React.Component {
       amountInitial: 20,
       dosageSchedule: [
         {
-          firstDose: new Date(Date.now() + (30 * 1000)),
-          minutesBetweenDoses: 1,
+          // firstDose: new Date(Date.now() + (30 * 1000)),
+          // minutesBetweenDoses: 1,
+          firstDose: "2018-11-20T17:13:45.725Z",
+          minutesBetweenDoses: 1440,
           dosage: 0.5
         }
       ]
@@ -71,111 +100,112 @@ export default class MakePrescriptionView extends React.Component {
           placeholder="Medication Name"
           placeholderTextColor="#009CC6"
           autoCapitalize="none"
-          onChangeText={value => this.setState({ medName: value })}
+          onChangeText={value => this.setState({ medication: value })}
         />
         <TextInput
-          style={styles.input}
-          underlineColorAndroid="transparent"
-          placeholder="Dosage Unit"
-          placeholderTextColor="#009CC6"
-          autoCapitalize="none"
-          onChangeText={value => this.setState({ medDoseUnit: value })}
-        />
-        <TextInput
+          keyboardType="numeric"
           style={styles.input}
           underlineColorAndroid="transparent"
           placeholder="Initial Amount"
           placeholderTextColor="#009CC6"
           autoCapitalize="none"
-          onChangeText={value => this.setState({ medInitialAmount: value })}
+          onChangeText={value => this.setState({ amountInitial: Number(value) })}
+        />
+        <TextInput
+          keyboardType="numeric"
+          style={styles.input}
+          underlineColorAndroid="transparent"
+          placeholder="Frequency (in minutes)"
+          placeholderTextColor="#009CC6"
+          autoCapitalize="none"
+          onChangeText={value => this.setState({ frequency: Number(value) })}
         />
         <TextInput
           style={styles.input}
+          keyboardType="numeric"
           underlineColorAndroid="transparent"
-          placeholder="Start Date"
+          placeholder="Dosage"
           placeholderTextColor="#009CC6"
           autoCapitalize="none"
-          onChangeText={value => this.setState({ startDate: value })}
+          onChangeText={value => this.setState({ dosage: Number(value) })}
         />
-        <TextInput
-          style={styles.input}
-          underlineColorAndroid="transparent"
-          placeholder="End Date"
-          placeholderTextColor="#009CC6"
-          autoCapitalize="none"
-          onChangeText={value => this.setState({ endDate: value })}
-        />
-        <TextInput
-          style={styles.input}
-          underlineColorAndroid="transparent"
-          placeholder="Frequency"
-          placeholderTextColor="#009CC6"
-          autoCapitalize="none"
-          onChangeText={value => this.setState({ medFreq: value })}
-        />
+        <Picker
+          mode="dropdown"
+          placeholder="Dosage Unit"
+          textStyle={{ color: "#009CC6" }}
+          itemStyle={{
+            backgroundColor: "#d3d3d3",
+            marginLeft: 0,
+            paddingLeft: 10
+          }}
+          itemTextStyle={{ color: "#788ad2" }}
+          selectedValue={this.state.dosageUnit}
+          onValueChange={itemValue => this.setState({ dosageUnit: itemValue })}
+        >
+          <Picker.Item label="Gram" value="Gram" />
+          <Picker.Item label="Liter" value="Liter" />
+        </Picker>
+
+
         <Button
-          title="Create a new prescription"
-          onPress={this.createPrescriptionOnPress}
+          bordered
+          style={styles.button}
+          onPress={this._showStartDateTimePicker}
+        >
+          <Text style={styles.buttonText}>Choose a start date </Text>
+        </Button>
+        <DateTimePicker
+          mode="datetime"
+          isVisible={this.state.isStartDateTimePickerVisible}
+          onConfirm={this._handleStartDatePicked}
+          onCancel={this._hideStartDateTimePicker}
         />
+
+        <Button
+          bordered
+          style={styles.button}
+          onPress={this._showEndDateTimePicker}
+        >
+          <Text style={styles.buttonText}>Choose a end date</Text>
+        </Button>
+        <DateTimePicker
+          mode="datetime"
+          isVisible={this.state.isEndDateTimePickerVisible}
+          onConfirm={this._handleEndDatePicked}
+          onCancel={this._hideEndDateTimePicker}
+        />
+
+        {/* <Button style={styles.button} onPress={this.createPrescriptionOnPress}> */}
+        <Button style={styles.button} onPress={this.mockOnPress}>
+          <Text>Create a new prescription</Text>
+        </Button>
       </ScrollView>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    paddingTop: 10,
-    backgroundColor: "#ecf0f1"
-  },
   formSection: {
     fontSize: 20,
     padding: 5,
-    margin: 15,
+    margin: 10,
     color: "black"
   },
-  paragraph: {
-    margin: 24,
-    fontSize: 18,
-    fontWeight: "bold",
-    textAlign: "center",
-    color: "#009CC6"
-  },
   input: {
-    margin: 15,
+    margin: 10,
     height: 40,
     padding: 10,
-    borderColor: "#009CC6",
+    borderColor: settings.THEME_COLOR,
     borderWidth: 1,
     borderRadius: 7
   },
-  fieldValue: {
-    fontSize: 16,
-    fontWeight: "200",
-    textAlign: "center",
-    color: "black"
-  },
-  medfield: {
-    fontSize: 16,
-    fontWeight: "600",
-    color: "#009CC6",
-    marginBottom: 40,
-    marginLeft: 24,
-    marginRight: 24
-  },
-  submitButton: {
-    backgroundColor: "#009CC6",
-    padding: 10,
-    margin: 15,
-    height: 40,
-    borderRadius: 10,
+  button: {
+    margin: 10,
     alignItems: "center",
-    width: "25%"
+    borderColor: settings.THEME_COLOR
   },
-  submitButtonText: {
-    color: "white"
+  buttonText: {
+    color: settings.THEME_COLOR
   }
 });
 AppRegistry.registerComponent(
