@@ -210,6 +210,9 @@ postPrescriptionsR = do
       mapRecurringDose pid (PostRecurringDose first minutesBetween dosage) =
         RecurringDose pid first minutesBetween dosage
 
+deletePrescriptionR :: Int -> Handler ()
+deletePrescriptionR = runDB . delete . prescriptionKey
+
 postDosesTakenR :: Handler Value
 postDosesTakenR = do
   d::DoseTaken <- requireJsonBody

@@ -30,4 +30,6 @@
 
 /prescriptions PrescriptionsR POST
 
+/prescriptions/#Int PrescriptionR DELETE
+
 /doses-taken DosesTakenR POST

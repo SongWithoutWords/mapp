@@ -148,6 +148,9 @@ patientKey = PatientKey . fromIntegral
 requestKey :: Int -> DoctorPatientRequestId
 requestKey = DoctorPatientRequestKey . fromIntegral
 
+prescriptionKey :: Int -> PrescriptionId
+prescriptionKey = PrescriptionKey . fromIntegral
+
 doctorPatientRequestKey :: Int -> DoctorPatientRequestId
 doctorPatientRequestKey = DoctorPatientRequestKey . fromIntegral
 
