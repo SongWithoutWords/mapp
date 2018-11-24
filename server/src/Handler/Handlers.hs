@@ -183,17 +183,29 @@ getPrescription = dbLookup404 >=> mapPrescription
 mapPrescription :: Entity Prescription -> Handler GetPrescription
 mapPrescription (Entity prescriptionId (Prescription did pid med unit amount)) = do
   schedule <- runDB $ selectList [RecurringDosePrescription ==. prescriptionId] []
-  let schedule' = mapRecurringDose . entityVal <$> schedule
+  let schedule' = recurringDoseToJs . entityVal <$> schedule
 
   dosesTaken <- runDB $ selectList [DoseTakenPrescription ==. prescriptionId] []
   let dosesTaken' = entityVal <$> dosesTaken
 
   pure $ GetPrescription prescriptionId did pid med unit amount schedule' dosesTaken'
 
-    where
-      mapRecurringDose :: RecurringDose -> PostRecurringDose
-      mapRecurringDose (RecurringDose _ first minutesBetween dosage) =
-          PostRecurringDose first minutesBetween dosage
+
+-- Convert recurring dose from database to json representation
+recurringDoseToJs :: RecurringDose -> PostRecurringDose
+recurringDoseToJs (RecurringDose _ first minutesBetween dosage) =
+    PostRecurringDose first minutesBetween dosage
+
+-- Convert recurring dose from json to database representation
+recurringDoseToDb :: PrescriptionId -> PostRecurringDose -> RecurringDose
+recurringDoseToDb pid (PostRecurringDose first minutesBetween dosage) =
+  RecurringDose pid first minutesBetween dosage
+
+insertSchedule :: PrescriptionId -> [PostRecurringDose] -> Handler ()
+insertSchedule pid schedule = runDB $ mapM (insert . recurringDoseToDb pid) schedule >> pure ()
+
+deleteSchedule :: PrescriptionId -> Handler ()
+deleteSchedule pid = runDB $ deleteWhere [RecurringDosePrescription ==. pid]
 
 postPrescriptionsR :: Handler Value
 postPrescriptionsR = do
@@ -201,14 +213,20 @@ postPrescriptionsR = do
 
   prescriptionId <- runDB $ insert $ Prescription did pid med unit amount
 
-  _ <- runDB $ mapM (insert . mapRecurringDose prescriptionId) schedule
+  insertSchedule prescriptionId schedule
 
   getPrescription prescriptionId >>= returnJson
 
-    where
-      mapRecurringDose :: PrescriptionId -> PostRecurringDose -> RecurringDose
-      mapRecurringDose pid (PostRecurringDose first minutesBetween dosage) =
-        RecurringDose pid first minutesBetween dosage
+patchPrescriptionR :: Int -> Handler Value
+patchPrescriptionR id = do
+  let prescriptionId = prescriptionKey id
+  PostPrescription did pid med unit amount schedule <- requireJsonBody
+
+  runDB $ replace prescriptionId $ Prescription did pid med unit amount
+  deleteSchedule prescriptionId
+  insertSchedule prescriptionId schedule
+
+  getPrescription prescriptionId >>= returnJson
 
 deletePrescriptionR :: Int -> Handler ()
 deletePrescriptionR = runDB . delete . prescriptionKey
@@ -217,5 +235,4 @@ postDosesTakenR :: Handler Value
 postDosesTakenR = do
   d::DoseTaken <- requireJsonBody
   runDB (insertEntity d) >>= returnJson
-
 
