@@ -1,13 +1,20 @@
 import * as React from "react";
 import settings from "../config/settings";
-import { Text, View, StyleSheet, AppRegistry, RefreshControl, ScrollView } from "react-native";
+import {
+  Text,
+  View,
+  StyleSheet,
+  AppRegistry,
+  RefreshControl,
+  ScrollView
+} from "react-native";
 import { Card, Button } from "react-native-elements"; //0.19.1
 import { TouchableOpacity } from "react-native";
 import genAlert from "../components/generalComponents/genAlert";
 import postData from "../lib/postData";
 import getDoctorData from "../lib/getDoctorData";
 
-export default class PatientInboxScreen extends React.Component {
+export default class PendingRequestScreen extends React.Component {
   mapRequestToCard = request => (
     <Card key={request.id}>
       <Text style={styles.text}>
@@ -26,19 +33,7 @@ export default class PatientInboxScreen extends React.Component {
     console.log(requestIDs);
     return (
       <View style={styles.container}>
-        <ScrollView
-          refreshControl={
-            <RefreshControl
-              refreshing={this.props.screenProps.isFetchingUser}
-              onRefresh={() => {
-                const { email, password } = this.props.screenProps.user;
-                const form = { email, password };
-                const url = settings.REMOTE_SERVER_URL + settings.LOGIN_RES;
-                this.props.screenProps.onSignIn(url, form);
-              }}
-            />
-          }
-        >
+        <ScrollView>
           {requestIDs.map(id =>
             this.mapRequestToCard(pendingRequests.byId[id])
           )}
@@ -48,7 +43,10 @@ export default class PatientInboxScreen extends React.Component {
   }
 }
 
-AppRegistry.registerComponent("PatientInboxScreen", () => PatientInboxScreen);
+AppRegistry.registerComponent(
+  "PendingRequestScreen",
+  () => PendingRequestScreen
+);
 
 const styles = StyleSheet.create({
   container: {

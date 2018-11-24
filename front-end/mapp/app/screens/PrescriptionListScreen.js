@@ -22,6 +22,23 @@ import { NavigationActions } from 'react-navigation';
 
 import ProgressBarAnimated from 'react-native-progress-bar-animated';
 class PrescriptionListScreen extends Component {
+
+  // polling on server
+  componentDidMount() {
+    const { email, password } = this.props.screenProps.user;
+    const form = { email, password };
+    const url = settings.REMOTE_SERVER_URL + settings.LOGIN_RES;
+    this.timer = setInterval(() => {
+      this.props.screenProps.onSignIn(url, form);
+    }, 2000);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.timer);
+    this.timer = null; // here...
+  }
+
+
   prescriptionOnPress = id => {
     this.props.navigation.navigate("PrescriptionInfo", {
       prescription: this.props.screenProps.prescriptions.byId[id]
@@ -84,8 +101,7 @@ class PrescriptionListScreen extends Component {
     }
 
     return (
-      <ScrollView style={styles.container}>
-        <Card>
+        <Card style={styles.container} key={prescription.id}>
           <Text style={styles.medfield}>
             Medication: <Text style={styles.fieldValue}>
                {prescription.medication}
@@ -145,7 +161,6 @@ class PrescriptionListScreen extends Component {
             </View>
           </View>
         </Card>
-      </ScrollView>
     );
   };
 
@@ -178,22 +193,20 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    //alignItems: 'center',
-    //justifyContent: 'center',
     padding: 10,
-    backgroundColor: '#ecf0f1',
+    backgroundColor: 'white',
   },
   fieldValue: {
     fontSize: 16,
     fontWeight: "200",
-    fontFamily: 'Poppins',
+    // fontFamily: 'Poppins',
     textAlign: 'center',
     color: 'black',
   },
   medfield: {
     fontSize: 16,
     fontWeight: '600',
-    fontFamily: 'Circular',
+    // fontFamily: 'Circular',
     //textAlign: 'center',
     color: '#009CC6',
     marginTop: 10,
@@ -204,14 +217,14 @@ const styles = StyleSheet.create({
   remainingPills: {
     textAlign: 'center',
     fontSize: 20,
-    fontFamily:'Circular',
+    // fontFamily:'Circular',
     fontWeight: '400',
     color: 'black',
   },
   button: {
     margin: 24,
     fontSize: 22,
-    fontFamily:'Circular',
+    // fontFamily:'Circular',
     fontWeight: '600',
     width:'30%',
     color: 'white'
@@ -220,7 +233,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color : 'white',
-    fontFamily: 'Circular',
+    // fontFamily: 'Circular',
     fontWeight:'500',
     fontSize: 16
   },

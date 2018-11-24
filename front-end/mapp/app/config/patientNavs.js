@@ -1,17 +1,22 @@
 import React from "react";
-import { AppRegistry } from 'react-native';
+import { View } from "react-native";
+import { AppRegistry } from "react-native";
 import settings from "../config/settings";
 import { createMaterialBottomTabNavigator } from "react-navigation-material-bottom-tabs";
+import { createMaterialTopTabNavigator } from "react-navigation";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { createStackNavigator } from "react-navigation";
-import PatientInboxScreen from "../screens/PatientInboxScreen";
+import PatientRequestScreen from "../screens/PatientRequestScreen";
 import AccountScreen from "../screens/AccountScreen";
 import PrescriptionInfoScreen from "../screens/PrescriptionInfoScreen";
 import PrescriptionListScreen from "../screens/PrescriptionListScreen";
 import DoctorListScreen from "../screens/DoctorListScreen";
 import DoctorInfoScreen from "../screens/DoctorInfoScreen";
-import {genTabNavOptions} from "../lib/genNavOptions"
+import { genTabNavOptions } from "../lib/genNavOptions";
 
+function NotificationScreen() {
+  return <View />;
+}
 
 // stack navigators
 const PrescriptionStackNavigator = createStackNavigator({
@@ -48,14 +53,51 @@ const DoctorStackNavigator = createStackNavigator({
   }
 });
 
+const InboxTabNavigator = createMaterialTopTabNavigator(
+  {
+    PendingRequests: {
+      screen: PatientRequestScreen,
+      navigationOptions: {
+        tabBarLabel: "Pending Requests",
+        header: null,
+        headerForceInset: { top: "never", bottom: "never" }
+      }
+    },
+    Notifications: {
+      screen: NotificationScreen,
+      navigationOptions: {
+        tabBarLabel: "Notifications",
+        header: null,
+        headerForceInset: { top: "never", bottom: "never" }
+      }
+    }
+  },
+  {
+    initialRouteName: "PendingRequests",
+    tabBarOptions: {
+      activeTintColor: settings.ACTIVE_COLOR,
+      inactiveTintColor: settings.ACTIVE_COLOR,
+      upperCaseLabel: false,
+      style: {
+        backgroundColor: settings.THEME_COLOR 
+      }
+    },
+    order: ["PendingRequests", "Notifications"]
+  }
+);
 
-const PatientTabNavOptions = genTabNavOptions("PrescriptionList", [ "Inbox", "PrescriptionList", "DoctorList", "Account"]);
+const PatientTabNavOptions = genTabNavOptions("PrescriptionList", [
+  "Inbox",
+  "PrescriptionList",
+  "DoctorList",
+  "Account"
+]);
 
 // tab navigator for patient
 const PatientTabNavigator = createMaterialBottomTabNavigator(
   {
     Inbox: {
-      screen: PatientInboxScreen,
+      screen: InboxTabNavigator,
       navigationOptions: {
         tabBarLabel: "Inbox",
         tabBarIcon: ({ tintColor }) => (
@@ -95,7 +137,7 @@ const PatientTabNavigator = createMaterialBottomTabNavigator(
       }
     }
   },
-  PatientTabNavOptions  
+  PatientTabNavOptions
 );
 export default PatientTabNavigator;
-AppRegistry.registerComponent('PatientTabNavigator', () => PatientTabNavigator);
+AppRegistry.registerComponent("PatientTabNavigator", () => PatientTabNavigator);

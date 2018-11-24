@@ -32,10 +32,28 @@ class PatientListScreen extends Component {
     };
   }
 
+  // polling on server
+  componentDidMount() {
+    const { email, password } = this.props.screenProps.user;
+    const form = { email, password };
+    const url = settings.REMOTE_SERVER_URL + settings.LOGIN_RES;
+    this.timer = setInterval(() => {
+      this.props.screenProps.onSignIn(url, form);
+    }, 2000);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.timer);
+    this.timer = null; // here...
+  }
+
   // everytime props changes update internal state: patients to
   // conform to the invariant
   componentWillReceiveProps(nextProps) {
-    if (nextProps.screenProps.user.myPatients !== this.props.screenProps.user.myPatients) {
+    if (
+      nextProps.screenProps.user.myPatients !==
+      this.props.screenProps.user.myPatients
+    ) {
       const myPatientIDs = nextProps.screenProps.user.myPatients;
       const patients = [];
       myPatientIDs.forEach(id => {
@@ -119,17 +137,17 @@ class PatientListScreen extends Component {
           keyExtractor={item => item.id.toString()}
           ItemSeparatorComponent={this.renderSeparator}
           ListHeaderComponent={this.renderHeader}
-          refreshControl={
-            <RefreshControl
-              refreshing={this.props.screenProps.isFetchingUser}
-              onRefresh={() => {
-                const { email, password } = this.props.screenProps.user;
-                const form = { email, password };
-                const url = settings.REMOTE_SERVER_URL + settings.LOGIN_RES;
-                this.props.screenProps.onSignIn(url, form);
-              }}
-            />
-          }
+          // refreshControl={
+          //   <RefreshControl
+          //     refreshing={this.props.screenProps.isFetchingUser}
+          //     onRefresh={() => {
+          //       const { email, password } = this.props.screenProps.user;
+          //       const form = { email, password };
+          //       const url = settings.REMOTE_SERVER_URL + settings.LOGIN_RES;
+          //       this.props.screenProps.onSignIn(url, form);
+          //     }}
+          //   />
+          // }
         />
       </View>
     );

@@ -78,17 +78,17 @@ export default class DoctorInboxScreen extends React.Component {
     return (
       <View style={styles.container}>
         <ScrollView
-          refreshControl={
-            <RefreshControl
-              refreshing={this.props.screenProps.isFetchingUser}
-              onRefresh={() => {
-                const { email, password } = this.props.screenProps.user;
-                const form = { email, password };
-                const url = settings.REMOTE_SERVER_URL + settings.LOGIN_RES;
-                this.props.screenProps.onSignIn(url, form);
-              }}
-            />
-          }
+          // refreshControl={
+          //   <RefreshControl
+          //     refreshing={this.props.screenProps.isFetchingUser}
+          //     onRefresh={() => {
+          //       const { email, password } = this.props.screenProps.user;
+          //       const form = { email, password };
+          //       const url = settings.REMOTE_SERVER_URL + settings.LOGIN_RES;
+          //       this.props.screenProps.onSignIn(url, form);
+          //     }}
+          // />
+          // }
         >
           {requestIDs.map(id =>
             this.mapRequestToCard(pendingRequests.byId[id])
