@@ -23,8 +23,9 @@ let LOGIN_RES = "/logins";
 let PRESCRIPTION_RES = "/prescriptions";
 
 let DOSES_RES = "/doses-taken";
-
-let THEME_COLOR = "#694fad";
+//Changed Theme Color
+//let THEME_COLOR = "#694fad";
+let THEME_COLOR = "#009CC6";
 let THEME_COLOR_LIGHT = "#9a7cdf";
 let INACTIVE_COLOR = "#3e2465";
 let ACTIVE_COLOR = "#f0edf6";
