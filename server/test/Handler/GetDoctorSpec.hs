@@ -52,7 +52,7 @@ spec = withApp $ do
         { id = doctorKey 1
         , firstName = "Brad"
         , lastName = "Pitt"
-        , patients = [tom, may, mel]
+        , patients = mapPatient <$> [tom, may, mel]
         , pendingRequests = []
         }
 
@@ -61,7 +61,7 @@ spec = withApp $ do
         { id = doctorKey 2
         , firstName = "Jude"
         , lastName = "Law"
-        , patients = [spike]
+        , patients = [mapPatient spike]
         , pendingRequests = []
         }
 
@@ -70,7 +70,7 @@ spec = withApp $ do
         { id = doctorKey 3
         , firstName = "Jet"
         , lastName = "Li"
-        , patients = [tom, may, spike, mel]
+        , patients = mapPatient <$> [tom, may, spike, mel]
         , pendingRequests = []
         }
 
@@ -92,3 +92,14 @@ spec = withApp $ do
 
       get $ DoctorR 7
       statusIs 404 -- not found
+
+
+  where
+    mapPatient :: Entity Patient -> DoctorViewOfPatient
+    mapPatient (Entity id (Patient fn ln bd)) = DoctorViewOfPatient
+      { id = id
+      , firstName = fn
+      , lastName = ln
+      , dateOfBirth = bd
+      , prescriptions = []
+      }

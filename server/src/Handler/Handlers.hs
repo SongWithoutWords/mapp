@@ -25,6 +25,8 @@ getDoctorWithPatients did = do
   let pids = doctorPatientRelationPatient . entityVal <$> relations
   patients' <- runDB $ mapMaybeM getEntity pids
 
+  patients'' <- mapM getDoctorViewOfPatient patients'
+
   requests <- runDB $ selectList [DoctorPatientRequestDoctor ==. did] []
   pendingRequests' <- runDB $ mapMaybeM getRequestForDoctor requests
 
@@ -32,7 +34,7 @@ getDoctorWithPatients did = do
     { id = did
     , firstName = fn
     , lastName = ln
-    , patients = patients'
+    , patients = patients''
     , pendingRequests = pendingRequests'
     }
 
@@ -46,6 +48,22 @@ getDoctorWithPatients did = do
         Nothing -> Nothing
         Just patient -> Just $ PendingRequestForDoctor key patient
 
+    getDoctorViewOfPatient :: Entity Patient -> Handler DoctorViewOfPatient
+    getDoctorViewOfPatient (Entity pid (Patient fn ln db)) = do
+      prescriptions' <- getPrescriptionsForPatient pid
+      pure $ DoctorViewOfPatient
+        { id = pid
+        , firstName = fn
+        , lastName = ln
+        , dateOfBirth = db
+        , prescriptions = prescriptions'
+        }
+
+getPrescriptionsForPatient :: PatientId -> Handler [GetPrescription]
+getPrescriptionsForPatient pid = do
+  prescriptions <- runDB $ selectList [PrescriptionPatient ==. pid] []
+  mapM mapPrescription prescriptions
+
 getPatientWithDoctors :: PatientId -> Handler PatientWithDoctors
 getPatientWithDoctors pid = do
   Patient fn ln bd <- runDB $ get404 pid
@@ -57,8 +75,7 @@ getPatientWithDoctors pid = do
   requests <- runDB $ selectList [DoctorPatientRequestPatient ==. pid] []
   pendingRequests' <- runDB $ mapMaybeM getRequestForPatient requests
 
-  prescriptions <- runDB $ selectList [PrescriptionPatient ==. pid] []
-  prescriptions' <- mapM mapPrescription prescriptions
+  prescriptions' <- getPrescriptionsForPatient pid
 
   return $ PatientWithDoctors
     { id = pid
