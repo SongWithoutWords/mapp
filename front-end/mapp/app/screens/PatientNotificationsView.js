@@ -127,7 +127,7 @@ export default class PatientNotificationsView extends React.Component  {
     return (
       <ScrollView>
       {requestIDs.map(id => {
-        //alert((new Date() - startDate)/one_min);
+        
         console.log( prescriptions.byId[id].dosesTaken);
         console.log( prescriptions.byId[id].dosesTaken[prescriptions.byId[id].dosesTaken.length-1]);
 
@@ -143,7 +143,6 @@ export default class PatientNotificationsView extends React.Component  {
           numOfLastDose = Math.floor((new Date(lastDose.time) - startDate)/(one_min*freq));
 
         if(numOfLastDose != numOfDose){
-          alert(numOfLastDose + " " + numOfDose);
           let mins = (new Date() - startDate)/one_min - numOfDose*freq;
           return this.mapNotificationToCard(prescriptions.byId[id], Math.round(mins));
         }

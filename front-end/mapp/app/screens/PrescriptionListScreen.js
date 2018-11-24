@@ -59,6 +59,18 @@ class PrescriptionListScreen extends Component {
     genAlert("Adding a new prescription by patients", "Has not been implemented :(");
   };
 
+  onEditPress = prescription => {
+    //console.log(id);
+    if(prescription.dosesTaken.length == 0){
+      this.props.navigation.navigate("EditPrescription", {
+        prescription: prescription
+      });
+    }
+    else{
+      genAlert("You have already started this prescription.");
+    }
+  };
+
   mapPrescriptionToCard = prescription => {
     //console.log(prescription.amountRemaining);
     let amountRemaining = prescription.amountInitial - prescription.dosesTaken.length*prescription.dosageSchedule[0].dosage
@@ -70,18 +82,18 @@ class PrescriptionListScreen extends Component {
     if(numberLeft > 0){
       PushNotification.localNotificationSchedule({
         /* Android Only Properties */
-        id: prescription.id + "", 
+        id: prescription.id + "",
         ticker: "Notification to take prescription",
-        autoCancel: true, 
-        largeIcon: "ic_launcher", 
-        smallIcon: "ic_notification", 
-        bigText: "It is time to take " + prescription.medication + " press to goto inbox screen", 
+        autoCancel: true,
+        largeIcon: "ic_launcher",
+        smallIcon: "ic_notification",
+        bigText: "It is time to take " + prescription.medication + " press to goto inbox screen",
         subText: "Time to take your medicine!",
-        color: "purple", 
-        vibrate: true, 
+        color: "purple",
+        vibrate: true,
         vibration: 300, // vibration length in milliseconds, ignored if vibrate=false, default: 1000
-        tag: 'mapp_prescription_notification', 
-        group: "prescription_notification", 
+        tag: 'mapp_prescription_notification',
+        group: "prescription_notification",
         ongoing: false, // (optional) set whether this is an "ongoing" notification
         priority: "high", // (optional) set notification priority, default: high
         visibility: "public", // (optional) set notification visibility, default: private
@@ -89,12 +101,12 @@ class PrescriptionListScreen extends Component {
         /* ios only */
         userInfo: {id : prescription.id + ""},
         /* iOS and Android properties */
-        title: "Time to take your medicine!", 
-        message: "It is time to take " + prescription.medication + " press to goto inbox screen", 
-        playSound: true, 
-        soundName: 'default', 
+        title: "Time to take your medicine!",
+        message: "It is time to take " + prescription.medication + " press to goto inbox screen",
+        playSound: true,
+        soundName: 'default',
         number: numberLeft, // (optional) Valid 32 bit integer specified as string. default: none (Cannot be zero)
-        repeatType: 'time', // every repeatTime ms run the notification again 
+        repeatType: 'time', // every repeatTime ms run the notification again
         repeatTime: prescription.dosageSchedule[0].minutesBetweenDoses * 60000,
         date: newTime
       });
@@ -155,7 +167,7 @@ class PrescriptionListScreen extends Component {
             </TouchableOpacity>
             </View>
             <View style={{width: '40%'}}>
-            <TouchableOpacity style={styles.EditButton}>
+            <TouchableOpacity style={styles.EditButton} onPress = {this.onEditPress.bind(this, prescription)}>
               <Text style = {styles.buttonText}>Edit</Text>
             </TouchableOpacity>
             </View>
@@ -169,7 +181,7 @@ class PrescriptionListScreen extends Component {
     const prescriptionIDs = this.props.screenProps.user.myPrescriptions;
     return (
       <View style={{ flex: 1 }}>
-        <ScrollView style={{ flex: 1 }}>
+        <ScrollView style={{ flex: 1 }, styles.container}>
           {
             prescriptionIDs.map(id =>
             this.mapPrescriptionToCard(prescriptions.byId[id])

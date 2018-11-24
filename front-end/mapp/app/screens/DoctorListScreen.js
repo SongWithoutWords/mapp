@@ -9,10 +9,10 @@ import { FETCHING_USER_FULFILLED } from "../config/constants";
 class DoctorListScreen extends Component {
   componentWillMount() {
     this.props.screenProps.fetchDoctors();
-  } 
+  }
 
   onPress = id => {
-    console.log(id);
+    console.log('bah bah' + id);
     this.props.navigation.navigate("DoctorInfo", {
       doctor: this.props.screenProps.doctors.byId[id],
       user: this.props.screenProps.user
