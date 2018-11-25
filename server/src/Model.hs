@@ -71,6 +71,7 @@ instance ToJSON DoctorWithPatients
 
 data DoctorViewOfPatient = DoctorViewOfPatient
   { id :: PatientId
+  , relationId :: DoctorPatientRelationId
   , firstName :: Text
   , lastName :: Text
   , dateOfBirth :: Maybe Day
@@ -92,12 +93,21 @@ data PatientWithDoctors = PatientWithDoctors
   , firstName :: Text
   , lastName :: Text
   , dateOfBirth :: Maybe Day
-  , doctors :: [Entity Doctor]
+  , doctors :: [PatientViewOfDoctor]
   , pendingRequests :: [PendingRequestForPatient]
   , prescriptions :: [GetPrescription]
   } deriving(Eq, Generic, Show)
 instance FromJSON PatientWithDoctors
 instance ToJSON PatientWithDoctors
+
+data PatientViewOfDoctor = PatientViewOfDoctor
+  { id :: DoctorId
+  , relationId :: DoctorPatientRelationId
+  , firstName :: Text
+  , lastName :: Text
+  } deriving(Eq, Generic, Show)
+instance FromJSON PatientViewOfDoctor
+instance ToJSON PatientViewOfDoctor
 
 data PendingRequestForPatient = PendingRequestForPatient
   { requestId :: DoctorPatientRequestId
@@ -148,14 +158,11 @@ patientKey = PatientKey . fromIntegral
 requestKey :: Int -> DoctorPatientRequestId
 requestKey = DoctorPatientRequestKey . fromIntegral
 
+relationKey :: Int -> DoctorPatientRelationId
+relationKey = DoctorPatientRelationKey . fromIntegral
+
 prescriptionKey :: Int -> PrescriptionId
 prescriptionKey = PrescriptionKey . fromIntegral
-
-doctorPatientRequestKey :: Int -> DoctorPatientRequestId
-doctorPatientRequestKey = DoctorPatientRequestKey . fromIntegral
-
-doctorPatientRelationKey :: Int -> DoctorPatientRelationId
-doctorPatientRelationKey = DoctorPatientRelationKey . fromIntegral
 
 doctorPatientRequest :: Int -> Int -> DoctorPatientRequest
 doctorPatientRequest did pid =

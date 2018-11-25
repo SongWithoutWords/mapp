@@ -82,7 +82,7 @@ spec = withApp $ do
 
       -- Add a request from the patient for the doctor
       postJson RequestsR $ doctorPatientRequest 1 1
-      jsonResponseIs $ Entity (doctorPatientRequestKey 1) $ doctorPatientRequest 1 1
+      jsonResponseIs $ Entity (requestKey 1) $ doctorPatientRequest 1 1
 
       -- Ensure that the doctor has the request
       get $ DoctorR 1
@@ -125,7 +125,7 @@ spec = withApp $ do
 
       -- Confirm the patient's request
       postJson RelationsR $ doctorPatientRelation 1 1
-      jsonResponseIs $ Entity (doctorPatientRelationKey 1) $ doctorPatientRelation 1 1
+      jsonResponseIs $ Entity (relationKey 1) $ doctorPatientRelation 1 1
 
       -- Ensure that the doctor has the patient
       get $ DoctorR 1
@@ -136,6 +136,7 @@ spec = withApp $ do
         , patients =
           [ DoctorViewOfPatient
               { id = patientKey 1
+              , relationId = relationKey 1
               , firstName = "Bobby"
               , lastName = "Lee"
               , dateOfBirth = Nothing
@@ -153,10 +154,12 @@ spec = withApp $ do
         , lastName = "Lee"
         , dateOfBirth = Nothing
         , doctors =
-          [ Entity (doctorKey 1) $ Doctor
-              { doctorFirstName = "James"
-              , doctorLastName = "Hill"
-              }
+          [ PatientViewOfDoctor
+            { id = doctorKey 1
+            , relationId = relationKey 1
+            , firstName = "James"
+            , lastName = "Hill"
+            }
           ]
         , pendingRequests = []
         , prescriptions = []

@@ -74,32 +74,6 @@ instance Yesod App where
     yesodMiddleware :: ToTypedContent res => Handler res -> Handler res
     yesodMiddleware = defaultYesodMiddleware
 
-    isAuthorized
-        :: Route App  -- ^ The route the user is visiting.
-        -> Bool       -- ^ Whether or not this is a "write" request.
-        -> Handler AuthResult
-    -- Routes not requiring authentication.
-    isAuthorized FaviconR _ = return Authorized
-    isAuthorized (StaticR _) _ = return Authorized
-
-    isAuthorized LoginsR _ = return Authorized
-
-    isAuthorized (DoctorR _) _ = return Authorized
-    isAuthorized DoctorsR _ = return Authorized
-
-    isAuthorized (PatientR _) _ = return Authorized
-    isAuthorized PatientsR _ = return Authorized
-
-    isAuthorized (RequestR _) _ = return Authorized
-    isAuthorized RequestsR _ = return Authorized
-
-    isAuthorized RelationsR _ = return Authorized
-
-    isAuthorized (PrescriptionR _) _ = return Authorized
-    isAuthorized PrescriptionsR _ = return Authorized
-
-    isAuthorized DosesTakenR _ = return Authorized
-
 -- How to run database actions.
 instance YesodPersist App where
     type YesodPersistBackend App = SqlBackend
