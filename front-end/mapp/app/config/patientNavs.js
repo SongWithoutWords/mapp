@@ -10,13 +10,12 @@ import PatientRequestScreen from "../screens/PatientRequestScreen";
 import AccountScreen from "../screens/AccountScreen";
 import PrescriptionInfoScreen from "../screens/PrescriptionInfoScreen";
 import PrescriptionListScreen from "../screens/PrescriptionListScreen";
+import EditPrescriptionView from "../screens/EditPrescriptionView";
+import NotificationScreen from '../screens/PatientNotificationsView'
 import DoctorListScreen from "../screens/DoctorListScreen";
 import DoctorInfoScreen from "../screens/DoctorInfoScreen";
 import { genTabNavOptions } from "../lib/genNavOptions";
 
-function NotificationScreen() {
-  return <View />;
-}
 
 // stack navigators
 const PrescriptionStackNavigator = createStackNavigator({
@@ -31,6 +30,13 @@ const PrescriptionStackNavigator = createStackNavigator({
     screen: PrescriptionInfoScreen,
     navigationOptions: {
       title: "Prescription Info",
+      headerForceInset: { top: "never", bottom: "never" }
+    }
+  },
+  EditPrescription: {
+    screen: EditPrescriptionView,
+    navigationOptions: {
+      title: "Edit Prescription",
       headerForceInset: { top: "never", bottom: "never" }
     }
   }
@@ -73,13 +79,13 @@ const InboxTabNavigator = createMaterialTopTabNavigator(
     }
   },
   {
-    initialRouteName: "PendingRequests",
+    initialRouteName: "Notifications",
     tabBarOptions: {
       activeTintColor: settings.ACTIVE_COLOR,
       inactiveTintColor: settings.ACTIVE_COLOR,
       upperCaseLabel: false,
       style: {
-        backgroundColor: settings.THEME_COLOR 
+        backgroundColor: settings.THEME_COLOR
       }
     },
     order: ["PendingRequests", "Notifications"]

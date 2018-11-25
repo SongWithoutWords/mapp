@@ -1,4 +1,4 @@
-import { Button, Card, FormLabel, FormInput } from "react-native-elements";
+import { Button, TouchableOpacity, Card, FormLabel, FormInput } from "react-native-elements";
 import React, { Component } from "react";
 import { AppRegistry, StyleSheet } from "react-native";
 
@@ -10,7 +10,8 @@ class WelcomeScreen extends Component {
 
   button = ({ title, userType}) => (
       <Button
-        buttonStyle={{ marginTop: 20 }}
+        buttonStyle={{ marginTop: 20}}
+        style = {{ fontFamily: 'Poppins-Medium'}}
         backgroundColor={settings.THEME_COLOR}
         title={title}
         onPress={() => {
@@ -49,15 +50,17 @@ const styles = StyleSheet.create({
   title: {
     backgroundColor: "transparent",
     color: settings.THEME_COLOR,
+    fontFamily: 'Poppins-Medium',
     fontSize: 30,
     padding: 10
   },
   subtitle: {
     backgroundColor: "transparent",
-    color: settings.THEME_COLOR,
+    color: 'black',
     fontSize: 15,
+    fontFamily: 'Poppins-Medium',
     padding: 10
-  }
+  },
 });
 
 export default WelcomeScreen;

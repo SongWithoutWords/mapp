@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import _ from "lodash"
 import {
   Text,
   View,
@@ -15,10 +16,8 @@ import { Card, CardItem, Body } from "native-base";
 import settings from "../config/settings";
 import ActionButton from "react-native-action-button";
 import genAlert from "../components/generalComponents/genAlert"
-import PushNotification from "react-native-push-notification";
 import {setupPushNotification} from "../lib/setupPushNotification"
-import {getNewDate} from "../lib/getNewDate"
-import { NavigationActions } from 'react-navigation';
+import {scheduleNotifications} from "../lib/scheduleNotifications"
 
 import ProgressBarAnimated from 'react-native-progress-bar-animated';
 class PrescriptionListScreen extends Component {
@@ -46,7 +45,19 @@ class PrescriptionListScreen extends Component {
   };
 
   componentWillMount(){
-    this.pushNotification = setupPushNotification(this.handleNotificationOpen)
+    this.pushNotification = setupPushNotification(this.handleNotificationOpen);
+    const prescriptions = this.props.screenProps.prescriptions;
+    const prescriptionIDs = this.props.screenProps.user.myPrescriptions;
+    prescriptionIDs.map(id =>scheduleNotifications(prescriptions.byId[id]));
+  }
+
+  componentDidUpdate(prevProps){
+    const prescriptions = this.props.screenProps.prescriptions;
+    const prescriptionIDs = this.props.screenProps.user.myPrescriptions;
+    if (_.isEqual(prevProps.screenProps.prescriptions, prescriptions))
+      console.log("they are equal!");
+    else
+      prescriptionIDs.map(id =>scheduleNotifications(prescriptions.byId[id]));
   }
 
   handleNotificationOpen = (notification) => {
@@ -59,47 +70,21 @@ class PrescriptionListScreen extends Component {
     genAlert("Adding a new prescription by patients", "Has not been implemented :(");
   };
 
-  mapPrescriptionToCard = prescription => {
-    //console.log(prescription.amountRemaining);
-    let amountRemaining = prescription.amountInitial - prescription.dosesTaken.length*prescription.dosageSchedule[0].dosage
-    const doctor = this.props.screenProps.doctors.byId[prescription.doctor];
-    const numberLeft = (prescription.amountInitial / prescription.dosageSchedule[0].dosage) - Object.keys(prescription.dosesTaken).length;
-    const newTime = getNewDate(prescription.dosageSchedule[0].firstDose, prescription.dosageSchedule[0].minutesBetweenDoses);
-    console.log(doctor + " " + numberLeft + " " + newTime);
-    PushNotification.cancelLocalNotifications({id: prescription.id + ""});
-    if(numberLeft > 0){
-      PushNotification.localNotificationSchedule({
-        /* Android Only Properties */
-        id: prescription.id + "", 
-        ticker: "Notification to take prescription",
-        autoCancel: true, 
-        largeIcon: "ic_launcher", 
-        smallIcon: "ic_notification", 
-        bigText: "It is time to take " + prescription.medication + " press to goto inbox screen", 
-        subText: "Time to take your medicine!",
-        color: "purple", 
-        vibrate: true, 
-        vibration: 300, // vibration length in milliseconds, ignored if vibrate=false, default: 1000
-        tag: 'mapp_prescription_notification', 
-        group: "prescription_notification", 
-        ongoing: false, // (optional) set whether this is an "ongoing" notification
-        priority: "high", // (optional) set notification priority, default: high
-        visibility: "public", // (optional) set notification visibility, default: private
-        importance: "high", // (optional) set notification importance, default: high
-        /* ios only */
-        userInfo: {id : prescription.id + ""},
-        /* iOS and Android properties */
-        title: "Time to take your medicine!", 
-        message: "It is time to take " + prescription.medication + " press to goto inbox screen", 
-        playSound: true, 
-        soundName: 'default', 
-        number: numberLeft, // (optional) Valid 32 bit integer specified as string. default: none (Cannot be zero)
-        repeatType: 'time', // every repeatTime ms run the notification again 
-        repeatTime: prescription.dosageSchedule[0].minutesBetweenDoses * 60000,
-        date: newTime
+  onEditPress = prescription => {
+    //console.log(id);
+    if(prescription.dosesTaken.length == 0){
+      this.props.navigation.navigate("EditPrescription", {
+        prescription: prescription
       });
     }
+    else{
+      genAlert("You have already started this prescription.");
+    }
+  };
 
+  mapPrescriptionToCard = prescription => {
+    let amountRemaining = prescription.amountInitial - (prescription.dosesTaken.length*prescription.dosageSchedule[0].dosage);
+    const doctor = this.props.screenProps.doctors.byId[prescription.doctor];
     return (
         <Card style={styles.container} key={prescription.id}>
           <Text style={styles.medfield}>
@@ -155,7 +140,7 @@ class PrescriptionListScreen extends Component {
             </TouchableOpacity>
             </View>
             <View style={{width: '40%'}}>
-            <TouchableOpacity style={styles.EditButton}>
+            <TouchableOpacity style={styles.EditButton} onPress = {this.onEditPress.bind(this, prescription)}>
               <Text style = {styles.buttonText}>Edit</Text>
             </TouchableOpacity>
             </View>
@@ -169,7 +154,7 @@ class PrescriptionListScreen extends Component {
     const prescriptionIDs = this.props.screenProps.user.myPrescriptions;
     return (
       <View style={{ flex: 1 }}>
-        <ScrollView style={{ flex: 1 }}>
+        <ScrollView style={{ flex: 1 }, styles.container}>
           {
             prescriptionIDs.map(id =>
             this.mapPrescriptionToCard(prescriptions.byId[id])

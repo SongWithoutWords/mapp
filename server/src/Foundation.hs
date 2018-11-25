@@ -95,7 +95,9 @@ instance Yesod App where
 
     isAuthorized RelationsR _ = return Authorized
 
+    isAuthorized (PrescriptionR _) _ = return Authorized
     isAuthorized PrescriptionsR _ = return Authorized
+
     isAuthorized DosesTakenR _ = return Authorized
 
 -- How to run database actions.

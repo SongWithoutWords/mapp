@@ -1,14 +1,19 @@
 import React, { Component } from "react";
 import settings from "../config/settings";
+import _ from "lodash"
 import {
   Text,
   View,
   StyleSheet,
   AppRegistry,
   RefreshControl,
-  FlatList
+  FlatList,
+  PushNotificationIOS,
+  Platform,
 } from "react-native";
 import { List, ListItem, SearchBar } from "react-native-elements";
+import {setupPushNotification} from "../lib/setupPushNotification"
+import {sendNotification} from "../lib/sendNotification";
 
 // note that this class now is actually "my patients" screen
 // cuz unlike doctor list screen, patients' info can only accessed
@@ -47,19 +52,25 @@ class PatientListScreen extends Component {
     this.timer = null; // here...
   }
 
-  // everytime props changes update internal state: patients to
+  componentWillMount(){
+    this.pushNotification = setupPushNotification(this.handleNotificationOpen);
+  }
+
+  // every time props changes update internal state: patients to
   // conform to the invariant
   componentWillReceiveProps(nextProps) {
-    if (
-      nextProps.screenProps.user.myPatients !==
-      this.props.screenProps.user.myPatients
-    ) {
+    if (_.isEqual(nextProps.screenProps.user.myPatients, this.props.screenProps.user.myPatients))
+      console.log("They are equal");
+    else{
       const myPatientIDs = nextProps.screenProps.user.myPatients;
       const patients = [];
+      const pendingRequests = nextProps.screenProps.pendingRequests;
       myPatientIDs.forEach(id => {
         patients.push(nextProps.screenProps.patients.byId[id]);
       });
       this.setState({ patients: patients });
+      if(pendingRequests.allIds.length > 0)
+        sendNotification();
     }
   }
 
@@ -70,6 +81,12 @@ class PatientListScreen extends Component {
       user: this.props.screenProps.user
     });
   };
+
+  handleNotificationOpen = (notification) => {
+    this.props.navigation.navigate("Inbox");
+    if(Platform.OS === 'ios')
+      notification.finish(PushNotificationIOS.FetchResult.NoData);
+  }
 
   renderHeader = () => {
     return (

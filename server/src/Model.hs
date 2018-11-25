@@ -63,11 +63,21 @@ data DoctorWithPatients = DoctorWithPatients
   { id :: DoctorId
   , firstName :: Text
   , lastName :: Text
-  , patients :: [Entity Patient]
+  , patients :: [DoctorViewOfPatient]
   , pendingRequests :: [PendingRequestForDoctor]
   } deriving(Eq, Generic, Show)
 instance FromJSON DoctorWithPatients
 instance ToJSON DoctorWithPatients
+
+data DoctorViewOfPatient = DoctorViewOfPatient
+  { id :: PatientId
+  , firstName :: Text
+  , lastName :: Text
+  , dateOfBirth :: Maybe Day
+  , prescriptions :: [GetPrescription]
+  } deriving(Eq, Generic, Show)
+instance FromJSON DoctorViewOfPatient
+instance ToJSON DoctorViewOfPatient
 
 data PendingRequestForDoctor = PendingRequestForDoctor
   { requestId :: DoctorPatientRequestId
@@ -137,6 +147,9 @@ patientKey = PatientKey . fromIntegral
 
 requestKey :: Int -> DoctorPatientRequestId
 requestKey = DoctorPatientRequestKey . fromIntegral
+
+prescriptionKey :: Int -> PrescriptionId
+prescriptionKey = PrescriptionKey . fromIntegral
 
 doctorPatientRequestKey :: Int -> DoctorPatientRequestId
 doctorPatientRequestKey = DoctorPatientRequestKey . fromIntegral
