@@ -28,7 +28,7 @@ stanzas:
       - agis-mapp.xyz
 
     # Enable to force Keter to redirect to https
-    requires-secure: true
+    requires-secure: false
 
   # Static files.
   - type: static-files
