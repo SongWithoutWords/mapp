@@ -142,8 +142,8 @@ class DoctorListScreen extends Component {
             </View>
           )}
           sections={[
-            { title: 'All Doctors', data: this.state.doctors, renderItem: renderAllDoctors },
             { title: 'My Doctors', data: this.props.screenProps.user.myDoctors.map(id=>this.props.screenProps.doctors.byId[id]), renderItem: renderMyDoctors },
+            { title: 'All Doctors', data: this.state.doctors, renderItem: renderAllDoctors },
           ]}
          />
         </ScrollView>
