@@ -26,7 +26,7 @@ class PatientInfoScreen extends Component {
         <Button
           title="Create a new prescription"
           onPress={() =>
-            this.props.navigation.navigate("MakePrescription", {
+            this.props.navigation.navigate("DoctorMakePrescription", {
               patient: patient,
               user: user
             })

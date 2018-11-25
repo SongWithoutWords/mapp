@@ -220,6 +220,6 @@ const styles = StyleSheet.create({
   }
 });
 AppRegistry.registerComponent(
-  "MakePrescriptionView",
-  () => MakePrescriptionView
+  "EditPrescriptionView",
+  () => EditPrescriptionView
 );

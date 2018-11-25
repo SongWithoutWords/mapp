@@ -29,7 +29,7 @@ const PatientStackNavigator = createStackNavigator({
       headerForceInset: { top: "never", bottom: "never" }
     }
   },
-  MakePrescription: {
+  DoctorMakePrescription: {
     screen: MakePrescriptionView,
     navigationOptions: {
       title: "New Prescription",

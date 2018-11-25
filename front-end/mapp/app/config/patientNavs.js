@@ -11,11 +11,11 @@ import AccountScreen from "../screens/AccountScreen";
 import PrescriptionInfoScreen from "../screens/PrescriptionInfoScreen";
 import PrescriptionListScreen from "../screens/PrescriptionListScreen";
 import EditPrescriptionView from "../screens/EditPrescriptionView";
-import NotificationScreen from '../screens/PatientNotificationsView'
+import MakePrescriptionView from "../screens/MakePrescriptionView";
+import NotificationScreen from "../screens/PatientNotificationsView";
 import DoctorListScreen from "../screens/DoctorListScreen";
 import DoctorInfoScreen from "../screens/DoctorInfoScreen";
 import { genTabNavOptions } from "../lib/genNavOptions";
-
 
 // stack navigators
 const PrescriptionStackNavigator = createStackNavigator({
@@ -30,6 +30,13 @@ const PrescriptionStackNavigator = createStackNavigator({
     screen: EditPrescriptionView,
     navigationOptions: {
       title: "Edit Prescription",
+      headerForceInset: { top: "never", bottom: "never" }
+    }
+  },
+  PatientMakePrescription: {
+    screen: MakePrescriptionView,
+    navigationOptions: {
+      title: "New Prescription",
       headerForceInset: { top: "never", bottom: "never" }
     }
   }
@@ -118,7 +125,11 @@ const PatientTabNavigator = createMaterialBottomTabNavigator(
       navigationOptions: {
         tabBarLabel: "Doctors",
         tabBarIcon: ({ tintColor }) => (
-          <MaterialCommunityIcons name="doctor" size={25} color={tintColor} />
+          <MaterialCommunityIcons
+            name="stethoscope"
+            size={25}
+            color={tintColor}
+          />
         )
       }
     },
