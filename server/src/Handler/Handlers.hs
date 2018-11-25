@@ -152,7 +152,7 @@ postDoctorsR = do
 
   case userInserted of
     Nothing -> do
-      _ <- runDB $ delete doctorId
+      runDB $ delete doctorId
       invalidArgs ["Email already in use"]
     Just _ -> getDoctorWithPatients doctorId >>= returnJson
 
@@ -169,7 +169,7 @@ postPatientsR =  do
   userInserted <- runDB $ insertUniqueEntity user
   case userInserted of
     Nothing -> do
-      _ <- runDB $ delete patientId
+      runDB $ delete patientId
       invalidArgs ["Email already in use"]
     Just _ -> getPatientWithDoctors patientId >>= returnJson
 
@@ -193,7 +193,7 @@ postRelationsR = do
   if null pendingRequests
     then invalidArgs ["No pending request from this patient to this doctor"]
     else do
-      _ <- runDB $ mapM (delete . entityKey) pendingRequests
+      runDB $ mapM_ (delete . entityKey) pendingRequests
       runDB (insertUniqueEntity relation) >>= returnJson
 
 deleteRelationR :: Int -> Handler ()
@@ -224,7 +224,7 @@ recurringDoseToDb pid (PostRecurringDose first minutesBetween dosage) =
   RecurringDose pid first minutesBetween dosage
 
 insertSchedule :: PrescriptionId -> [PostRecurringDose] -> Handler ()
-insertSchedule pid schedule = runDB $ mapM (insert . recurringDoseToDb pid) schedule >> pure ()
+insertSchedule pid schedule = runDB $ mapM_ (insert_ . recurringDoseToDb pid) schedule
 
 deleteSchedule :: PrescriptionId -> Handler ()
 deleteSchedule pid = runDB $ deleteWhere [RecurringDosePrescription ==. pid]

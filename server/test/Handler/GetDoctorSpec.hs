@@ -11,7 +11,7 @@ spec = withApp $ do
     it "returns a 200 when the doctor exists" $ do
 
       -- Patients
-      _ <- runDB $ mapM insert_
+      runDB $ mapM_ insert_
         [ Patient "Tom" "Cruise" $ Just $ fromGregorian 1961 2 3
         , Patient "May" "West"   $ Just $ fromGregorian 1962 3 4
         , Patient "Spike" "Lee"  $ Just $ fromGregorian 1963 4 5
@@ -19,7 +19,7 @@ spec = withApp $ do
         ]
 
       -- Doctors
-      _ <- runDB $ mapM insert_
+      runDB $ mapM_ insert_
         [ Doctor "Brad" "Pitt"
         , Doctor "Jude" "Law"
         , Doctor "Jet" "Li"
@@ -27,7 +27,7 @@ spec = withApp $ do
         ]
 
       -- Doctor patient relations
-      _ <- runDB $ mapM insert_
+      runDB $ mapM_ insert_
         [ doctorPatientRelation 1 1
         , doctorPatientRelation 1 2
         , doctorPatientRelation 1 4
