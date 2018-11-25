@@ -1,9 +1,10 @@
 import React, { Component } from "react";
-import { Text, View, ScrollView, SectionList, AppRegistry } from "react-native";
-import { List, ListItem, SearchBar } from "react-native-elements";
+import { Text, View, StyleSheet, ScrollView, SectionList, AppRegistry, TouchableOpacity } from "react-native";
+import { List, ListItem, SearchBar, Card } from "react-native-elements";
 import settings from "../config/settings";
 import genAlert from "../components/generalComponents/genAlert";
 import checkRequestErrors from "../lib/errors";
+import postData from "../lib/postData";
 import { FETCHING_USER_FULFILLED } from "../config/constants";
 import _ from "lodash"
 
@@ -28,6 +29,19 @@ class DoctorListScreen extends Component {
   componentWillMount() {
     this.props.screenProps.fetchDoctors();
   }
+
+  requestDoctor = (doctor) => {
+    const url = settings.REMOTE_SERVER_URL + settings.REQUESTS_RES;
+    const json = { doctor: doctor.id, patient: this.props.screenProps.user.id };
+
+    return postData(url, json)
+      .then(responseJson => {
+        console.log(responseJson);
+      })
+      .catch(error => {
+        genAlert("Failed to send the request", error.message);
+      });
+  };
 
   onPress = id => {
     console.log('bah bah' + id);
@@ -68,16 +82,46 @@ class DoctorListScreen extends Component {
   };
   render() {
     const doctors = this.props.screenProps.doctors;
-    const overrideRenderItem = ({ item, index, section: { title, data } }) => <ListItem
-      key={item.id}
-      title={
-        "Dr. " +
-        item.firstName +
-        " " +
-        item.lastName
-      }
-      onPress={()=>this.onPress(item.id)}
-    />
+    const renderAllDoctors = ({ item, index, section: { title, data } }) => <Card flexDirection= 'row'>
+    <View style={{width: '50%', justifyContent:'center'}}>
+    <Text style = {styles.doctorName}>{"Dr. " +
+                  item.firstName +
+                  " " +
+                  item.lastName}</Text>
+    </View>
+    <View style={{width: '15%', justifyContent:'center'}}>
+    <Text style = {styles.doctorName}>
+                ID: {item.id}</Text>
+    </View>
+    <View>
+    <TouchableOpacity
+          style={styles.submitButton1}
+          onPress={this.requestDoctor.bind(this, item)}
+        >
+          <Text style={{color:'white'}}> Send Request</Text>
+        </TouchableOpacity>
+    </View>
+    </Card>
+    const renderMyDoctors = ({ item, index, section: { title, data } }) => <Card flexDirection= 'row'>
+    <View style={{width: '50%', justifyContent:'center'}}>
+    <Text style = {styles.doctorName}>{"Dr. " +
+                  item.firstName +
+                  " " +
+                  item.lastName}</Text>
+    </View>
+    <View style={{width: '15%', justifyContent:'center'}}>
+    <Text style = {styles.doctorName}>
+                ID: {item.id}</Text>
+    </View>
+    <View style={{width: '35%', justifyContent:'center', alignItems: 'center', flex:1}}>
+    <TouchableOpacity
+          style={styles.submitButton2}
+          onPress={this.requestDoctor}
+        >
+          <Text style={{color:'white'}}> Delete</Text>
+        </TouchableOpacity>
+    </View>
+    </Card>
     return (
       <View style={{flex: 1}}>
         <SearchBar
@@ -89,18 +133,17 @@ class DoctorListScreen extends Component {
           autoCorrect={false}
           clearIcon
         />
-
         <ScrollView style={{flex: 1}}>
         <SectionList
           renderItem={({ item, index, section }) => <Text key={index}>{item}</Text>}
           renderSectionHeader={({section: {title}}) => (
-            <View style={{padding: 20, height: 25, justifyContent:'center', backgroundColor: settings.THEME_COLOR}}>
+            <View style={{marginTop: 20, padding: 20, height: 25, justifyContent:'center', backgroundColor: settings.THEME_COLOR}}>
               <Text style ={{color:'white', fontSize: 25, fontFamily: 'Poppins-Medium'}}>{title}</Text>
             </View>
           )}
           sections={[
-            { title: 'All Doctors', data: this.state.doctors, renderItem: overrideRenderItem },
-            { title: 'My Doctors', data: this.props.screenProps.user.myDoctors.map(id=>this.props.screenProps.doctors.byId[id]), renderItem: overrideRenderItem },
+            { title: 'All Doctors', data: this.state.doctors, renderItem: renderAllDoctors },
+            { title: 'My Doctors', data: this.props.screenProps.user.myDoctors.map(id=>this.props.screenProps.doctors.byId[id]), renderItem: renderMyDoctors },
           ]}
          />
         </ScrollView>
@@ -108,6 +151,38 @@ class DoctorListScreen extends Component {
     );
   }
 }
-
+const styles = StyleSheet.create({
+  text: {
+    color: 'black',
+    fontSize: 20
+  },
+  container: {
+    flex: 1,
+    //padding: 10,
+    //height: 20,
+    backgroundColor: 'white',
+  },
+  CardStyle: {
+    justifyContent: 'center',
+    height: 50,
+    borderWidth: 1,
+    padding: 8},
+  submitButton1: {
+    backgroundColor: "#009CC6",
+    padding: 8,
+    height: 35,
+    borderRadius: 10,
+    alignItems: "center",
+    color: 'white'
+  },
+  submitButton2: {
+    backgroundColor: '#C60000',
+    padding: 8,
+    height: 35,
+    borderRadius: 10,
+    alignItems: "center",
+    color: 'white'
+  }
+});
 export default DoctorListScreen;
 AppRegistry.registerComponent("DoctorListScreen", () => DoctorListScreen);
