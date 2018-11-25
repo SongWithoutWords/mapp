@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, ScrollView, AppRegistry } from "react-native";
+import { Text, View, ScrollView, SectionList, AppRegistry } from "react-native";
 import { List, ListItem, SearchBar } from "react-native-elements";
 import settings from "../config/settings";
 import genAlert from "../components/generalComponents/genAlert";
@@ -68,7 +68,16 @@ class DoctorListScreen extends Component {
   };
   render() {
     const doctors = this.props.screenProps.doctors;
-    console.log("Doctors: " + JSON.stringify(doctors))
+    const overrideRenderItem = ({ item, index, section: { title, data } }) => <ListItem
+      key={item.id}
+      title={
+        "Dr. " +
+        item.firstName +
+        " " +
+        item.lastName
+      }
+      onPress={()=>this.onPress(item.id)}
+    />
     return (
       <View style={{flex: 1}}>
         <SearchBar
@@ -80,21 +89,20 @@ class DoctorListScreen extends Component {
           autoCorrect={false}
           clearIcon
         />
+
         <ScrollView style={{flex: 1}}>
-          <List>
-            {this.state.doctors.map(doctor => (
-              <ListItem
-                key={doctor.id}
-                title={
-                  "Dr. " +
-                  doctor.firstName +
-                  " " +
-                  doctor.lastName
-                }
-                onPress={()=>this.onPress(doctor.id)}
-              />
-            ))}
-          </List>
+        <SectionList
+          renderItem={({ item, index, section }) => <Text key={index}>{item}</Text>}
+          renderSectionHeader={({section: {title}}) => (
+            <View style={{padding: 20, height: 25, justifyContent:'center', backgroundColor: settings.THEME_COLOR}}>
+              <Text style ={{color:'white', fontSize: 25, fontFamily: 'Poppins-Medium'}}>{title}</Text>
+            </View>
+          )}
+          sections={[
+            { title: 'All Doctors', data: this.state.doctors, renderItem: overrideRenderItem },
+            { title: 'My Doctors', data: this.props.screenProps.user.myDoctors.map(id=>this.props.screenProps.doctors.byId[id]), renderItem: overrideRenderItem },
+          ]}
+         />
         </ScrollView>
       </View>
     );
