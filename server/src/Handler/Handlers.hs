@@ -177,6 +177,9 @@ postRelationsR = do
       _ <- runDB $ mapM (delete . entityKey) pendingRequests
       runDB (insertUniqueEntity relation) >>= returnJson
 
+deleteRelationR :: Int -> Handler ()
+deleteRelationR = runDB . delete . relationKey
+
 getPrescription :: PrescriptionId -> Handler GetPrescription
 getPrescription = dbLookup404 >=> mapPrescription
 

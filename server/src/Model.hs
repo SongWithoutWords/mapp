@@ -148,14 +148,11 @@ patientKey = PatientKey . fromIntegral
 requestKey :: Int -> DoctorPatientRequestId
 requestKey = DoctorPatientRequestKey . fromIntegral
 
+relationKey :: Int -> DoctorPatientRelationId
+relationKey = DoctorPatientRelationKey . fromIntegral
+
 prescriptionKey :: Int -> PrescriptionId
 prescriptionKey = PrescriptionKey . fromIntegral
-
-doctorPatientRequestKey :: Int -> DoctorPatientRequestId
-doctorPatientRequestKey = DoctorPatientRequestKey . fromIntegral
-
-doctorPatientRelationKey :: Int -> DoctorPatientRelationId
-doctorPatientRelationKey = DoctorPatientRelationKey . fromIntegral
 
 doctorPatientRequest :: Int -> Int -> DoctorPatientRequest
 doctorPatientRequest did pid =
