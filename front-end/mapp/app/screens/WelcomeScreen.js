@@ -11,7 +11,6 @@ class WelcomeScreen extends Component {
   button = ({ title, userType}) => (
       <Button
         buttonStyle={{ marginTop: 20}}
-        style = {{ fontFamily: 'Poppins-Medium'}}
         backgroundColor={settings.THEME_COLOR}
         title={title}
         onPress={() => {

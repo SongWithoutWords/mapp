@@ -82,6 +82,19 @@ class PrescriptionListScreen extends Component {
     }
   };
 
+  convertMinsToFreqString = mins => {
+    switch (mins) {
+      case (24 * 60):
+        return "Every day";
+      case (1):
+        return "Every minute";
+      case (7 * 24 * 60):
+        return "Every week";
+      default:
+        return "Every " + mins + " minutes";
+    }
+  };
+
   mapPrescriptionToCard = prescription => {
     let amountRemaining = prescription.amountInitial - (prescription.dosesTaken.length*prescription.dosageSchedule[0].dosage);
     const doctor = this.props.screenProps.doctors.byId[prescription.doctor];
@@ -104,12 +117,7 @@ class PrescriptionListScreen extends Component {
           </Text>
           <Text style={styles.medfield}>
             Frequency: <Text style={styles.fieldValue}>
-               Every 8 hours
-            </Text>
-          </Text>
-          <Text style={styles.medfield}>
-            Location: <Text style={styles.fieldValue}>
-               Kitchen - Under the sink - in the white box
+              {this.convertMinsToFreqString(prescription.dosageSchedule[0].minutesBetweenDoses)} 
             </Text>
           </Text>
           <View style={{
@@ -184,15 +192,12 @@ const styles = StyleSheet.create({
   fieldValue: {
     fontSize: 16,
     fontWeight: "200",
-    // fontFamily: 'Poppins',
     textAlign: 'center',
     color: 'black',
   },
   medfield: {
     fontSize: 16,
     fontWeight: '600',
-    // fontFamily: 'Circular',
-    //textAlign: 'center',
     color: '#009CC6',
     marginTop: 10,
     marginBottom: 20,
@@ -202,23 +207,18 @@ const styles = StyleSheet.create({
   remainingPills: {
     textAlign: 'center',
     fontSize: 20,
-    // fontFamily:'Circular',
     fontWeight: '400',
     color: 'black',
   },
   button: {
     margin: 24,
     fontSize: 22,
-    // fontFamily:'Circular',
     fontWeight: '600',
     width:'30%',
     color: 'white'
-    //textAlign: 'center',
-    //color: '#34495e',
   },
   buttonText: {
     color : 'white',
-    // fontFamily: 'Circular',
     fontWeight:'500',
     fontSize: 16
   },

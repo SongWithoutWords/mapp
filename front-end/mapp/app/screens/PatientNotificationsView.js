@@ -44,14 +44,13 @@ export default class PatientNotificationsView extends React.Component  {
          time: new Date(Date.now()),
          amount : 1
        }));
-       //alert(this);
      });
   }
   mapNotificationToCard = (prescription, mins) => (
 
-      <Card flexDirection= 'row'>
+      <Card flexDirection= 'row' key={prescription.id}>
 
-          <View style = {[{width: 80, height: 80, borderColor : 'black', alignItems: 'center', justifyContent: 'center', padding: 10}, styles.withBottomBorder]}>
+          <View style = {[{width: 80, borderColor : 'black', alignItems: 'center', justifyContent: 'center', padding: 10}, styles.withBottomBorder]}>
             <Image style = {{ width: 45, height: 45 }} source={require('./002-pill.png')} />
           </View>
           <View style = {{width: '75%', height: 100, padding: 5}}>
@@ -78,49 +77,11 @@ export default class PatientNotificationsView extends React.Component  {
             </View>
           </View>
         </Card>
-      //</View>
     );
 
   render() {
-    /*const prescriptions = {byId :
-      {2 : {
-            amountInitial: 20,
-            doctor: 3,
-            dosageSchedule: [
-                {
-                    dosage: 0.5,
-                    firstDose: "2018-11-21T18:51:47.928Z",
-                    minutesBetweenDoses: 10
-                }
-            ],
-            dosageUnit: "Gram",
-            dosesTaken: [
-                {
-                    amount: 5,
-                    prescription: 2,
-                    time: "2018-11-21T18:51:47.928Z"
-                },
-                {
-                    amount: 1,
-                    prescription: 2,
-                    time: "2018-11-22T23:48:44.321Z"
-                },
-                {
-                    amount: 3,
-                    prescription: 2,
-                    time: "2018-11-22T23:54:06.837Z"
-                }
-            ],
-            id: 2,
-            medication: "Amoxicillin",
-            patient: 2
-        }
-        },
-    allIds:[2]};*/
     const prescriptions = this.props.screenProps.prescriptions;
     const requestIDs = this.props.screenProps.user.myPrescriptions;
-    //console.log(prescriptions.byId[2].dosesTaken);
-    //console.log( prescriptions.byId[2].dosesTaken[prescriptions.byId[2].dosesTaken.length-1]);
     console.log(requestIDs);
     const one_min= 1000*60 ;
     const notificationInterval = 10;
@@ -154,8 +115,6 @@ export default class PatientNotificationsView extends React.Component  {
 
 const styles = StyleSheet.create({
   container: {
-    //alignItems: 'center',
-    //justifyContent: 'center',
     padding: 10,
     backgroundColor: '#ecf0f1',
     flex: 1
@@ -170,7 +129,6 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     borderColor : "#009CC6",
-    //marginTop: 40,
     padding : 10,
     backgroundColor: 'white',
     height: 110
@@ -179,7 +137,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "200",
     fontFamily: 'Poppins',
-    //textAlign: 'center'
     color:'#5A5A5A',
     marginTop : 3,
     marginLeft: 5
@@ -191,17 +148,15 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(80, 187, 117, 0.2)'
   },
   fieldValue: {
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: "200",
     fontFamily: 'Poppins',
-    //textAlign: 'center',
     color: 'black',
     marginLeft: 5
   },
   medfield: {
     fontSize: 16,
     fontWeight: '600',
-    fontFamily: 'Circular',
     //textAlign: 'center',
     color: '#009CC6',
     //marginTop: 40,
@@ -211,16 +166,12 @@ const styles = StyleSheet.create({
   button: {
     margin: 14,
     fontSize: 15,
-    fontFamily:'Circular',
     fontWeight: '400',
     width:'40%',
     color: 'white'
-    //textAlign: 'center',
-    //color: '#34495e',
   },
   buttonText: {
     color : 'white',
-    fontFamily: 'Circular',
     fontWeight:'500',
     fontSize: 15
   },

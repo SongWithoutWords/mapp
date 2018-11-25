@@ -154,17 +154,6 @@ class PatientListScreen extends Component {
           keyExtractor={item => item.id.toString()}
           ItemSeparatorComponent={this.renderSeparator}
           ListHeaderComponent={this.renderHeader}
-          // refreshControl={
-          //   <RefreshControl
-          //     refreshing={this.props.screenProps.isFetchingUser}
-          //     onRefresh={() => {
-          //       const { email, password } = this.props.screenProps.user;
-          //       const form = { email, password };
-          //       const url = settings.REMOTE_SERVER_URL + settings.LOGIN_RES;
-          //       this.props.screenProps.onSignIn(url, form);
-          //     }}
-          //   />
-          // }
         />
       </View>
     );

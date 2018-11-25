@@ -5,6 +5,7 @@ import settings from "../config/settings";
 import genAlert from "../components/generalComponents/genAlert";
 import checkRequestErrors from "../lib/errors";
 import { FETCHING_USER_FULFILLED } from "../config/constants";
+import _ from "lodash"
 
 class DoctorListScreen extends Component {
   constructor(props) {
@@ -35,6 +36,22 @@ class DoctorListScreen extends Component {
       user: this.props.screenProps.user
     });
   };
+
+  // every time props changes update internal state: patients to
+  // conform to the invariant
+  componentWillReceiveProps(nextProps) {
+    if (_.isEqual(nextProps.screenProps.doctors, this.props.screenProps.doctors))
+      console.log("They are equal");
+    else{
+      const doctorIDs = nextProps.screenProps.doctors.allIds;
+      const doctors = [];
+      doctorIDs.forEach(id => {
+        doctors.push(nextProps.screenProps.doctors.byId[id]);
+      });
+      this.setState({ doctors: doctors });
+    }
+  }
+
 
   searchFilterFunction = text => {
     const doctorIDs = this.props.screenProps.doctors.allIds;

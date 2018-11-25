@@ -9,26 +9,6 @@ import ProgressBarAnimated from 'react-native-progress-bar-animated';
 import settings from "../config/settings";
 
 export default class PatientPrescriptionList extends React.Component {
-  /*onPress = () => {
-    this.props.navigation.navigate("PrescriptionInfo");
-  };*/
-  /*
-  data PostPrescription = PostPrescription
-  { doctor :: DoctorId
-  , patient :: PatientId
-  , medication :: Text
-  , dosageUnit :: DosageUnit
-  , amountInitial :: Double
-  , dosageSchedule :: [PostRecurringDose]
-  } deriving(Generic)
-instance FromJSON PostPrescription
-
-data PostRecurringDose = PostRecurringDose
-  { firstDose :: UTCTime
-  , minutesBetweenDoses :: Int
-  , dosage :: Double
-  } deriving(Generic)
-instance FromJSON PostRecurringDose*/
   mapPrescriptonToCard = prescription => (
     <Card>
       <Text style={styles.medfield}>
@@ -109,8 +89,6 @@ const progressCustomStyles = {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    //alignItems: 'center',
-    //justifyContent: 'center',
     padding: 10,
     backgroundColor: '#ecf0f1',
   },
@@ -124,8 +102,6 @@ const styles = StyleSheet.create({
   medfield: {
     fontSize: 16,
     fontWeight: '600',
-    fontFamily: 'Circular',
-    //textAlign: 'center',
     color: '#009CC6',
     marginBottom: 40,
     marginLeft: 24,
@@ -134,23 +110,18 @@ const styles = StyleSheet.create({
   remainingPills: {
     textAlign: 'center',
     fontSize: 20,
-    fontFamily:'Circular',
     fontWeight: '400',
     color: 'black',
   },
   button: {
     margin: 24,
     fontSize: 22,
-    fontFamily:'Circular',
     fontWeight: '600',
     width:'30%',
     color: 'white'
-    //textAlign: 'center',
-    //color: '#34495e',
   },
   buttonText: {
     color : 'white',
-    fontFamily: 'Circular',
     fontWeight:'500',
     fontSize: 16
   },

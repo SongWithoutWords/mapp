@@ -12,7 +12,7 @@ import PatientListScreen from "../screens/PatientListScreen";
 import PatientInfoScreen from "../screens/PatientInfoScreen";
 import { genTabNavOptions } from "../lib/genNavOptions";
 
-import makePrescriptionView from "../screens/makePrescriptionView";
+import MakePrescriptionView from "../screens/MakePrescriptionView";
 
 const PatientStackNavigator = createStackNavigator({
   PatientList: {
@@ -30,7 +30,7 @@ const PatientStackNavigator = createStackNavigator({
     }
   },
   MakePrescription: {
-    screen: makePrescriptionView,
+    screen: MakePrescriptionView,
     navigationOptions: {
       title: "New Prescription",
       headerForceInset: { top: "never", bottom: "never" }
