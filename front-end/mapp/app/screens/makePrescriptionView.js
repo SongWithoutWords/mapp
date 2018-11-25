@@ -13,20 +13,20 @@ import postData from "../lib/postData";
 import genAlert from "../components/generalComponents/genAlert";
 import DateTimePicker from "react-native-modal-datetime-picker";
 import { Picker, Header, Content, Button, Text } from "native-base";
+import { FREQUENCY } from "../config/constants";
 
 export default class MakePrescriptionView extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      isStartDateTimePickerVisible: false,
       medication: "",
       dosage: 0,
       dosageUnit: "",
+      frequency: "", // used to compute minutes between doses
+      minutesBetweenDoses: 0,
       amountInitial: 0,
-      startDate: null,
-      endDate: null,
-      frequency: 0,
-      isStartDateTimePickerVisible: false,
-      isEndDateTimePickerVisible: false
+      startDateTime: null
     };
   }
 
@@ -37,50 +37,48 @@ export default class MakePrescriptionView extends React.Component {
     this.setState({ isStartDateTimePickerVisible: false });
   _handleStartDatePicked = date => {
     console.log("A start date has been picked: ", date);
-    this.setState({ startDate: date });
+    this.setState({ startDateTime: date });
     this._hideStartDateTimePicker();
   };
 
-  _showEndDateTimePicker = () =>
-    this.setState({ isEndDateTimePickerVisible: true });
-  _hideEndDateTimePicker = () =>
-    this.setState({ isEndDateTimePickerVisible: false });
-  _handleEndDatePicked = date => {
-    console.log("An end date has been picked: ", date);
-    this.setState({ endDate: date });
-    this._hideEndDateTimePicker();
-  };
-
-  mockOnPress = () => {
-    genAlert(JSON.stringify(this.state));
+  convertFrequencyToMins = freq => {
+    switch (freq) {
+      case FREQUENCY.EVERY_DAY:
+        return 24 * 60;
+      case FREQUENCY.EVERY_MINUTE:
+        return 1;
+      case FREQUENCY.EVERY_WEEK:
+        return 7 * 24 * 60;
+      default:
+        return 0;
+    }
   };
 
   createPrescriptionOnPress = () => {
     const patient = this.props.navigation.getParam("patient", {});
     const user = this.props.navigation.getParam("user", {});
     const url = settings.REMOTE_SERVER_URL + settings.PRESCRIPTION_RES;
+    const dosageSchedule = [];
+
+    var schedule = {};
+    schedule.firstDose = this.state.startDateTime;
+    schedule.dosage = this.state.dosage;
+    schedule.minutesBetweenDoses = this.state.minutesBetweenDoses;
+    dosageSchedule.push(schedule);
 
     const json = {
       patient: patient.id,
       doctor: user.id,
-      medication: "Amoxicillin",
-      dosageUnit: "Gram",
-      amountInitial: 20,
-      dosageSchedule: [
-        {
-          firstDose: new Date(Date.now()),
-          minutesBetweenDoses: 1,
-          dosage: 0.5
-        }
-      ]
+      medication: this.state.medication,
+      dosageUnit: this.state.dosageUnit,
+      amountInitial: this.state.amountInitial,
+      dosageSchedule: dosageSchedule
     };
+
+    console.log(JSON.stringify(json));
 
     return postData(url, json)
       .then(response => {
-        genAlert(
-          "Form Input handler has not been implemented",
-          "but a mock prescription has been created"
-        );
         this.props.navigation.goBack();
       })
       .catch(error => {
@@ -89,6 +87,17 @@ export default class MakePrescriptionView extends React.Component {
   };
 
   render() {
+    var dateTimePickerText = (
+      <Text style={styles.buttonText}>Choose a start date </Text>
+    );
+    if (this.state.startDateTime !== null) {
+      dateTimePickerText = (
+        <Text style={styles.buttonText}>
+          {this.state.startDateTime.toString().slice(0, 25)}
+        </Text>
+      );
+    }
+
     return (
       <ScrollView style={{ padding: 20 }}>
         <Text style={styles.formSection}>Medication Information</Text>
@@ -107,16 +116,9 @@ export default class MakePrescriptionView extends React.Component {
           placeholder="Initial Amount"
           placeholderTextColor="#009CC6"
           autoCapitalize="none"
-          onChangeText={value => this.setState({ amountInitial: Number(value) })}
-        />
-        <TextInput
-          keyboardType="numeric"
-          style={styles.input}
-          underlineColorAndroid="transparent"
-          placeholder="Frequency (in minutes)"
-          placeholderTextColor="#009CC6"
-          autoCapitalize="none"
-          onChangeText={value => this.setState({ frequency: Number(value) })}
+          onChangeText={value =>
+            this.setState({ amountInitial: Number(value) })
+          }
         />
         <TextInput
           style={styles.input}
@@ -127,6 +129,7 @@ export default class MakePrescriptionView extends React.Component {
           autoCapitalize="none"
           onChangeText={value => this.setState({ dosage: Number(value) })}
         />
+
         <Picker
           mode="dropdown"
           placeholder="Dosage Unit"
@@ -144,13 +147,36 @@ export default class MakePrescriptionView extends React.Component {
           <Picker.Item label="Liter" value="Liter" />
         </Picker>
 
+        <Picker
+          mode="dropdown"
+          placeholder="Dosage Frequency"
+          textStyle={{ color: "#009CC6" }}
+          itemStyle={{
+            backgroundColor: "#d3d3d3",
+            marginLeft: 0,
+            paddingLeft: 10
+          }}
+          itemTextStyle={{ color: "#788ad2" }}
+          selectedValue={this.state.frequency}
+          onValueChange={itemValue => {
+            this.setState({ frequency: itemValue });
+            this.setState({ minutesBetweenDoses: this.convertFrequencyToMins(itemValue) });
+          }}
+        >
+          <Picker.Item label="Every Day" value={FREQUENCY.EVERY_DAY} />
+          <Picker.Item label="Every Week" value={FREQUENCY.EVERY_WEEK} />
+          <Picker.Item
+            label="Every Minute (for demoing purposes)"
+            value={FREQUENCY.EVERY_MINUTE}
+          />
+        </Picker>
 
         <Button
           bordered
           style={styles.button}
           onPress={this._showStartDateTimePicker}
         >
-          <Text style={styles.buttonText}>Choose a start date </Text>
+          {dateTimePickerText}
         </Button>
         <DateTimePicker
           mode="datetime"
@@ -159,22 +185,7 @@ export default class MakePrescriptionView extends React.Component {
           onCancel={this._hideStartDateTimePicker}
         />
 
-        <Button
-          bordered
-          style={styles.button}
-          onPress={this._showEndDateTimePicker}
-        >
-          <Text style={styles.buttonText}>Choose a end date</Text>
-        </Button>
-        <DateTimePicker
-          mode="datetime"
-          isVisible={this.state.isEndDateTimePickerVisible}
-          onConfirm={this._handleEndDatePicked}
-          onCancel={this._hideEndDateTimePicker}
-        />
-
-        {/* <Button style={styles.button} onPress={this.createPrescriptionOnPress}> */}
-        <Button style={styles.button} onPress={this.mockOnPress}>
+        <Button style={styles.button} onPress={this.createPrescriptionOnPress}>
           <Text>Create a new prescription</Text>
         </Button>
       </ScrollView>
