@@ -10,19 +10,13 @@ spec = withApp $ do
   describe "valid request" $ do
     it "returns a 200 when the doctor exists" $ do
 
-
       -- Patients
-      tom <- runDB $ insertEntity $
-        Patient "Tom" "Cruise" $ Just $ fromGregorian 1960 1 2
-
-      may <- runDB $ insertEntity
-        $ Patient "May" "West" $ Just $ fromGregorian 1961 2 3
-
-      spike <- runDB $ insertEntity $
-        Patient "Spike" "Lee" $ Just $ fromGregorian 1963 4 5
-
-      mel <- runDB $ insertEntity $
-        Patient "Mel" "Brooks" $ Just $ fromGregorian 1964 5 6
+      _ <- runDB $ mapM insert_
+        [ Patient "Tom" "Cruise" $ Just $ fromGregorian 1961 2 3
+        , Patient "May" "West"   $ Just $ fromGregorian 1962 3 4
+        , Patient "Spike" "Lee"  $ Just $ fromGregorian 1963 4 5
+        , Patient "Mel" "Brooks" $ Just $ fromGregorian 1964 5 6
+        ]
 
       -- Doctors
       _ <- runDB $ mapM insert_
@@ -52,7 +46,32 @@ spec = withApp $ do
         { id = doctorKey 1
         , firstName = "Brad"
         , lastName = "Pitt"
-        , patients = mapPatient <$> [tom, may, mel]
+        , patients =
+          [ DoctorViewOfPatient
+            { id = patientKey 1
+            , relationId = relationKey 1
+            , firstName = "Tom"
+            , lastName = "Cruise"
+            , dateOfBirth = Just $ fromGregorian 1961 2 3
+            , prescriptions = []
+            }
+          , DoctorViewOfPatient
+            { id = patientKey 2
+            , relationId = relationKey 2
+            , firstName = "May"
+            , lastName = "West"
+            , dateOfBirth = Just $ fromGregorian 1962 3 4
+            , prescriptions = []
+            }
+          , DoctorViewOfPatient
+            { id = patientKey 4
+            , relationId = relationKey 3
+            , firstName = "Mel"
+            , lastName = "Brooks"
+            , dateOfBirth = Just $ fromGregorian 1964 5 6
+            , prescriptions = []
+            }
+          ]
         , pendingRequests = []
         }
 
@@ -61,7 +80,16 @@ spec = withApp $ do
         { id = doctorKey 2
         , firstName = "Jude"
         , lastName = "Law"
-        , patients = [mapPatient spike]
+        , patients =
+          [ DoctorViewOfPatient
+            { id = patientKey 3
+            , relationId = relationKey 4
+            , firstName = "Spike"
+            , lastName = "Lee"
+            , dateOfBirth = Just $ fromGregorian 1963 4 5
+            , prescriptions = []
+            }
+          ]
         , pendingRequests = []
         }
 
@@ -70,7 +98,40 @@ spec = withApp $ do
         { id = doctorKey 3
         , firstName = "Jet"
         , lastName = "Li"
-        , patients = mapPatient <$> [tom, may, spike, mel]
+        , patients =
+          [ DoctorViewOfPatient
+            { id = patientKey 1
+            , relationId = relationKey 5
+            , firstName = "Tom"
+            , lastName = "Cruise"
+            , dateOfBirth = Just $ fromGregorian 1961 2 3
+            , prescriptions = []
+            }
+          , DoctorViewOfPatient
+            { id = patientKey 2
+            , relationId = relationKey 6
+            , firstName = "May"
+            , lastName = "West"
+            , dateOfBirth = Just $ fromGregorian 1962 3 4
+            , prescriptions = []
+            }
+          , DoctorViewOfPatient
+            { id = patientKey 3
+            , relationId = relationKey 7
+            , firstName = "Spike"
+            , lastName = "Lee"
+            , dateOfBirth = Just $ fromGregorian 1963 4 5
+            , prescriptions = []
+            }
+          , DoctorViewOfPatient
+            { id = patientKey 4
+            , relationId = relationKey 8
+            , firstName = "Mel"
+            , lastName = "Brooks"
+            , dateOfBirth = Just $ fromGregorian 1964 5 6
+            , prescriptions = []
+            }
+          ]
         , pendingRequests = []
         }
 
@@ -94,12 +155,12 @@ spec = withApp $ do
       statusIs 404 -- not found
 
 
-  where
-    mapPatient :: Entity Patient -> DoctorViewOfPatient
-    mapPatient (Entity id (Patient fn ln bd)) = DoctorViewOfPatient
-      { id = id
-      , firstName = fn
-      , lastName = ln
-      , dateOfBirth = bd
-      , prescriptions = []
-      }
+  -- where
+  --   mapPatient :: Entity Patient -> DoctorViewOfPatient
+  --   mapPatient (Entity id (Patient fn ln bd)) = DoctorViewOfPatient
+  --     { id = id
+  --     , firstName = fn
+  --     , lastName = ln
+  --     , dateOfBirth = bd
+  --     , prescriptions = []
+  --     }

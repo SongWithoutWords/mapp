@@ -22,42 +22,46 @@ getDoctorWithPatients did = do
   Doctor fn ln <- runDB $ get404 did
 
   relations <- runDB $ selectList [DoctorPatientRelationDoctor ==. did] []
-  let pids = doctorPatientRelationPatient . entityVal <$> relations
-  patients' <- runDB $ mapMaybeM getEntity pids
-
-  patients'' <- mapM getDoctorViewOfPatient patients'
+  patients <- mapMaybeM getDoctorViewOfPatient relations
 
   requests <- runDB $ selectList [DoctorPatientRequestDoctor ==. did] []
-  pendingRequests' <- runDB $ mapMaybeM getRequestForDoctor requests
+  requests' <- mapMaybeM getRequestForDoctor requests
 
   return $ DoctorWithPatients
     { id = did
     , firstName = fn
     , lastName = ln
-    , patients = patients''
-    , pendingRequests = pendingRequests'
+    , patients = patients
+    , pendingRequests = requests'
     }
 
   where
     getRequestForDoctor
       :: Entity DoctorPatientRequest
-      -> SqlPersistT Handler (Maybe PendingRequestForDoctor)
+      -> Handler (Maybe PendingRequestForDoctor)
     getRequestForDoctor (Entity key (DoctorPatientRequest _ pid)) = do
-      mpatient <- getEntity pid
+      mpatient <- runDB $ getEntity pid
       pure $ case mpatient of
         Nothing -> Nothing
         Just patient -> Just $ PendingRequestForDoctor key patient
 
-    getDoctorViewOfPatient :: Entity Patient -> Handler DoctorViewOfPatient
-    getDoctorViewOfPatient (Entity pid (Patient fn ln db)) = do
-      prescriptions' <- getPrescriptionsForPatient pid
-      pure $ DoctorViewOfPatient
-        { id = pid
-        , firstName = fn
-        , lastName = ln
-        , dateOfBirth = db
-        , prescriptions = prescriptions'
-        }
+    getDoctorViewOfPatient
+      :: Entity DoctorPatientRelation
+      -> Handler (Maybe DoctorViewOfPatient)
+    getDoctorViewOfPatient (Entity rid (DoctorPatientRelation _ pid)) = do
+      mpatient <- runDB $ get pid
+      case mpatient of
+        Nothing -> pure Nothing
+        Just (Patient fn ln bd) -> do
+          prescriptions' <- getPrescriptionsForPatient pid
+          pure $ Just $ DoctorViewOfPatient
+            { id = pid
+            , relationId = rid
+            , firstName = fn
+            , lastName = ln
+            , dateOfBirth = bd
+            , prescriptions = prescriptions'
+            }
 
 getPrescriptionsForPatient :: PatientId -> Handler [GetPrescription]
 getPrescriptionsForPatient pid = do
@@ -69,11 +73,10 @@ getPatientWithDoctors pid = do
   Patient fn ln bd <- runDB $ get404 pid
 
   relations <- runDB $ selectList [DoctorPatientRelationPatient ==. pid] []
-  let dids = doctorPatientRelationDoctor . entityVal <$> relations
-  doctors' <- runDB $ mapMaybeM getEntity dids
+  doctors <- mapMaybeM getPatientViewOfDoctor relations
 
   requests <- runDB $ selectList [DoctorPatientRequestPatient ==. pid] []
-  pendingRequests' <- runDB $ mapMaybeM getRequestForPatient requests
+  requests' <- mapMaybeM getRequestForPatient requests
 
   prescriptions' <- getPrescriptionsForPatient pid
 
@@ -82,20 +85,36 @@ getPatientWithDoctors pid = do
     , firstName = fn
     , lastName = ln
     , dateOfBirth = bd
-    , doctors = doctors'
-    , pendingRequests = pendingRequests'
+    , doctors = doctors
+    , pendingRequests = requests'
     , prescriptions = prescriptions'
     }
 
   where
     getRequestForPatient
       :: Entity DoctorPatientRequest
-      -> SqlPersistT Handler (Maybe PendingRequestForPatient)
+      -> Handler (Maybe PendingRequestForPatient)
     getRequestForPatient (Entity key (DoctorPatientRequest did _)) = do
-      mdoctor <- getEntity did
+      mdoctor <- runDB $ getEntity did
       pure $ case mdoctor of
         Nothing -> Nothing
         Just doctor -> Just $ PendingRequestForPatient key doctor
+
+    getPatientViewOfDoctor
+      :: Entity DoctorPatientRelation
+      -> Handler (Maybe PatientViewOfDoctor)
+    getPatientViewOfDoctor (Entity rid (DoctorPatientRelation did _)) = do
+      mdoctor <- runDB $ get did
+      case mdoctor of
+        Nothing -> pure Nothing
+        Just (Doctor fn ln) -> do
+          prescriptions' <- getPrescriptionsForPatient pid
+          pure $ Just $ PatientViewOfDoctor
+            { id = did
+            , relationId = rid
+            , firstName = fn
+            , lastName = ln
+            }
 
 postLoginsR :: Handler Value
 postLoginsR = do

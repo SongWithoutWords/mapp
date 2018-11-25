@@ -136,6 +136,7 @@ spec = withApp $ do
         , patients =
           [ DoctorViewOfPatient
               { id = patientKey 1
+              , relationId = relationKey 1
               , firstName = "Bobby"
               , lastName = "Lee"
               , dateOfBirth = Nothing
@@ -153,10 +154,12 @@ spec = withApp $ do
         , lastName = "Lee"
         , dateOfBirth = Nothing
         , doctors =
-          [ Entity (doctorKey 1) $ Doctor
-              { doctorFirstName = "James"
-              , doctorLastName = "Hill"
-              }
+          [ PatientViewOfDoctor
+            { id = doctorKey 1
+            , relationId = relationKey 1
+            , firstName = "James"
+            , lastName = "Hill"
+            }
           ]
         , pendingRequests = []
         , prescriptions = []
