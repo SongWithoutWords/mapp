@@ -18,6 +18,7 @@ import ActionButton from "react-native-action-button";
 import genAlert from "../components/generalComponents/genAlert"
 import {setupPushNotification} from "../lib/setupPushNotification"
 import {scheduleNotifications} from "../lib/scheduleNotifications"
+import {convertMinsToFreqString} from "../lib/frequencyMinsConversion"
 
 import ProgressBarAnimated from 'react-native-progress-bar-animated';
 class PrescriptionListScreen extends Component {
@@ -37,12 +38,6 @@ class PrescriptionListScreen extends Component {
     clearInterval(this.timer);
     this.timer = null; // here...
   }
-
-  prescriptionOnPress = id => {
-    this.props.navigation.navigate("PrescriptionInfo", {
-      prescription: this.props.screenProps.prescriptions.byId[id]
-    });
-  };
 
   componentWillMount(){
     this.pushNotification = setupPushNotification(this.handleNotificationOpen);
@@ -71,33 +66,41 @@ class PrescriptionListScreen extends Component {
   };
 
   onEditPress = prescription => {
-    //console.log(id);
-    if(prescription.dosesTaken.length == 0){
-      this.props.navigation.navigate("EditPrescription", {
-        prescription: prescription
-      });
+    if(prescription.dosesTaken.length !== 0){
+      genAlert("You have already started this prescription.");
+    }
+    else if (prescription.doctor !== null){
+      genAlert("You can edit only the prescriptions you created.");
     }
     else{
-      genAlert("You have already started this prescription.");
+      this.props.navigation.navigate("EditPrescription", {
+        prescription: prescription,
+        user: this.props.screenProps.user
+      });
     }
   };
 
-  convertMinsToFreqString = mins => {
-    switch (mins) {
-      case (24 * 60):
-        return "Every day";
-      case (1):
-        return "Every minute";
-      case (7 * 24 * 60):
-        return "Every week";
-      default:
-        return "Every " + mins + " minutes";
-    }
-  };
 
   mapPrescriptionToCard = prescription => {
     let amountRemaining = prescription.amountInitial - (prescription.dosesTaken.length*prescription.dosageSchedule[0].dosage);
-    const doctor = this.props.screenProps.doctors.byId[prescription.doctor];
+    var doctor;
+    var doctorField;
+
+    if(prescription.doctor !== null){
+      doctor = this.props.screenProps.doctors.byId[prescription.doctor];
+      doctorField = (<Text style={styles.medfield}>
+            Doctor: <Text style={styles.fieldValue}>
+              {doctor.firstName + " " + doctor.lastName}
+            </Text>
+          </Text>);
+    }else{
+      doctorField = <View></View>
+      doctor = null;
+    }
+
+    const firstDoseString = prescription.dosageSchedule[0].firstDose.toString().slice(0, 10);
+    const frequency = convertMinsToFreqString(prescription.dosageSchedule[0].minutesBetweenDoses);
+
     return (
         <Card style={styles.container} key={prescription.id}>
           <Text style={styles.medfield}>
@@ -110,14 +113,15 @@ class PrescriptionListScreen extends Component {
                {prescription.dosageUnit}
             </Text>
           </Text>
+          {doctorField}
           <Text style={styles.medfield}>
-            Doctor: <Text style={styles.fieldValue}>
-              {doctor.firstName + " " + doctor.lastName}
+            Frequency: <Text style={styles.fieldValue}>
+              {frequency} 
             </Text>
           </Text>
           <Text style={styles.medfield}>
-            Frequency: <Text style={styles.fieldValue}>
-              {this.convertMinsToFreqString(prescription.dosageSchedule[0].minutesBetweenDoses)} 
+            First Dose: <Text style={styles.fieldValue}>
+              {firstDoseString} 
             </Text>
           </Text>
           <View style={{
@@ -162,7 +166,7 @@ class PrescriptionListScreen extends Component {
     const prescriptionIDs = this.props.screenProps.user.myPrescriptions;
     return (
       <View style={{ flex: 1 }}>
-        <ScrollView style={{ flex: 1 }, styles.container}>
+        <ScrollView style={styles.container}>
           {
             prescriptionIDs.map(id =>
             this.mapPrescriptionToCard(prescriptions.byId[id])

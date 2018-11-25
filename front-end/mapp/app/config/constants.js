@@ -29,3 +29,11 @@ export const FREQUENCY = {
   EVERY_WEEK,
   EVERY_MINUTE
 };
+
+// dosage unit enum
+let GRAM = "Gram";
+let LITER = "Liter";
+export const DOSAGE_UNIT = {
+  GRAM,
+  LITER
+};

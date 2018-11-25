@@ -26,13 +26,6 @@ const PrescriptionStackNavigator = createStackNavigator({
       headerForceInset: { top: "never", bottom: "never" }
     }
   },
-  PrescriptionInfo: {
-    screen: PrescriptionInfoScreen,
-    navigationOptions: {
-      title: "Prescription Info",
-      headerForceInset: { top: "never", bottom: "never" }
-    }
-  },
   EditPrescription: {
     screen: EditPrescriptionView,
     navigationOptions: {

@@ -9,24 +9,27 @@ import {
 // or any pure javascript modules available in npm
 import { Card, CheckBox } from "react-native-elements"; // 0.19.1
 import settings from "../config/settings";
-import postData from "../lib/postData";
+import patchData from "../lib/patchData";
 import genAlert from "../components/generalComponents/genAlert";
 import DateTimePicker from "react-native-modal-datetime-picker";
 import { Picker, Header, Content, Button, Text } from "native-base";
+import { FREQUENCY, DOSAGE_UNIT } from "../config/constants";
+import { convertFrequencyToMins } from "../lib/frequencyMinsConversion";
+import validatePrescription from "../lib/validatePrescription";
 
-export default class MakePrescriptionView extends React.Component {
+export default class EditPrescriptionView extends React.Component {
   constructor(props) {
     super(props);
+    const prescription = this.props.navigation.getParam("prescription", {});
     this.state = {
-      medication: "",
-      dosage: 0,
-      dosageUnit: "",
-      amountInitial: 0,
-      startDate: null,
-      endDate: null,
-      frequency: 0,
       isStartDateTimePickerVisible: false,
-      isEndDateTimePickerVisible: false
+      medication: prescription.medication,
+      dosage: prescription.dosageSchedule[0].dosage,
+      dosageUnit: "",
+      frequency: "", // used to compute minutes between doses
+      minutesBetweenDoses: 0,
+      amountInitial: prescription.amountInitial,
+      startDateTime: null
     };
   }
 
@@ -37,105 +40,99 @@ export default class MakePrescriptionView extends React.Component {
     this.setState({ isStartDateTimePickerVisible: false });
   _handleStartDatePicked = date => {
     console.log("A start date has been picked: ", date);
-    this.setState({ startDate: date });
+    this.setState({ startDateTime: date });
     this._hideStartDateTimePicker();
   };
 
-  _showEndDateTimePicker = () =>
-    this.setState({ isEndDateTimePickerVisible: true });
-  _hideEndDateTimePicker = () =>
-    this.setState({ isEndDateTimePickerVisible: false });
-  _handleEndDatePicked = date => {
-    console.log("An end date has been picked: ", date);
-    this.setState({ endDate: date });
-    this._hideEndDateTimePicker();
-  };
+  editPrescriptionOnPress = () => {
+    if (validatePrescription(this.state)) {
+      const user = this.props.navigation.getParam("user", {});
+      const prescription = this.props.navigation.getParam("prescription", {});
+      const url =
+        settings.REMOTE_SERVER_URL +
+        settings.PRESCRIPTION_RES +
+        "/" +
+        prescription.id;
+      const dosageSchedule = [];
 
-  mockOnPress = () => {
-    genAlert(JSON.stringify(this.state));
-  };
+      var schedule = {};
+      schedule.firstDose = this.state.startDateTime;
+      schedule.dosage = this.state.dosage;
+      schedule.minutesBetweenDoses = this.state.minutesBetweenDoses;
+      dosageSchedule.push(schedule);
 
-  createPrescriptionOnPress = () => {
-    const patient = this.props.navigation.getParam("patient", {});
-    const user = this.props.navigation.getParam("user", {});
-    const url = settings.REMOTE_SERVER_URL + settings.PRESCRIPTION_RES;
+      const json = {
+        patient: user.id,
+        medication: this.state.medication,
+        dosageUnit: this.state.dosageUnit,
+        amountInitial: this.state.amountInitial,
+        dosageSchedule: dosageSchedule
+      };
 
-    const json = {
-      patient: patient.id,
-      doctor: user.id,
-      medication: "Amoxicillin",
-      dosageUnit: "Gram",
-      amountInitial: 20,
-      dosageSchedule: [
-        {
-          firstDose: new Date(Date.now()),
-          minutesBetweenDoses: 1,
-          dosage: 0.5
-        }
-      ]
-    };
+      console.log(JSON.stringify(json));
 
-    return postData(url, json)
-      .then(response => {
-        genAlert(
-          "Form Input handler has not been implemented",
-          "but a mock prescription has been created"
-        );
-        this.props.navigation.goBack();
-      })
-      .catch(error => {
-        genAlert("Failed to create a new prescription", error.message);
-      });
+      return patchData(url, json)
+        .then(response => {
+          genAlert("Prescription updated!");
+          this.props.navigation.goBack();
+        })
+        .catch(error => {
+          genAlert("Failed to modify a prescription", error.message);
+        });
+    }
   };
 
   render() {
     const prescription = this.props.navigation.getParam("prescription", {});
+    var dateTimePickerText = (
+      <Text style={styles.buttonText}>Choose a start date </Text>
+    );
+    if (this.state.startDateTime !== null) {
+      dateTimePickerText = (
+        <Text style={styles.buttonText}>
+          {this.state.startDateTime.toString().slice(0, 25)}
+        </Text>
+      );
+    }
+
     return (
       <ScrollView style={{ padding: 20 }}>
         <Text style={styles.formSection}>Medication Information</Text>
-        <Text>Medication Name</Text>
         <TextInput
+          defaultValue={prescription.medication}
           style={styles.input}
           underlineColorAndroid="transparent"
-          placeholder={prescription.medication}
+          placeholder="Medication Name"
           placeholderTextColor="#009CC6"
           autoCapitalize="none"
           onChangeText={value => this.setState({ medication: value })}
         />
-        <Text>Initial Amount</Text>
         <TextInput
+          defaultValue={prescription.amountInitial.toString()}
           keyboardType="numeric"
           style={styles.input}
           underlineColorAndroid="transparent"
-          placeholder={prescription.amountInitial+''}
+          placeholder="Initial Amount"
           placeholderTextColor="#009CC6"
           autoCapitalize="none"
-          onChangeText={value => this.setState({ amountInitial: Number(value) })}
+          onChangeText={value =>
+            this.setState({ amountInitial: Number(value) })
+          }
         />
-        <Text>Frequency (in minutes)</Text>
         <TextInput
-          keyboardType="numeric"
-          style={styles.input}
-          underlineColorAndroid="transparent"
-          placeholder={prescription.dosageSchedule[0].minutesBetweenDoses+''}
-          placeholderTextColor="#009CC6"
-          autoCapitalize="none"
-          onChangeText={value => this.setState({ frequency: Number(value) })}
-        />
-        <Text>Dosage</Text>
-        <TextInput
+          defaultValue={prescription.dosageSchedule[0].dosage.toString()}
           style={styles.input}
           keyboardType="numeric"
           underlineColorAndroid="transparent"
-          placeholder={prescription.dosageSchedule[0].dosage+''}
+          placeholder="Dosage"
           placeholderTextColor="#009CC6"
           autoCapitalize="none"
           onChangeText={value => this.setState({ dosage: Number(value) })}
         />
-        <Text>Dosage Unit</Text>
+
         <Picker
           mode="dropdown"
-          placeholder={prescription.dosageUnit+''}
+          placeholder="Dosage Unit"
           textStyle={{ color: "#009CC6" }}
           itemStyle={{
             backgroundColor: "#d3d3d3",
@@ -146,17 +143,42 @@ export default class MakePrescriptionView extends React.Component {
           selectedValue={this.state.dosageUnit}
           onValueChange={itemValue => this.setState({ dosageUnit: itemValue })}
         >
-          <Picker.Item label="Gram" value="Gram" />
-          <Picker.Item label="Liter" value="Liter" />
+          <Picker.Item label="Gram" value={DOSAGE_UNIT.GRAM} />
+          <Picker.Item label="Liter" value={DOSAGE_UNIT.LITER} />
         </Picker>
 
+        <Picker
+          mode="dropdown"
+          placeholder="Dosage Frequency"
+          textStyle={{ color: "#009CC6" }}
+          itemStyle={{
+            backgroundColor: "#d3d3d3",
+            marginLeft: 0,
+            paddingLeft: 10
+          }}
+          itemTextStyle={{ color: "#788ad2" }}
+          selectedValue={this.state.frequency}
+          onValueChange={itemValue => {
+            this.setState({ frequency: itemValue });
+            this.setState({
+              minutesBetweenDoses: convertFrequencyToMins(itemValue)
+            });
+          }}
+        >
+          <Picker.Item label="Every Day" value={FREQUENCY.EVERY_DAY} />
+          <Picker.Item label="Every Week" value={FREQUENCY.EVERY_WEEK} />
+          <Picker.Item
+            label="Every Minute (for demoing purposes)"
+            value={FREQUENCY.EVERY_MINUTE}
+          />
+        </Picker>
 
         <Button
           bordered
           style={styles.button}
           onPress={this._showStartDateTimePicker}
         >
-          <Text style={styles.buttonText}>Choose a start date </Text>
+          {dateTimePickerText}
         </Button>
         <DateTimePicker
           mode="datetime"
@@ -165,23 +187,8 @@ export default class MakePrescriptionView extends React.Component {
           onCancel={this._hideStartDateTimePicker}
         />
 
-        <Button
-          bordered
-          style={styles.button}
-          onPress={this._showEndDateTimePicker}
-        >
-          <Text style={styles.buttonText}>Choose a end date</Text>
-        </Button>
-        <DateTimePicker
-          mode="datetime"
-          isVisible={this.state.isEndDateTimePickerVisible}
-          onConfirm={this._handleEndDatePicked}
-          onCancel={this._hideEndDateTimePicker}
-        />
-
-        {/* <Button style={styles.button} onPress={this.createPrescriptionOnPress}> */}
-        <Button style={styles.button} onPress={this.mockOnPress}>
-          <Text>Save Changes</Text>
+        <Button style={styles.button} onPress={this.editPrescriptionOnPress}>
+          <Text>Save</Text>
         </Button>
       </ScrollView>
     );
@@ -206,11 +213,10 @@ const styles = StyleSheet.create({
   button: {
     margin: 10,
     alignItems: "center",
-    borderColor: settings.THEME_COLOR,
-    backgroundColor: settings.THEME_COLOR
+    borderColor: settings.THEME_COLOR
   },
   buttonText: {
-    color: 'white'
+    color: settings.THEME_COLOR
   }
 });
 AppRegistry.registerComponent(

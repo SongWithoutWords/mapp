@@ -13,7 +13,9 @@ import postData from "../lib/postData";
 import genAlert from "../components/generalComponents/genAlert";
 import DateTimePicker from "react-native-modal-datetime-picker";
 import { Picker, Header, Content, Button, Text } from "native-base";
-import { FREQUENCY } from "../config/constants";
+import { FREQUENCY, DOSAGE_UNIT } from "../config/constants";
+import { convertFrequencyToMins } from "../lib/frequencyMinsConversion";
+import validatePrescription from "../lib/validatePrescription";
 
 export default class MakePrescriptionView extends React.Component {
   constructor(props) {
@@ -41,49 +43,39 @@ export default class MakePrescriptionView extends React.Component {
     this._hideStartDateTimePicker();
   };
 
-  convertFrequencyToMins = freq => {
-    switch (freq) {
-      case FREQUENCY.EVERY_DAY:
-        return 24 * 60;
-      case FREQUENCY.EVERY_MINUTE:
-        return 1;
-      case FREQUENCY.EVERY_WEEK:
-        return 7 * 24 * 60;
-      default:
-        return 0;
-    }
-  };
-
   createPrescriptionOnPress = () => {
-    const patient = this.props.navigation.getParam("patient", {});
-    const user = this.props.navigation.getParam("user", {});
-    const url = settings.REMOTE_SERVER_URL + settings.PRESCRIPTION_RES;
-    const dosageSchedule = [];
+    if (validatePrescription(this.state)) {
+      const patient = this.props.navigation.getParam("patient", {});
+      const user = this.props.navigation.getParam("user", {});
+      const url = settings.REMOTE_SERVER_URL + settings.PRESCRIPTION_RES;
+      const dosageSchedule = [];
 
-    var schedule = {};
-    schedule.firstDose = this.state.startDateTime;
-    schedule.dosage = this.state.dosage;
-    schedule.minutesBetweenDoses = this.state.minutesBetweenDoses;
-    dosageSchedule.push(schedule);
+      var schedule = {};
+      schedule.firstDose = this.state.startDateTime;
+      schedule.dosage = this.state.dosage;
+      schedule.minutesBetweenDoses = this.state.minutesBetweenDoses;
+      dosageSchedule.push(schedule);
 
-    const json = {
-      patient: patient.id,
-      doctor: user.id,
-      medication: this.state.medication,
-      dosageUnit: this.state.dosageUnit,
-      amountInitial: this.state.amountInitial,
-      dosageSchedule: dosageSchedule
-    };
+      const json = {
+        patient: patient.id,
+        doctor: user.id,
+        medication: this.state.medication,
+        dosageUnit: this.state.dosageUnit,
+        amountInitial: this.state.amountInitial,
+        dosageSchedule: dosageSchedule
+      };
 
-    console.log(JSON.stringify(json));
+      console.log(JSON.stringify(json));
 
-    return postData(url, json)
-      .then(response => {
-        this.props.navigation.goBack();
-      })
-      .catch(error => {
-        genAlert("Failed to create a new prescription", error.message);
-      });
+      return postData(url, json)
+        .then(response => {
+          genAlert("A new prescription created!");
+          this.props.navigation.goBack();
+        })
+        .catch(error => {
+          genAlert("Failed to create a new prescription", error.message);
+        });
+    }
   };
 
   render() {
@@ -143,8 +135,8 @@ export default class MakePrescriptionView extends React.Component {
           selectedValue={this.state.dosageUnit}
           onValueChange={itemValue => this.setState({ dosageUnit: itemValue })}
         >
-          <Picker.Item label="Gram" value="Gram" />
-          <Picker.Item label="Liter" value="Liter" />
+          <Picker.Item label="Gram" value={DOSAGE_UNIT.GRAM} />
+          <Picker.Item label="Liter" value={DOSAGE_UNIT.LITER} />
         </Picker>
 
         <Picker
@@ -160,7 +152,9 @@ export default class MakePrescriptionView extends React.Component {
           selectedValue={this.state.frequency}
           onValueChange={itemValue => {
             this.setState({ frequency: itemValue });
-            this.setState({ minutesBetweenDoses: this.convertFrequencyToMins(itemValue) });
+            this.setState({
+              minutesBetweenDoses: convertFrequencyToMins(itemValue)
+            });
           }}
         >
           <Picker.Item label="Every Day" value={FREQUENCY.EVERY_DAY} />

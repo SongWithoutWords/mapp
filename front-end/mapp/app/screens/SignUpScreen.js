@@ -159,7 +159,7 @@ var constraints = {
     presence: true,
     length: {
       minimum: 6,
-      message: "must be at least 6 characters"
+      message: "must have at least 6 characters"
     }
   },
   confirmPassword: {
@@ -177,14 +177,14 @@ var constraints = {
     format: {
       pattern: "[a-zA-Z]+",
       flags: "i",
-      message: "can only contain a-z and A-Z"
+      message: "can only contain a-z or A-Z"
     }
   },
   lastName: {
     format: {
       pattern: "[a-zA-Z]+",
       flags: "i",
-      message: "can only contain a-z and A-Z"
+      message: "can only contain a-z or A-Z"
     }
   }
 };
