@@ -34,7 +34,7 @@ export default class DoctorInboxScreen extends React.Component {
     console.log(requestID);
     const url =
       settings.REMOTE_SERVER_URL + settings.REQUESTS_RES + "/" + requestID;
-    return fetch(url, {
+    return fetch(url, { // TODO add email and password to header
       method: "DELETE",
       headers: {
         Accept: "application/json",

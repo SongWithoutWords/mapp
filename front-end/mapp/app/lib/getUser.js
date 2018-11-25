@@ -9,7 +9,9 @@ function getUser(url, form) {
     method: "POST",
     headers: {
       Accept: "application/json",
-      "Content-Type": "application/json"
+      "Content-Type": "application/json",
+      email: email,
+      password: password
     },
     body: JSON.stringify(jsonBody)
   })

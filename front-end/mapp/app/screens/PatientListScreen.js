@@ -44,7 +44,7 @@ class PatientListScreen extends Component {
     const url = settings.REMOTE_SERVER_URL + settings.LOGIN_RES;
     this.timer = setInterval(() => {
       this.props.screenProps.onSignIn(url, form);
-    }, 2000);
+    }, settings.POLLING_RATE);
   }
 
   componentWillUnmount() {

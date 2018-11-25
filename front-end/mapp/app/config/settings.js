@@ -30,6 +30,8 @@ let THEME_COLOR_LIGHT = "#9a7cdf";
 let INACTIVE_COLOR = "#3e2465";
 let ACTIVE_COLOR = "#f0edf6";
 
+let POLLING_RATE = 2000; // in miliseconds
+
 export const settings = {
   LOCAL_SERVER_URL,
   REMOTE_SERVER_URL,
@@ -43,7 +45,8 @@ export const settings = {
   INACTIVE_COLOR,
   ACTIVE_COLOR,
   LOGIN_RES,
-  DOSES_RES
+  DOSES_RES,
+  POLLING_RATE
 };
 
 export default settings;

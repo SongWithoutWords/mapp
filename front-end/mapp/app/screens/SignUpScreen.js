@@ -1,7 +1,8 @@
 import settings from "../config/settings";
 import { USER_TYPE } from "../config/constants";
 import React, { Component } from "react";
-import { StyleSheet, Text, View, ScrollView, AppRegistry } from "react-native";
+import { StyleSheet, View, ScrollView, AppRegistry } from "react-native";
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import genAlert from "../components/generalComponents/genAlert";
 import validate from "validate.js";
 import {
@@ -96,8 +97,8 @@ class SignUpScreen extends Component {
   render() {
     const userTypeString = this.props.navigation.getParam("userType", "");
     return (
-      <View style={styles.container}>
-        <ScrollView>
+      <KeyboardAwareScrollView style={styles.container}>
+        <View>
           <Card>
             {this.formItem({
               itemLabel: "Email",
@@ -144,8 +145,8 @@ class SignUpScreen extends Component {
               }
             />
           </Card>
-        </ScrollView>
-      </View>
+        </View>
+      </KeyboardAwareScrollView>
     );
   }
 }

@@ -29,14 +29,14 @@ class PrescriptionListScreen extends Component {
     const url = settings.REMOTE_SERVER_URL + settings.LOGIN_RES;
     this.timer = setInterval(() => {
       this.props.screenProps.onSignIn(url, form);
-    }, 2000);
+      this.props.screenProps.fetchDoctors();
+    }, settings.POLLING_RATE);
   }
 
   componentWillUnmount() {
     clearInterval(this.timer);
     this.timer = null; // here...
   }
-
 
   prescriptionOnPress = id => {
     this.props.navigation.navigate("PrescriptionInfo", {
@@ -111,7 +111,7 @@ class PrescriptionListScreen extends Component {
             </Text>
           </Text>
           <Text style={styles.medfield}>
-            Physician: <Text style={styles.fieldValue}>
+            Doctor: <Text style={styles.fieldValue}>
               {doctor.firstName + " " + doctor.lastName}
             </Text>
           </Text>

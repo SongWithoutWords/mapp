@@ -17,7 +17,7 @@ export default class PatientNotificationsView extends React.Component  {
 
    return fetch(settings.REMOTE_SERVER_URL + settings.DOSES_RES, {
      method: "POST",
-     headers: {
+     headers: { // TODO add authorization header
        Accept: "application/json",
        "Content-Type": "application/json"
      },

@@ -21,23 +21,23 @@ class DoctorListScreen extends Component {
     this.state = {
       doctors: doctors
       // state used by search bar
-      // an array of patients connected to this doctor
+      // an array of doctors connected to this doctor
       // invariant: consistent with the patient states in redux store
     };
   }
+
   componentWillMount() {
     this.props.screenProps.fetchDoctors();
   }
 
   onPress = id => {
-    console.log('bah bah' + id);
     this.props.navigation.navigate("DoctorInfo", {
       doctor: this.props.screenProps.doctors.byId[id],
       user: this.props.screenProps.user
     });
   };
 
-  // every time props changes update internal state: patients to
+  // every time props changes update internal state: doctors to
   // conform to the invariant
   componentWillReceiveProps(nextProps) {
     if (_.isEqual(nextProps.screenProps.doctors, this.props.screenProps.doctors))
