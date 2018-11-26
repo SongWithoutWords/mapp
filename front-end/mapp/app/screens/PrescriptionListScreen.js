@@ -275,22 +275,25 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "200",
     textAlign: "center",
-    color: "black"
+    color: "black",
+    fontFamily: 'Poppins-Medium'
   },
   medfield: {
     fontSize: 16,
-    fontWeight: "600",
+    //fontWeight: "600",
     color: "#009CC6",
     marginTop: 10,
     marginBottom: 20,
     marginLeft: 24,
-    marginRight: 24
+    marginRight: 24,
+    fontFamily: 'Poppins-SemiBold'
   },
   remainingPills: {
     textAlign: "center",
     fontSize: 20,
     fontWeight: "400",
-    color: "black"
+    color: "black",
+    fontFamily: 'lineto-circular-pro-book'
   },
   button: {
     margin: 24,
@@ -301,8 +304,9 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: "white",
-    fontWeight: "500",
-    fontSize: 16
+    //fontWeight: "500",
+    fontSize: 16,
+    fontFamily: 'lineto-circular-pro-medium'
   },
   EditButton: {
     alignItems: "center",

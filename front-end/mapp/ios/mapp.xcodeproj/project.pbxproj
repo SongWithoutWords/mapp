@@ -89,6 +89,8 @@
 		FB33F42D29B243489055985F /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D4D13FA54021491C894657AE /* EvilIcons.ttf */; };
 		FEE77F44AD7E4681BFC7A4B3 /* libRNVectorIcons.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A4C45A92802C4DE19B14F2CD /* libRNVectorIcons.a */; };
 		FFDF6342EFBD4729B719B725 /* libRNVectorIcons-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8029ABCDA2BA47798B880B3F /* libRNVectorIcons-tvOS.a */; };
+		231D63D608E44A5AB9622D0F /* lineto-circular-pro-book.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3566AD49969A448FBAC4EE31 /* lineto-circular-pro-book.ttf */; };
+		32209BD6633B4FEE98F1D732 /* lineto-circular-pro-medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B474F588EF0F4F66ADD890B0 /* lineto-circular-pro-medium.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -482,6 +484,8 @@
 		F4AA6252D7DF446D9493087A /* Poppins-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Poppins-Bold.ttf"; path = "../assets/fonts/Poppins/Poppins-Bold.ttf"; sourceTree = "<group>"; };
 		F4ACBA31453D4984875BD60D /* FontAwesome5_Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome5_Regular.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome5_Regular.ttf"; sourceTree = "<group>"; };
 		FB3C3130C81949D9B3A5C21D /* Octicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Octicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Octicons.ttf"; sourceTree = "<group>"; };
+		3566AD49969A448FBAC4EE31 /* lineto-circular-pro-book.ttf */ = {isa = PBXFileReference; name = "lineto-circular-pro-book.ttf"; path = "../assets/fonts/Poppins/lineto-circular-pro-book.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		B474F588EF0F4F66ADD890B0 /* lineto-circular-pro-medium.ttf */ = {isa = PBXFileReference; name = "lineto-circular-pro-medium.ttf"; path = "../assets/fonts/Poppins/lineto-circular-pro-medium.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -838,6 +842,8 @@
 				6A35477522384D3F83403029 /* Poppins-SemiBoldItalic.ttf */,
 				6F87AB11C50D4FBCA7A6F984 /* Poppins-Thin.ttf */,
 				92E32368744645549C698CAB /* Poppins-ThinItalic.ttf */,
+				3566AD49969A448FBAC4EE31 /* lineto-circular-pro-book.ttf */,
+				B474F588EF0F4F66ADD890B0 /* lineto-circular-pro-medium.ttf */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -1386,6 +1392,8 @@
 				F7880D10665844698C87192A /* Poppins-SemiBoldItalic.ttf in Resources */,
 				A7BE1AAFE64D4709A1406594 /* Poppins-Thin.ttf in Resources */,
 				A552E276C1C843E6B0B7B635 /* Poppins-ThinItalic.ttf in Resources */,
+				231D63D608E44A5AB9622D0F /* lineto-circular-pro-book.ttf in Resources */,
+				32209BD6633B4FEE98F1D732 /* lineto-circular-pro-medium.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
