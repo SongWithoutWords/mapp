@@ -92,53 +92,46 @@ class DoctorListScreen extends Component {
   };
   render() {
     const doctors = this.props.screenProps.doctors;
-    const renderAllDoctors = ({ item, index, section: { title, data } }) => (
-      <Card flexDirection="row">
-        <View style={{ width: "50%", justifyContent: "center" }}>
-          <Text style={styles.doctorName}>
-            {"Dr. " + item.firstName + " " + item.lastName}
-          </Text>
-        </View>
-        <View style={{ width: "15%", justifyContent: "center" }}>
-          <Text style={styles.doctorName}>ID: {item.id}</Text>
-        </View>
-        <View>
-          <TouchableOpacity
-            style={styles.submitButton1}
-            onPress={this.requestDoctor.bind(this, item)}
-          >
-            <Text style={{ color: "white" }}> Send Request</Text>
-          </TouchableOpacity>
-        </View>
-      </Card>
-    );
-    const renderMyDoctors = ({ item, index, section: { title, data } }) => (
-      <Card flexDirection="row">
-        <View style={{ width: "50%", justifyContent: "center" }}>
-          <Text style={styles.doctorName}>
-            {"Dr. " + item.firstName + " " + item.lastName}
-          </Text>
-        </View>
-        <View style={{ width: "15%", justifyContent: "center" }}>
-          <Text style={styles.doctorName}>ID: {item.id}</Text>
-        </View>
-        <View
-          style={{
-            width: "35%",
-            justifyContent: "center",
-            alignItems: "center",
-            flex: 1
-          }}
+    const renderAllDoctors = ({ item, index, section: { title, data } }) => <Card flexDirection= 'row'>
+    <View style={{width: '50%', justifyContent:'center'}}>
+    <Text style = {styles.doctorName}>{"Dr. " +
+                  item.firstName +
+                  " " +
+                  item.lastName}</Text>
+    </View>
+    <View style={{width: '15%', justifyContent:'center'}}>
+    <Text style = {styles.doctorName}>
+                ID: {item.id}</Text>
+    </View>
+    <View>
+    <TouchableOpacity
+          style={styles.submitButton1}
+          onPress={this.requestDoctor.bind(this, item)}
         >
-          <TouchableOpacity
-            style={styles.submitButton2}
-            onPress={this.requestDoctor}
-          >
-            <Text style={{ color: "white" }}> Delete</Text>
-          </TouchableOpacity>
-        </View>
-      </Card>
-    );
+          <Text style={styles.buttonText}> Send Request</Text>
+        </TouchableOpacity>
+    </View>
+    </Card>
+    const renderMyDoctors = ({ item, index, section: { title, data } }) => <Card flexDirection= 'row'>
+    <View style={{width: '50%', justifyContent:'center'}}>
+    <Text style = {styles.doctorName}>{"Dr. " +
+                  item.firstName +
+                  " " +
+                  item.lastName}</Text>
+    </View>
+    <View style={{width: '15%', justifyContent:'center'}}>
+    <Text style = {styles.doctorName}>
+                ID: {item.id}</Text>
+    </View>
+    <View style={{width: '35%', justifyContent:'center', alignItems: 'center', flex:1}}>
+    <TouchableOpacity
+          style={styles.submitButton2}
+          onPress={this.requestDoctor}
+        >
+          <Text style={styles.buttonText}> Delete</Text>
+        </TouchableOpacity>
+    </View>
+    </Card>
     return (
       <View style={{ flex: 1 }}>
         <SearchBar
@@ -227,7 +220,13 @@ const styles = StyleSheet.create({
     height: 35,
     borderRadius: 10,
     alignItems: "center",
-    color: "white"
+    color: 'white',
+  },
+  buttonText: {
+    color: "white",
+    //fontWeight: "500",
+    fontSize: 14,
+    fontFamily: 'lineto-circular-pro-medium'
   }
 });
 export default DoctorListScreen;

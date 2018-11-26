@@ -54,35 +54,34 @@ export default class PatientNotificationsView extends React.Component {
   };
   mapNotificationToCard = (prescription, mins) => (
     <Card flexDirection= 'row' key={prescription.id}>
-
-    <View style = {[{width: '25%',  aspectRatio: 1, alignItems: 'center', justifyContent: 'center', padding: 10}, styles.withBottomBorder]}>
-      <Image style = {{  width: '80%', height: '80%' }} source={require('./002-pill.png')} />
-    </View>
-    <View style = {{width: '75%', height: 100, padding: 5}}>
-      <Text style={styles.fieldValue}>
-        You must take your <Text style={styles.medfield, {color: '#C60000'}}>{prescription.medication}</Text> prescription <Text style={styles.medfield, {color: '#C60000'}}>now</Text>
-      </Text>
-      <Text style={styles.notificationDate}>{mins} minutes ago</Text>
-      <View style={{
-                alignItems : 'center',
-                justifyContent : 'center',
-                flexDirection: 'row',
-                marginLeft: 0
-              }}>
-        <View style={{width: '40%'}}>
-        <TouchableOpacity style={styles.RenewButton} onPress = {this.takeMed.bind(this, prescription)}>
-          <Text style = {styles.buttonText}>Take Now</Text>
-        </TouchableOpacity>
-        </View>
-        <View style={{width: '40%'}}>
-        <TouchableOpacity style={styles.EditButton}>
-          <Text style = {styles.buttonText}>Snooze</Text>
-        </TouchableOpacity>
-        </View>
-      </View>
-    </View>
-  </Card>
-  );
+          <View style = {[{width: '25%',  aspectRatio: 1, alignItems: 'center', justifyContent: 'center', padding: 10}, styles.withBottomBorder]}>
+            <Image style = {{  width: '80%', height: '80%' }} source={require('./002-pill.png')} />
+          </View>
+          <View style = {{width: '75%', height: 100, padding: 5}}>
+            <Text style={styles.fieldValue}>
+              You must take your <Text style={styles.medfield, {color: '#C60000'}}>{prescription.medication}</Text> prescription <Text style={styles.medfield, {color: '#C60000'}}>now</Text>
+            </Text>
+            <Text style={styles.notificationDate}>{mins} minutes ago</Text>
+            <View style={{
+                      alignItems : 'center',
+                      justifyContent : 'center',
+                      flexDirection: 'row',
+                      marginLeft: 0
+                    }}>
+              <View style={{width: '40%'}}>
+              <TouchableOpacity style={styles.RenewButton} onPress = {this.takeMed.bind(this, prescription)}>
+                <Text style = {styles.buttonText}>Take Now</Text>
+              </TouchableOpacity>
+              </View>
+              <View style={{width: '40%'}}>
+              <TouchableOpacity style={styles.EditButton}>
+                <Text style = {styles.buttonText}>Snooze</Text>
+              </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </Card>
+    );
 
   render() {
     const prescriptions = this.props.screenProps.prescriptions;
@@ -171,18 +170,16 @@ const styles = StyleSheet.create({
   fieldValue: {
     fontSize: 14,
     fontWeight: "200",
-    fontFamily: "Poppins",
-    color: "black",
-    marginLeft: 5
+    fontFamily: 'Poppins',
+    color: 'black',
+    marginLeft: 5,
+    fontFamily: 'Poppins-Regular'
   },
   medfield: {
     fontSize: 16,
-    fontWeight: "600",
-    //textAlign: 'center',
-    color: "#009CC6",
-    //marginTop: 40,
-    marginLeft: 24
-    //marginRight: 24,
+    fontWeight: '600',
+    color: '#009CC6',
+    marginLeft: 24,
   },
   button: {
     margin: 14,
@@ -192,16 +189,15 @@ const styles = StyleSheet.create({
     color: "white"
   },
   buttonText: {
-    color: "white",
-    fontWeight: "500",
-    fontSize: 15
+    color : 'white',
+    fontSize: 15,
+    fontFamily: 'lineto-circular-pro-medium'
   },
-  EditButton: {
-    alignItems: "center",
-    backgroundColor: "#C60000",
-    padding: 6,
-    borderRadius: 10,
-    margin: 10
+  EditButton: { alignItems: 'center',
+    backgroundColor: '#C60000',padding: 6, borderRadius:10 , marginTop: 5, marginLeft: 10
+  },
+  RenewButton: { alignItems: 'center',
+    backgroundColor: '#50BB75',padding: 6, borderRadius:10 , marginTop: 5
   },
   RenewButton: {
     alignItems: "center",
