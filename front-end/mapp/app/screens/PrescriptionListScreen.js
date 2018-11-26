@@ -43,11 +43,11 @@ class PrescriptionListScreen extends Component {
     this.pushNotification = setupPushNotification(this.handleNotificationOpen);
     const prescriptions = this.props.screenProps.prescriptions;
     const prescriptionIDs = this.props.screenProps.user.myPrescriptions;
-    prescriptionIDs.map(id => 
+    prescriptionIDs.map(id =>
     {
       scheduleNotifications(prescriptions.byId[id]);
       numberLeft = (prescriptions.byId[id].amountInitial / prescriptions.byId[id].dosageSchedule[0].dosage) - Object.keys(prescriptions.byId[id].dosesTaken).length;
-      if (((numberLeft * prescriptions.byId[id].dosageSchedule[0].dosage) / prescriptions.byId[id].amountInitial) < 0.2) 
+      if (((numberLeft * prescriptions.byId[id].dosageSchedule[0].dosage) / prescriptions.byId[id].amountInitial) < 0.2)
           sendNotification("You can renew prescription for " + prescriptions.byId[id].medication + " just go to the prescriptions page to do so",
           "A prescription for is running low!");
     });
@@ -61,14 +61,14 @@ class PrescriptionListScreen extends Component {
       console.log("they are equal!");
     else{
       prescriptionIDs.map(id =>
-      { 
+      {
         scheduleNotifications(newPrescriptions.byId[id]);
         newNumberLeft = (newPrescriptions.byId[id].amountInitial / newPrescriptions.byId[id].dosageSchedule[0].dosage) - Object.keys(newPrescriptions.byId[id].dosesTaken).length;
         oldNumberLeft = (oldPrescriptions.byId[id].amountInitial / oldPrescriptions.byId[id].dosageSchedule[0].dosage) - Object.keys(oldPrescriptions.byId[id].dosesTaken).length;
-        if ((newNumberLeft - oldNumberLeft) < 0 && ((newNumberLeft * newPrescriptions.byId[id].dosageSchedule[0].dosage ) / newPrescriptions.byId[id].amountInitial) < 0.2) 
+        if ((newNumberLeft - oldNumberLeft) < 0 && ((newNumberLeft * newPrescriptions.byId[id].dosageSchedule[0].dosage ) / newPrescriptions.byId[id].amountInitial) < 0.2)
           sendNotification("You can renew prescription for " + newPrescriptions.byId[id].medication + ". Just go to the prescriptions page to do so",
           "A prescription is running low!");
-      });  
+      });
     }
   }
 
@@ -126,7 +126,7 @@ class PrescriptionListScreen extends Component {
       prescription.dosageSchedule[0].minutesBetweenDoses
     );
     const dosage = prescription.dosageSchedule[0].dosage;
-
+    const val = Math.round((amountRemaining / prescription.amountInitial) * 100);
     return (
       <Card style={styles.container} key={prescription.id}>
         <Text style={styles.medfield}>
@@ -155,7 +155,8 @@ class PrescriptionListScreen extends Component {
               (amountRemaining / prescription.amountInitial) * 100
             )}
             height={20}
-            backgroundColor="#6CC644"
+            backgroundColor={'#' + Math.round(((0xC6 - 0x6C)/100*(100-val) + 0x6C)).toString(16)
+            + Math.round(((0x00 - 0xC6)/100*(100-val) + 0xC6)).toString(16) + '00'}
             barAnimationDuration={0}
           />
           <View style={styles.buttonContainer}>
