@@ -5,10 +5,16 @@ export function scheduleNotifications(prescription) {
     const numberLeft = (prescription.amountInitial / prescription.dosageSchedule[0].dosage) - Object.keys(prescription.dosesTaken).length;
     const firstDate = new Date(prescription.dosageSchedule[0].firstDose);
     const timeNow = new Date();
-    d = Math.ceil((timeNow - firstDate) / (prescription.dosageSchedule[0].minutesBetweenDoses * 60000));
-    newTime = new Date(firstDate.getTime() + (d * (prescription.dosageSchedule[0].minutesBetweenDoses * 60000)));
+    newTime = firstDate;
+
+    if(timeNow.getTime() > firstDate.getTime()){
+      d = Math.ceil((timeNow - firstDate) / (prescription.dosageSchedule[0].minutesBetweenDoses * 60000));
+      newTime = new Date(firstDate.getTime() + (d * (prescription.dosageSchedule[0].minutesBetweenDoses * 60000)));
+    }
+
     console.log(numberLeft + " New time for new notification " + newTime);
     PushNotification.cancelLocalNotifications({id: prescription.id + ""});
+
     if(numberLeft > 0){
       PushNotification.localNotificationSchedule({
         /* Android Only Properties */

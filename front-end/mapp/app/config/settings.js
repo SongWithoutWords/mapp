@@ -1,5 +1,5 @@
 let LOCAL_SERVER_URL = "http://localhost:3000";
-let REMOTE_SERVER_URL = "https://agis-mapp.xyz";
+let REMOTE_SERVER_URL = "http://agis-mapp.xyz";
 
 //RESTful APIs
 let DOCTOR_RES = "/doctors";

@@ -1,7 +1,7 @@
 import PushNotification from 'react-native-push-notification';
 import settings from "../config/settings";
 
-export function sendNotification() {
+export function sendNotification(message, subject) {
     PushNotification.localNotification({
         /* Android Only Properties */
         id: "1", 
@@ -9,8 +9,8 @@ export function sendNotification() {
         autoCancel: true, 
         largeIcon: "ic_launcher", 
         smallIcon: "ic_notification", 
-        bigText: "You have a new Patient requesting to connect to your account. Press here to go to the inbox screen", 
-        subText: "You have a new Patient request!",
+        bigText: message, 
+        subText: subject,
         color: settings.THEME_COLOR, 
         vibrate: true, 
         vibration: 300, // vibration length in milliseconds, ignored if vibrate=false, default: 1000
@@ -23,8 +23,8 @@ export function sendNotification() {
         /* ios only */
         userInfo: {id : "1"},
         /* iOS and Android properties */
-        title: "You have a new Patient request!", 
-        message: "You have a new Patient requesting to connect to your account. Press here to go to the inbox screen", 
+        title: subject, 
+        message: message, 
         playSound: true, 
         soundName: 'default', 
     });
