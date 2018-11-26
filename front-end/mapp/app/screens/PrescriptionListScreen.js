@@ -72,7 +72,7 @@ class PrescriptionListScreen extends Component {
     } else if (prescription.doctor !== null) {
       genAlert("You can edit only the prescriptions you created.");
     } else {
-      this.props.navigation.navigate("EditPrescription", {
+      this.props.navigation.navigate("PatientEditPrescription", {
         prescription: prescription,
         user: this.props.screenProps.user
       });

@@ -3,7 +3,7 @@ import settings from "../config/settings";
 import validatePrescription from "../lib/validatePrescription";
 import genAlert from "../components/generalComponents/genAlert";
 
-async function createPrescription({
+function createPrescription({
   medication = "",
   dosage = 0,
   dosageUnit = "",

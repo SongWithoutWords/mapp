@@ -12,7 +12,7 @@ import settings from "../config/settings";
 import postData from "../lib/postData";
 import genAlert from "../components/generalComponents/genAlert";
 import DateTimePicker from "react-native-modal-datetime-picker";
-import { Picker, Header, Content, Button, Text } from "native-base";
+import { Picker, Header, Icon, Button, Text } from "native-base";
 import { FREQUENCY, DOSAGE_UNIT } from "../config/constants";
 import { convertFrequencyToMins } from "../lib/frequencyMinsConversion";
 import createPrescription from "../lib/createPrescription";
@@ -136,6 +136,7 @@ export default class MakePrescriptionView extends React.Component {
 
         <Picker
           mode="dropdown"
+          iosIcon={<Icon name="ios-arrow-down-outline" />}
           placeholder="Dosage Unit"
           textStyle={{ color: "#009CC6" }}
           itemStyle={{
@@ -153,6 +154,7 @@ export default class MakePrescriptionView extends React.Component {
 
         <Picker
           mode="dropdown"
+          iosIcon={<Icon name="ios-arrow-down-outline" />}
           placeholder="Dosage Frequency"
           textStyle={{ color: "#009CC6" }}
           itemStyle={{

@@ -26,7 +26,7 @@ const PrescriptionStackNavigator = createStackNavigator({
       headerForceInset: { top: "never", bottom: "never" }
     }
   },
-  EditPrescription: {
+  PatientEditPrescription: {
     screen: EditPrescriptionView,
     navigationOptions: {
       title: "Edit Prescription",

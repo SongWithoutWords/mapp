@@ -12,10 +12,11 @@ import settings from "../config/settings";
 import patchData from "../lib/patchData";
 import genAlert from "../components/generalComponents/genAlert";
 import DateTimePicker from "react-native-modal-datetime-picker";
-import { Picker, Header, Content, Button, Text } from "native-base";
+import { Picker, Header, Icon, Button, Text } from "native-base";
 import { FREQUENCY, DOSAGE_UNIT } from "../config/constants";
 import { convertFrequencyToMins } from "../lib/frequencyMinsConversion";
 import validatePrescription from "../lib/validatePrescription";
+import modifyPrescription from "../lib/modifyPrescription";
 
 export default class EditPrescriptionView extends React.Component {
   constructor(props) {
@@ -44,42 +45,51 @@ export default class EditPrescriptionView extends React.Component {
     this._hideStartDateTimePicker();
   };
 
+  deletePrescriptionOnPress = () => {
+    genAlert("not implemented yet");
+  }
+
   editPrescriptionOnPress = () => {
-    if (validatePrescription(this.state)) {
-      const user = this.props.navigation.getParam("user", {});
-      const prescription = this.props.navigation.getParam("prescription", {});
-      const url =
-        settings.REMOTE_SERVER_URL +
-        settings.PRESCRIPTION_RES +
-        "/" +
-        prescription.id;
-      const dosageSchedule = [];
+    var localState;
+    const {
+      medication,
+      dosage,
+      dosageUnit,
+      frequency,
+      minutesBetweenDoses,
+      amountInitial,
+      startDateTime
+    } = this.state;
+    localState = {
+      medication,
+      dosage,
+      dosageUnit,
+      frequency,
+      minutesBetweenDoses,
+      amountInitial,
+      startDateTime
+    };
 
-      var schedule = {};
-      schedule.firstDose = this.state.startDateTime;
-      schedule.dosage = this.state.dosage;
-      schedule.minutesBetweenDoses = this.state.minutesBetweenDoses;
-      dosageSchedule.push(schedule);
+    const user = this.props.navigation.getParam("user", {});
+    const prescriptionID = this.props.navigation.getParam("prescription", {}).id;
+    var patient;
+    var patientID = null;
 
-      const json = {
-        patient: user.id,
-        medication: this.state.medication,
-        dosageUnit: this.state.dosageUnit,
-        amountInitial: this.state.amountInitial,
-        dosageSchedule: dosageSchedule
-      };
-
-      console.log(JSON.stringify(json));
-
-      return patchData(url, json)
-        .then(response => {
-          genAlert("Prescription updated!");
-          this.props.navigation.goBack();
-        })
-        .catch(error => {
-          genAlert("Failed to modify a prescription", error.message);
-        });
+    // this view is used by both patnav and docnav
+    switch (this.props.navigation.state.routeName) {
+      case "PatientEditPrescription":
+        patientID = user.id;
+        break;
+      case "DoctorEditPrescription":
+        patient = this.props.navigation.getParam("patient", {});
+        patientID = patient.id;
+        break;
     }
+
+    localState.patientID = patientID;
+    localState.prescriptionID = prescriptionID;
+    localState.navigation = this.props.navigation;
+    modifyPrescription(localState);
   };
 
   render() {
@@ -132,6 +142,7 @@ export default class EditPrescriptionView extends React.Component {
 
         <Picker
           mode="dropdown"
+          iosIcon={<Icon name="ios-arrow-down-outline" />}
           placeholder="Dosage Unit"
           textStyle={{ color: "#009CC6" }}
           itemStyle={{
@@ -149,6 +160,7 @@ export default class EditPrescriptionView extends React.Component {
 
         <Picker
           mode="dropdown"
+          iosIcon={<Icon name="ios-arrow-down-outline" />}
           placeholder="Dosage Frequency"
           textStyle={{ color: "#009CC6" }}
           itemStyle={{
@@ -189,6 +201,9 @@ export default class EditPrescriptionView extends React.Component {
 
         <Button style={styles.button} onPress={this.editPrescriptionOnPress}>
           <Text>Save</Text>
+        </Button>
+        <Button danger style={styles.button} onPress={this.deletePrescriptionOnPress}>
+          <Text>Delete</Text>
         </Button>
       </ScrollView>
     );
