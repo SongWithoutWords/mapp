@@ -11,7 +11,7 @@ import AccountScreen from "../screens/AccountScreen";
 import PrescriptionInfoScreen from "../screens/PrescriptionInfoScreen";
 import PrescriptionListScreen from "../screens/PrescriptionListScreen";
 import EditPrescriptionView from "../screens/EditPrescriptionView";
-import MakePrescriptionView from "../screens/MakePrescriptionView";
+import MakePrescriptionView from "../screens/makePrescriptionView";
 import NotificationScreen from "../screens/PatientNotificationsView";
 import DoctorListScreen from "../screens/DoctorListScreen";
 import DoctorInfoScreen from "../screens/DoctorInfoScreen";

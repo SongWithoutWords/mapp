@@ -12,7 +12,7 @@ import PatientListScreen from "../screens/PatientListScreen";
 import PatientInfoScreen from "../screens/PatientInfoScreen";
 import { genTabNavOptions } from "../lib/genNavOptions";
 
-import MakePrescriptionView from "../screens/MakePrescriptionView";
+import MakePrescriptionView from "../screens/makePrescriptionView";
 
 const PatientStackNavigator = createStackNavigator({
   PatientList: {
