@@ -22,22 +22,6 @@ import { convertMinsToFreqString } from "../lib/frequencyMinsConversion";
 
 import ProgressBarAnimated from "react-native-progress-bar-animated";
 class PrescriptionListScreen extends Component {
-  // polling on server
-  componentDidMount() {
-    const { email, password } = this.props.screenProps.user;
-    const form = { email, password };
-    const url = settings.REMOTE_SERVER_URL + settings.LOGIN_RES;
-    this.timer = setInterval(() => {
-      this.props.screenProps.onSignIn(url, form);
-      this.props.screenProps.fetchDoctors();
-    }, settings.POLLING_RATE);
-  }
-
-  componentWillUnmount() {
-    clearInterval(this.timer);
-    this.timer = null; // here...
-  }
-
   componentWillMount() {
     this.pushNotification = setupPushNotification(this.handleNotificationOpen);
     const prescriptions = this.props.screenProps.prescriptions;

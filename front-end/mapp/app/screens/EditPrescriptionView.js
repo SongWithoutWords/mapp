@@ -17,6 +17,7 @@ import { FREQUENCY, DOSAGE_UNIT } from "../config/constants";
 import { convertFrequencyToMins } from "../lib/frequencyMinsConversion";
 import validatePrescription from "../lib/validatePrescription";
 import modifyPrescription from "../lib/modifyPrescription";
+import deletePrescription from "../lib/deletePrescription";
 
 export default class EditPrescriptionView extends React.Component {
   constructor(props) {
@@ -46,8 +47,10 @@ export default class EditPrescriptionView extends React.Component {
   };
 
   deletePrescriptionOnPress = () => {
-    genAlert("not implemented yet");
-  }
+    const prescriptionID = this.props.navigation.getParam("prescription", {}).id;
+    const navigation = this.props.navigation;
+    deletePrescription({prescriptionID, navigation});
+  };
 
   editPrescriptionOnPress = () => {
     var localState;
@@ -71,7 +74,8 @@ export default class EditPrescriptionView extends React.Component {
     };
 
     const user = this.props.navigation.getParam("user", {});
-    const prescriptionID = this.props.navigation.getParam("prescription", {}).id;
+    const prescriptionID = this.props.navigation.getParam("prescription", {})
+      .id;
     var patient;
     var patientID = null;
 
@@ -202,7 +206,11 @@ export default class EditPrescriptionView extends React.Component {
         <Button style={styles.button} onPress={this.editPrescriptionOnPress}>
           <Text>Save</Text>
         </Button>
-        <Button danger style={styles.button} onPress={this.deletePrescriptionOnPress}>
+        <Button
+          danger
+          style={styles.button}
+          onPress={this.deletePrescriptionOnPress}
+        >
           <Text>Delete</Text>
         </Button>
       </ScrollView>
