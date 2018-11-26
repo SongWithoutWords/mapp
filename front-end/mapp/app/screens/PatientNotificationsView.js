@@ -50,8 +50,8 @@ export default class PatientNotificationsView extends React.Component  {
 
       <Card flexDirection= 'row' key={prescription.id}>
 
-          <View style = {[{width: 80, borderColor : 'black', alignItems: 'center', justifyContent: 'center', padding: 10}, styles.withBottomBorder]}>
-            <Image style = {{ width: 45, height: 45 }} source={require('./002-pill.png')} />
+          <View style = {[{width: '25%',  aspectRatio: 1, alignItems: 'center', justifyContent: 'center', padding: 10}, styles.withBottomBorder]}>
+            <Image style = {{  width: '80%', height: '80%' }} source={require('./002-pill.png')} />
           </View>
           <View style = {{width: '75%', height: 100, padding: 5}}>
             <Text style={styles.fieldValue}>
