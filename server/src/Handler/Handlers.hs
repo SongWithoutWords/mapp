@@ -17,6 +17,72 @@ dbLookup404 key = do
     Just value -> pure value
     Nothing -> notFound
 
+authenticateHeader :: Handler (Either DoctorId PatientId)
+authenticateHeader = do
+  mAuth <- lookupBasicAuth
+  case mAuth of
+    Nothing -> permissionDenied "Must provide email and password in Authorization header"
+    Just (emailRec, passwordRec) -> authenticate emailRec passwordRec
+
+authenticate :: Text -> Text -> Handler (Either DoctorId PatientId)
+authenticate emailRec passwordRec = do
+  maybeUser <- runDB $ getBy $ UniqueUser emailRec
+  case maybeUser of
+    Nothing -> permissionDenied "No account for this email address"
+    Just (Entity _ (User _ userPassword _ doctorOrPatientId')) ->
+      if passwordRec /= userPassword
+        then permissionDenied "Incorrect password"
+        else pure doctorOrPatientId'
+
+userMustBePatient :: PatientId -> PatientId -> Handler ()
+userMustBePatient patientRequired patientFound =
+  unless (patientFound == patientRequired) $
+    permissionDenied "User must be the correct patient"
+
+userMustBeAPatient :: DoctorId -> Handler ()
+userMustBeAPatient _ = permissionDenied "User must be a patient"
+
+userMustBeDoctor :: DoctorId -> DoctorId -> Handler ()
+userMustBeDoctor doctorRequired doctorFound =
+  unless (doctorFound == doctorRequired) $
+    permissionDenied "User must be the correct doctor"
+
+userMustBeADoctor :: PatientId -> Handler ()
+userMustBeADoctor _ = permissionDenied "User must be a doctor"
+
+userMustBeDoctorOf :: PatientId -> DoctorId -> Handler ()
+userMustBeDoctorOf pid did = do
+      doctorPatientRelationExists <- runDB $ (> 0) <$> count
+        [ DoctorPatientRelationDoctor ==. did
+        , DoctorPatientRelationPatient ==. pid]
+      unless doctorPatientRelationExists $
+        permissionDenied "User must be a doctor of the patient"
+
+authenticateEither :: (DoctorId -> Handler ()) -> (PatientId -> Handler ()) -> Handler ()
+authenticateEither fa fb = authenticateHeader >>= either fa fb
+
+authenticateAsPatient :: PatientId -> Handler ()
+authenticateAsPatient pid =
+  authenticateEither userMustBeAPatient (userMustBePatient pid)
+
+authenticateAsDoctor :: DoctorId -> Handler ()
+authenticateAsDoctor did =
+  authenticateEither (userMustBeDoctor did) userMustBeADoctor
+
+authenticateAsDoctorOrPatient :: DoctorId -> PatientId -> Handler ()
+authenticateAsDoctorOrPatient did pid =
+  authenticateEither (userMustBeDoctor did) (userMustBePatient pid)
+
+authenticateAsDoctorOrElsePatient :: Maybe DoctorId -> PatientId -> Handler ()
+authenticateAsDoctorOrElsePatient mdid pid =
+  case mdid of
+    Just did -> authenticateAsDoctor did
+    Nothing -> authenticateAsPatient pid
+
+authenticateAsPatientOrDoctorOf :: PatientId -> Handler ()
+authenticateAsPatientOrDoctorOf pid =
+  authenticateEither (userMustBeDoctorOf pid) (userMustBePatient pid)
+
 getDoctorWithPatients :: DoctorId -> Handler DoctorWithPatients
 getDoctorWithPatients did = do
   Doctor fn ln <- runDB $ get404 did
@@ -119,21 +185,23 @@ getPatientWithDoctors pid = do
 postLoginsR :: Handler Value
 postLoginsR = do
   PostLogin emailReceived passwordReceived <- requireJsonBody
-  maybeUser <- runDB $ getBy $ UniqueUser emailReceived
-  case maybeUser of
-    Nothing -> invalidArgs ["No account for this email address"]
-    Just (Entity _ (User _ password' _ doctorOrPatientId')) ->
-      if passwordReceived /= password'
-        then permissionDenied "Incorrect password"
-        else case doctorOrPatientId' of
-          Left did -> getDoctorWithPatients did >>= returnJson
-          Right pid -> getPatientWithDoctors pid >>= returnJson
+  doctorOrPatientId' <- authenticate emailReceived passwordReceived
+
+  case doctorOrPatientId' of
+    Left did -> getDoctorWithPatients did >>= returnJson
+    Right pid -> getPatientWithDoctors pid >>= returnJson
 
 getDoctorR :: Int -> Handler Value
-getDoctorR = getDoctorWithPatients . doctorKey >=> returnJson
+getDoctorR id = do
+  let did = doctorKey id
+  authenticateAsDoctor did
+  getDoctorWithPatients did >>= returnJson
 
 getPatientR :: Int -> Handler Value
-getPatientR = getPatientWithDoctors . patientKey >=> returnJson
+getPatientR id = do
+  let pid = patientKey id
+  authenticateAsPatient pid
+  getPatientWithDoctors pid >>= returnJson
 
 getDoctorsR :: Handler Value
 getDoctorsR = do
@@ -142,6 +210,7 @@ getDoctorsR = do
 
 postDoctorsR :: Handler Value
 postDoctorsR = do
+  -- No authentication required: creating a new account
   PostDoctor email' password' firstName' lastName' <- requireJsonBody
   doctorId <- runDB $ insert Doctor
     { doctorFirstName = firstName'
@@ -158,6 +227,7 @@ postDoctorsR = do
 
 postPatientsR :: Handler Value
 postPatientsR =  do
+  -- No authentication required: creating a new account
   PostPatient email' password' fn ln bd <- requireJsonBody
   patientId <- runDB $ insert Patient
     { patientFirstName = fn
@@ -175,17 +245,25 @@ postPatientsR =  do
 
 postRequestsR :: Handler Value
 postRequestsR =  do
-  request :: DoctorPatientRequest <- requireJsonBody
+  request@(DoctorPatientRequest _ pid) <- requireJsonBody
+  authenticateAsPatient pid
   requestInserted <- runDB $ insertUniqueEntity request
   returnJson requestInserted
 
 deleteRequestR :: Int -> Handler ()
-deleteRequestR = runDB . delete . requestKey
+deleteRequestR id = do
+  let rid = requestKey id
+  mreq <- runDB $ get rid
+  case mreq of
+    Nothing -> notFound
+    Just (DoctorPatientRequest did pid) -> do
+      authenticateAsDoctorOrPatient did pid
+      runDB $ delete rid
 
 postRelationsR :: Handler Value
 postRelationsR = do
   relation@(DoctorPatientRelation did pid) <- requireJsonBody
-
+  authenticateAsDoctor did
   pendingRequests <- runDB $ selectList
     [ DoctorPatientRequestDoctor ==. did
     , DoctorPatientRequestPatient ==. pid] []
@@ -197,7 +275,14 @@ postRelationsR = do
       runDB (insertUniqueEntity relation) >>= returnJson
 
 deleteRelationR :: Int -> Handler ()
-deleteRelationR = runDB . delete . relationKey
+deleteRelationR id = do
+  let rid = relationKey id
+  mrel <- runDB $ get rid
+  case mrel of
+    Nothing -> notFound
+    Just (DoctorPatientRelation did pid) -> do
+      authenticateAsDoctorOrPatient did pid
+      runDB $ delete rid
 
 getPrescription :: PrescriptionId -> Handler GetPrescription
 getPrescription = dbLookup404 >=> mapPrescription
@@ -235,6 +320,8 @@ postPrescriptionsR :: Handler Value
 postPrescriptionsR = do
   PostPrescription did pid med unit amount schedule <- requireJsonBody
 
+  authenticateAsDoctorOrElsePatient did pid
+
   prescriptionId <- runDB $ insert $ Prescription did pid med unit amount
 
   insertSchedule prescriptionId schedule
@@ -244,22 +331,42 @@ postPrescriptionsR = do
 patchPrescriptionR :: Int -> Handler Value
 patchPrescriptionR id = do
   let prescriptionId = prescriptionKey id
-  PostPrescription did pid med unit amount schedule <- requireJsonBody
 
-  runDB $ replace prescriptionId $ Prescription did pid med unit amount
-  deleteScheduleAndDosesTaken prescriptionId
-  insertSchedule prescriptionId schedule
+  mPrescription <- runDB $ get prescriptionId
 
-  getPrescription prescriptionId >>= returnJson
+  case mPrescription of
+    Nothing -> notFound
+    Just (Prescription did pid _ _ _) -> do
+      authenticateAsDoctorOrElsePatient did pid
+
+      PatchPrescription med unit amount schedule <- requireJsonBody
+
+      deleteScheduleAndDosesTaken prescriptionId
+      runDB $ replace prescriptionId $ Prescription did pid med unit amount
+      insertSchedule prescriptionId schedule
+
+      getPrescription prescriptionId >>= returnJson
 
 deletePrescriptionR :: Int -> Handler ()
 deletePrescriptionR id = do
-  let pid = prescriptionKey id
-  deleteScheduleAndDosesTaken pid
-  runDB $ delete pid
+  let prescriptionId = prescriptionKey id
+
+  mPrescription <- runDB $ get prescriptionId
+
+  case mPrescription of
+    Nothing -> notFound
+    Just (Prescription did pid _ _ _) -> do
+      authenticateAsDoctorOrElsePatient did pid
+
+      deleteScheduleAndDosesTaken prescriptionId
+      runDB $ delete prescriptionId
 
 postDosesTakenR :: Handler Value
 postDosesTakenR = do
-  d::DoseTaken <- requireJsonBody
-  runDB (insertEntity d) >>= returnJson
-
+  d@(DoseTaken prescriptionId _ _) <- requireJsonBody
+  mPrescription <- runDB $ get prescriptionId
+  case mPrescription of
+    Nothing -> invalidArgs ["Prescription does not exist"]
+    Just (Prescription _ pid _ _ _) -> do
+      authenticateAsPatient pid
+      runDB (insertEntity d) >>= returnJson

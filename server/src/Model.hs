@@ -127,6 +127,15 @@ data PostPrescription = PostPrescription
 instance FromJSON PostPrescription
 instance ToJSON PostPrescription
 
+data PatchPrescription = PatchPrescription
+  { medication :: Text
+  , dosageUnit :: DosageUnit
+  , amountInitial :: Double
+  , dosageSchedule :: [PostRecurringDose]
+  } deriving(Generic)
+instance FromJSON PatchPrescription
+instance ToJSON PatchPrescription
+
 data PostRecurringDose = PostRecurringDose
   { firstDose :: UTCTime
   , minutesBetweenDoses :: Int
