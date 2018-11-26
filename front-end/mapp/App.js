@@ -43,7 +43,7 @@ class App extends Component<Props> {
               pendingRequests: this.props.pendingRequests,
               fetchDoctors: this.props.fetchDoctors,
               doctors: this.props.doctors,
-              prescriptions: this.props.prescriptions
+              prescriptions: this.props.prescriptions,
             }}
           />
         );

@@ -92,7 +92,7 @@ const InboxTabNavigator = createMaterialTopTabNavigator(
   }
 );
 
-const PatientTabNavOptions = genTabNavOptions("PrescriptionList", [
+const PatientTabNavOptions = genTabNavOptions("Account", [
   "Inbox",
   "PrescriptionList",
   "DoctorList",
