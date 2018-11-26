@@ -14,7 +14,6 @@ import Foundation            as X
 import Model                 as X
 import Test.Hspec            as X
 import Yesod.Default.Config2 (useEnv, loadYamlSettings)
-import Yesod.Auth            as X
 import Yesod.Test            as X
 import Yesod.Core.Unsafe     (fakeHandlerGetLogger)
 
@@ -28,6 +27,7 @@ import Yesod.Core (messageLoggerSource)
 -- For JSON test functions
 import Network.Wai.Test(SResponse(..))
 import Data.Aeson
+import qualified Data.ByteString.Base64 as B64
 import qualified Network.HTTP.Types as H
 import qualified Test.HUnit as H
 import Text.Show.Pretty(ppShow)
@@ -107,4 +107,23 @@ jsonResponseIs expected = withResponse $ \ (SResponse status _ bodyText) -> do
 
 postJson :: (ToJSON a) => RedirectUrl App url => url -> a -> YesodExample App ()
 postJson url value = postBody url $ encode value
+
+addBasicAuthHeader :: Text -> Text -> RequestBuilder site ()
+addBasicAuthHeader email password = addRequestHeader $
+  (H.hAuthorization, (asByteString "Basic ") ++ (B64.encode $ encodeUtf8 $ email ++ ":" ++ password))
+
+postJsonAuth
+  :: (ToJSON a, RedirectUrl App url)
+  => (Text, Text) -> url -> a -> YesodExample App ()
+postJsonAuth (email, password) url value = request $ do
+  setMethod "POST"
+  setUrl url
+  addBasicAuthHeader email password
+  setRequestBody $ encode value
+
+getAuth :: RedirectUrl App url => (Text, Text) -> url -> YesodExample App ()
+getAuth (email, password) url = request $ do
+  setMethod "GET"
+  setUrl url
+  addBasicAuthHeader email password
 
