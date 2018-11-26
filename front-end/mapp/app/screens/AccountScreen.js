@@ -3,20 +3,26 @@ import settings from "../config/settings";
 import { Button, Text } from "react-native-elements";
 import { StyleSheet, AppRegistry } from "react-native";
 import { View } from "react-native";
+import { USER_TYPE } from "../config/constants";
 
 class AccountScreen extends Component {
   // polling on server
   componentDidMount() {
-    const { email, password } = this.props.screenProps.user;
+    const { email, password, userType } = this.props.screenProps.user;
     const form = { email, password };
     const url = settings.REMOTE_SERVER_URL + settings.LOGIN_RES;
     this.timer = setInterval(() => {
       this.props.screenProps.onSignIn(url, form);
-      this.props.screenProps.fetchDoctors();
+      if (userType === USER_TYPE.PATIENT) {
+        this.props.screenProps.fetchDoctors(email, password);
+      }
     }, settings.POLLING_RATE);
   }
 
-  // componentWillUnmount() {}
+  componentWillUnmount() {
+    clearInterval(this.timer);
+    this.timer = null; // here...
+  }
 
   render() {
     const firstName = this.props.screenProps.user.firstName;

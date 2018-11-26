@@ -1,18 +1,12 @@
 import settings from "../config/settings";
 import _ from "lodash";
+import fetchAuth from "../lib/fetchAuth";
 
 function getDoctors(email="", password="") {
-  return fetch(settings.REMOTE_SERVER_URL + settings.DOCTOR_RES, {
-    method: "GET",
-    headers: {
-      email: email,
-      password: password
-    },
-  })
+  const url = settings.REMOTE_SERVER_URL + settings.DOCTOR_RES;
+  const method = "GET";
+  return fetchAuth({url, method, email, password})
     .then(response => {
-      if (!response.ok) {
-        throw new Error(response.status.toString());
-      }
       return response.json();
     })
     .then(function(responseJson) {

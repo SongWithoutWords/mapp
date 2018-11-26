@@ -86,6 +86,8 @@ export default class MakePrescriptionView extends React.Component {
     localState.patientID = patientID;
     localState.doctorID = doctorID;
     localState.navigation = this.props.navigation;
+    localState.email = user.email;
+    localState.password = user.password;
 
     createPrescription(localState);
   };

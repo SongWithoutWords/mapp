@@ -28,13 +28,23 @@ class PrescriptionListScreen extends Component {
     this.pushNotification = setupPushNotification(this.handleNotificationOpen);
     const prescriptions = this.props.screenProps.prescriptions;
     const prescriptionIDs = this.props.screenProps.user.myPrescriptions;
-    prescriptionIDs.map(id =>
-    {
+    prescriptionIDs.map(id => {
       scheduleNotifications(prescriptions.byId[id]);
-      numberLeft = (prescriptions.byId[id].amountInitial / prescriptions.byId[id].dosageSchedule[0].dosage) - Object.keys(prescriptions.byId[id].dosesTaken).length;
-      if (((numberLeft * prescriptions.byId[id].dosageSchedule[0].dosage) / prescriptions.byId[id].amountInitial) < 0.2)
-          sendNotification("You can renew prescription for " + prescriptions.byId[id].medication + " just go to the prescriptions page to do so",
-          "A prescription for is running low!");
+      numberLeft =
+        prescriptions.byId[id].amountInitial /
+          prescriptions.byId[id].dosageSchedule[0].dosage -
+        Object.keys(prescriptions.byId[id].dosesTaken).length;
+      if (
+        (numberLeft * prescriptions.byId[id].dosageSchedule[0].dosage) /
+          prescriptions.byId[id].amountInitial <
+        0.2
+      )
+        sendNotification(
+          "You can renew prescription for " +
+            prescriptions.byId[id].medication +
+            " just go to the prescriptions page to do so",
+          "A prescription for is running low!"
+        );
     });
   }
 
@@ -44,15 +54,29 @@ class PrescriptionListScreen extends Component {
     const prescriptionIDs = this.props.screenProps.user.myPrescriptions;
     if (_.isEqual(newPrescriptions, oldPrescriptions))
       console.log("they are equal!");
-    else{
-      prescriptionIDs.map(id =>
-      {
+    else {
+      prescriptionIDs.map(id => {
         scheduleNotifications(newPrescriptions.byId[id]);
-        newNumberLeft = (newPrescriptions.byId[id].amountInitial / newPrescriptions.byId[id].dosageSchedule[0].dosage) - Object.keys(newPrescriptions.byId[id].dosesTaken).length;
-        oldNumberLeft = (oldPrescriptions.byId[id].amountInitial / oldPrescriptions.byId[id].dosageSchedule[0].dosage) - Object.keys(oldPrescriptions.byId[id].dosesTaken).length;
-        if ((newNumberLeft - oldNumberLeft) < 0 && ((newNumberLeft * newPrescriptions.byId[id].dosageSchedule[0].dosage ) / newPrescriptions.byId[id].amountInitial) < 0.2)
-          sendNotification("You can renew prescription for " + newPrescriptions.byId[id].medication + ". Just go to the prescriptions page to do so",
-          "A prescription is running low!");
+        newNumberLeft =
+          newPrescriptions.byId[id].amountInitial /
+            newPrescriptions.byId[id].dosageSchedule[0].dosage -
+          Object.keys(newPrescriptions.byId[id].dosesTaken).length;
+        oldNumberLeft =
+          oldPrescriptions.byId[id].amountInitial /
+            oldPrescriptions.byId[id].dosageSchedule[0].dosage -
+          Object.keys(oldPrescriptions.byId[id].dosesTaken).length;
+        if (
+          newNumberLeft - oldNumberLeft < 0 &&
+          (newNumberLeft * newPrescriptions.byId[id].dosageSchedule[0].dosage) /
+            newPrescriptions.byId[id].amountInitial <
+            0.2
+        )
+          sendNotification(
+            "You can renew prescription for " +
+              newPrescriptions.byId[id].medication +
+              ". Just go to the prescriptions page to do so",
+            "A prescription is running low!"
+          );
       });
     }
   }
@@ -73,21 +97,23 @@ class PrescriptionListScreen extends Component {
     let amountRemaining =
       prescription.amountInitial -
       prescription.dosesTaken.length * prescription.dosageSchedule[0].dosage;
-    if(prescription.doctor !== null && amountRemaining<=0){
+    if (prescription.doctor !== null && amountRemaining <= 0) {
       createPrescription({
-        medication : prescription.medication,
-        dosage : prescription.dosageSchedule[0].dosage,
-        dosageUnit : prescription.dosageUnit,
-        frequency : FREQUENCY.EVERY_WEEK,
-        minutesBetweenDoses : prescription.dosageSchedule[0].minutesBetweenDoses,
-        amountInitial : prescription.amountInitial,
-        startDateTime : prescription.dosageSchedule[0].firstDose,
-        patientID : prescription.patient,
-        doctorID : prescription.doctor, // TODO
-        navigation : this.props.navigation
+        medication: prescription.medication,
+        dosage: prescription.dosageSchedule[0].dosage,
+        dosageUnit: prescription.dosageUnit,
+        frequency: FREQUENCY.EVERY_WEEK,
+        minutesBetweenDoses: prescription.dosageSchedule[0].minutesBetweenDoses,
+        amountInitial: prescription.amountInitial,
+        startDateTime: prescription.dosageSchedule[0].firstDose,
+        patientID: prescription.patient,
+        doctorID: prescription.doctor, // TODO
+        navigation: this.props.navigation,
+        email: this.props.screenProps.user.email,
+        password:this.props.screenProps.user.password
       });
     }
-  }
+  };
   onEditPress = prescription => {
     if (prescription.dosesTaken.length !== 0) {
       genAlert("You have already started this prescription.");
@@ -102,12 +128,13 @@ class PrescriptionListScreen extends Component {
   };
 
   mapPrescriptionToCard = prescription => {
+    console.log(prescription);
     let amountRemaining =
       prescription.amountInitial -
       prescription.dosesTaken.length * prescription.dosageSchedule[0].dosage;
     var doctor;
     var doctorField;
-    if(amountRemaining < 0) return;
+    if (amountRemaining < 0) return;
     if (prescription.doctor !== null) {
       doctor = this.props.screenProps.doctors.byId[prescription.doctor];
       doctorField = (
@@ -130,7 +157,9 @@ class PrescriptionListScreen extends Component {
       prescription.dosageSchedule[0].minutesBetweenDoses
     );
     const dosage = prescription.dosageSchedule[0].dosage;
-    const val = Math.round((amountRemaining / prescription.amountInitial) * 100);
+    const val = Math.round(
+      (amountRemaining / prescription.amountInitial) * 100
+    );
     return (
       <Card style={styles.container} key={prescription.id}>
         <Text style={styles.medfield}>
@@ -139,7 +168,9 @@ class PrescriptionListScreen extends Component {
         </Text>
         <Text style={styles.medfield}>
           Dosage:{" "}
-          <Text style={styles.fieldValue}>{dosage} {prescription.dosageUnit}</Text>
+          <Text style={styles.fieldValue}>
+            {dosage} {prescription.dosageUnit}
+          </Text>
         </Text>
         {doctorField}
         <Text style={styles.medfield}>
@@ -159,8 +190,16 @@ class PrescriptionListScreen extends Component {
               (amountRemaining / prescription.amountInitial) * 100
             )}
             height={20}
-            backgroundColor={'#' + Math.round(((0xC6 - 0x6C)/100*(100-val) + 0x6C)).toString(16)
-            + Math.round(((0x00 - 0xC6)/100*(100-val) + 0xC6)).toString(16) + '00'}
+            backgroundColor={
+              "#" +
+              Math.round(((0xc6 - 0x6c) / 100) * (100 - val) + 0x6c).toString(
+                16
+              ) +
+              Math.round(((0x00 - 0xc6) / 100) * (100 - val) + 0xc6).toString(
+                16
+              ) +
+              "00"
+            }
             barAnimationDuration={0}
           />
           <View style={styles.buttonContainer}>
@@ -182,8 +221,9 @@ class PrescriptionListScreen extends Component {
         >
           <View style={{ width: "40%" }}>
             <TouchableOpacity
-            style={styles.RenewButton}
-            onPress={this.onRenewPress.bind(this, prescription)}>
+              style={styles.RenewButton}
+              onPress={this.onRenewPress.bind(this, prescription)}
+            >
               <Text style={styles.buttonText}>Renew</Text>
             </TouchableOpacity>
           </View>

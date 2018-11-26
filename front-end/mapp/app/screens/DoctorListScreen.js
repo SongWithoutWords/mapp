@@ -1,12 +1,20 @@
 import React, { Component } from "react";
-import { Text, View, StyleSheet, ScrollView, SectionList, AppRegistry, TouchableOpacity } from "react-native";
+import {
+  Text,
+  View,
+  StyleSheet,
+  ScrollView,
+  SectionList,
+  AppRegistry,
+  TouchableOpacity
+} from "react-native";
 import { List, ListItem, SearchBar, Card } from "react-native-elements";
 import settings from "../config/settings";
 import genAlert from "../components/generalComponents/genAlert";
 import checkRequestErrors from "../lib/errors";
 import postData from "../lib/postData";
 import { FETCHING_USER_FULFILLED } from "../config/constants";
-import _ from "lodash"
+import _ from "lodash";
 
 class DoctorListScreen extends Component {
   constructor(props) {
@@ -28,14 +36,15 @@ class DoctorListScreen extends Component {
   }
 
   componentWillMount() {
-    this.props.screenProps.fetchDoctors();
+    const { email, password } = this.props.screenProps.user;
+    this.props.screenProps.fetchDoctors(email, password);
   }
 
-  requestDoctor = (doctor) => {
+  requestDoctor = doctor => {
     const url = settings.REMOTE_SERVER_URL + settings.REQUESTS_RES;
-    const json = { doctor: doctor.id, patient: this.props.screenProps.user.id };
-
-    return postData(url, json)
+    const data = { doctor: doctor.id, patient: this.props.screenProps.user.id };
+    const { email, password } = this.props.screenProps.user;
+    return postData(url, data, email, password)
       .then(responseJson => {
         console.log(responseJson);
       })
@@ -54,9 +63,11 @@ class DoctorListScreen extends Component {
   // every time props changes update internal state: doctors to
   // conform to the invariant
   componentWillReceiveProps(nextProps) {
-    if (_.isEqual(nextProps.screenProps.doctors, this.props.screenProps.doctors))
+    if (
+      _.isEqual(nextProps.screenProps.doctors, this.props.screenProps.doctors)
+    )
       console.log("They are equal");
-    else{
+    else {
       const doctorIDs = nextProps.screenProps.doctors.allIds;
       const doctors = [];
       doctorIDs.forEach(id => {
@@ -65,7 +76,6 @@ class DoctorListScreen extends Component {
       this.setState({ doctors: doctors });
     }
   }
-
 
   searchFilterFunction = text => {
     const doctorIDs = this.props.screenProps.doctors.allIds;
@@ -82,48 +92,55 @@ class DoctorListScreen extends Component {
   };
   render() {
     const doctors = this.props.screenProps.doctors;
-    const renderAllDoctors = ({ item, index, section: { title, data } }) => <Card flexDirection= 'row'>
-    <View style={{width: '50%', justifyContent:'center'}}>
-    <Text style = {styles.doctorName}>{"Dr. " +
-                  item.firstName +
-                  " " +
-                  item.lastName}</Text>
-    </View>
-    <View style={{width: '15%', justifyContent:'center'}}>
-    <Text style = {styles.doctorName}>
-                ID: {item.id}</Text>
-    </View>
-    <View>
-    <TouchableOpacity
-          style={styles.submitButton1}
-          onPress={this.requestDoctor.bind(this, item)}
+    const renderAllDoctors = ({ item, index, section: { title, data } }) => (
+      <Card flexDirection="row">
+        <View style={{ width: "50%", justifyContent: "center" }}>
+          <Text style={styles.doctorName}>
+            {"Dr. " + item.firstName + " " + item.lastName}
+          </Text>
+        </View>
+        <View style={{ width: "15%", justifyContent: "center" }}>
+          <Text style={styles.doctorName}>ID: {item.id}</Text>
+        </View>
+        <View>
+          <TouchableOpacity
+            style={styles.submitButton1}
+            onPress={this.requestDoctor.bind(this, item)}
+          >
+            <Text style={{ color: "white" }}> Send Request</Text>
+          </TouchableOpacity>
+        </View>
+      </Card>
+    );
+    const renderMyDoctors = ({ item, index, section: { title, data } }) => (
+      <Card flexDirection="row">
+        <View style={{ width: "50%", justifyContent: "center" }}>
+          <Text style={styles.doctorName}>
+            {"Dr. " + item.firstName + " " + item.lastName}
+          </Text>
+        </View>
+        <View style={{ width: "15%", justifyContent: "center" }}>
+          <Text style={styles.doctorName}>ID: {item.id}</Text>
+        </View>
+        <View
+          style={{
+            width: "35%",
+            justifyContent: "center",
+            alignItems: "center",
+            flex: 1
+          }}
         >
-          <Text style={{color:'white'}}> Send Request</Text>
-        </TouchableOpacity>
-    </View>
-    </Card>
-    const renderMyDoctors = ({ item, index, section: { title, data } }) => <Card flexDirection= 'row'>
-    <View style={{width: '50%', justifyContent:'center'}}>
-    <Text style = {styles.doctorName}>{"Dr. " +
-                  item.firstName +
-                  " " +
-                  item.lastName}</Text>
-    </View>
-    <View style={{width: '15%', justifyContent:'center'}}>
-    <Text style = {styles.doctorName}>
-                ID: {item.id}</Text>
-    </View>
-    <View style={{width: '35%', justifyContent:'center', alignItems: 'center', flex:1}}>
-    <TouchableOpacity
-          style={styles.submitButton2}
-          onPress={this.requestDoctor}
-        >
-          <Text style={{color:'white'}}> Delete</Text>
-        </TouchableOpacity>
-    </View>
-    </Card>
+          <TouchableOpacity
+            style={styles.submitButton2}
+            onPress={this.requestDoctor}
+          >
+            <Text style={{ color: "white" }}> Delete</Text>
+          </TouchableOpacity>
+        </View>
+      </Card>
+    );
     return (
-      <View style={{flex: 1}}>
+      <View style={{ flex: 1 }}>
         <SearchBar
           round
           placeholder="Type Here..."
@@ -133,19 +150,47 @@ class DoctorListScreen extends Component {
           autoCorrect={false}
           clearIcon
         />
-        <ScrollView style={{flex: 1}}>
-        <SectionList
-          renderItem={({ item, index, section }) => <Text key={index}>{item}</Text>}
-          renderSectionHeader={({section: {title}}) => (
-            <View style={{marginTop: 20, padding: 20, height: 25, justifyContent:'center', backgroundColor: settings.THEME_COLOR}}>
-              <Text style ={{color:'white', fontSize: 25, fontFamily: 'Poppins-Medium'}}>{title}</Text>
-            </View>
-          )}
-          sections={[
-            { title: 'My Doctors', data: this.props.screenProps.user.myDoctors.map(id=>this.props.screenProps.doctors.byId[id]), renderItem: renderMyDoctors },
-            { title: 'All Doctors', data: this.state.doctors, renderItem: renderAllDoctors },
-          ]}
-         />
+        <ScrollView style={{ flex: 1 }}>
+          <SectionList
+            renderItem={({ item, index, section }) => (
+              <Text key={index}>{item}</Text>
+            )}
+            renderSectionHeader={({ section: { title } }) => (
+              <View
+                style={{
+                  marginTop: 20,
+                  padding: 20,
+                  height: 25,
+                  justifyContent: "center",
+                  backgroundColor: settings.THEME_COLOR
+                }}
+              >
+                <Text
+                  style={{
+                    color: "white",
+                    fontSize: 25,
+                    fontFamily: "Poppins-Medium"
+                  }}
+                >
+                  {title}
+                </Text>
+              </View>
+            )}
+            sections={[
+              {
+                title: "My Doctors",
+                data: this.props.screenProps.user.myDoctors.map(
+                  id => this.props.screenProps.doctors.byId[id]
+                ),
+                renderItem: renderMyDoctors
+              },
+              {
+                title: "All Doctors",
+                data: this.state.doctors,
+                renderItem: renderAllDoctors
+              }
+            ]}
+          />
         </ScrollView>
       </View>
     );
@@ -153,35 +198,36 @@ class DoctorListScreen extends Component {
 }
 const styles = StyleSheet.create({
   text: {
-    color: 'black',
+    color: "black",
     fontSize: 20
   },
   container: {
     flex: 1,
     //padding: 10,
     //height: 20,
-    backgroundColor: 'white',
+    backgroundColor: "white"
   },
   CardStyle: {
-    justifyContent: 'center',
+    justifyContent: "center",
     height: 50,
     borderWidth: 1,
-    padding: 8},
+    padding: 8
+  },
   submitButton1: {
     backgroundColor: "#009CC6",
     padding: 8,
     height: 35,
     borderRadius: 10,
     alignItems: "center",
-    color: 'white'
+    color: "white"
   },
   submitButton2: {
-    backgroundColor: '#C60000',
+    backgroundColor: "#C60000",
     padding: 8,
     height: 35,
     borderRadius: 10,
     alignItems: "center",
-    color: 'white'
+    color: "white"
   }
 });
 export default DoctorListScreen;

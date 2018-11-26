@@ -43,7 +43,7 @@ class App extends Component<Props> {
               pendingRequests: this.props.pendingRequests,
               fetchDoctors: this.props.fetchDoctors,
               doctors: this.props.doctors,
-              prescriptions: this.props.prescriptions,
+              prescriptions: this.props.prescriptions
             }}
           />
         );
@@ -82,11 +82,14 @@ function mapDispatchToProps(dispatch) {
   return {
     fetchUser: (url, form) =>
       dispatch(fetchUser(url, form)).catch(error => {
-        genAlert("Failed to fetch user info", error.message);
+        genAlert(
+          "Failed to fetch user info",
+          error.message + "\nPassword or Email is incorrect"
+        );
       }),
 
-    fetchDoctors: () =>
-      dispatch(fetchDoctors()).catch(error => {
+    fetchDoctors: (email, password) =>
+      dispatch(fetchDoctors(email, password)).catch(error => {
         genAlert("Failed to fetch doctors' info", error.message);
       }),
 

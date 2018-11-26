@@ -37,21 +37,6 @@ class PatientListScreen extends Component {
     };
   }
 
-  // polling on server
-  componentDidMount() {
-    const { email, password } = this.props.screenProps.user;
-    const form = { email, password };
-    const url = settings.REMOTE_SERVER_URL + settings.LOGIN_RES;
-    this.timer = setInterval(() => {
-      this.props.screenProps.onSignIn(url, form);
-    }, settings.POLLING_RATE);
-  }
-
-  componentWillUnmount() {
-    clearInterval(this.timer);
-    this.timer = null; // here...
-  }
-
   componentWillMount(){
     this.pushNotification = setupPushNotification(this.handleNotificationOpen);
     if(Object.keys(this.props.screenProps.pendingRequests.allIds).length > 0)

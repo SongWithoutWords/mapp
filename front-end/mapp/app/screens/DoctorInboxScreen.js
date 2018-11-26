@@ -13,15 +13,15 @@ import { TouchableOpacity } from "react-native";
 import genAlert from "../components/generalComponents/genAlert";
 import postData from "../lib/postData";
 import checkRequestErrors from "../lib/errors";
-
+import fetchAuth from "../lib/fetchAuth";
 
 export default class DoctorInboxScreen extends React.Component {
   acceptOnPress = patientID => {
     const url = settings.REMOTE_SERVER_URL + settings.RELAITON_RES;
-    const json = { patient: patientID, doctor: this.props.screenProps.user.id };
-    return postData(url, json)
+    const data = { patient: patientID, doctor: this.props.screenProps.user.id };
+    const { email, password } = this.props.screenProps.user;
+    return postData(url, data, email, password)
       .then(response => {
-        const { email, password } = this.props.screenProps.user;
         const form = { email, password };
         const url = settings.REMOTE_SERVER_URL + settings.LOGIN_RES;
         this.props.screenProps.onSignIn(url, form);
@@ -35,15 +35,9 @@ export default class DoctorInboxScreen extends React.Component {
     console.log(requestID);
     const url =
       settings.REMOTE_SERVER_URL + settings.REQUESTS_RES + "/" + requestID;
-    return fetch(url, {
-        // TODO add email and password to header
-        method: "DELETE",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json"
-        }
-      })
-      .then(checkRequestErrors)
+    const { email, password } = this.props.screenProps.user;
+    const method = "DELETE";
+    return fetchAuth({ url, method, email, password })
       .then(response => {
         const { email, password } = this.props.screenProps.user;
         const form = { email, password };

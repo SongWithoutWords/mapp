@@ -1,17 +1,10 @@
 import checkRequestErrors from "./errors";
+import fetchAuth from "./fetchAuth";
 
 function patchData(url = ``, data = {}, email="", password ="") {
   // Default options are marked with *
-  return fetch(url, {
-    method: "PATCH",
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-      email: email,
-      password: password
-    },
-    body: JSON.stringify(data)
-  }).then(checkRequestErrors);
+  const method = "PATCH";
+  return fetchAuth({ url, method, data, email, password })
 }
 
 export default patchData;

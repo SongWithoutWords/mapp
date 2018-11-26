@@ -1,18 +1,12 @@
 import * as React from "react";
-import settings from "../config/settings";
 import {
   Text,
   View,
   StyleSheet,
   AppRegistry,
-  RefreshControl,
   ScrollView
 } from "react-native";
-import { Card, Button } from "react-native-elements"; //0.19.1
-import { TouchableOpacity } from "react-native";
-import genAlert from "../components/generalComponents/genAlert";
-import postData from "../lib/postData";
-import getDoctorData from "../lib/getDoctorData";
+import { Card } from "react-native-elements"; //0.19.1
 
 export default class PendingRequestScreen extends React.Component {
   mapRequestToCard = request => (

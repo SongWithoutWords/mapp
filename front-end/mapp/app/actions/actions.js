@@ -17,10 +17,10 @@ export function fetchUser(url, form) {
   };
 }
 
-export function fetchDoctors() {
+export function fetchDoctors(email, password) {
   return {
     type: FETCHING_DOCTORS,
-    payload: getDoctors()
+    payload: getDoctors(email, password)
   };
 }
 

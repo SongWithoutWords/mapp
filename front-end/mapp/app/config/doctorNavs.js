@@ -38,7 +38,7 @@ const PatientStackNavigator = createStackNavigator({
   }
 });
 
-const DoctorTabNavOptions = genTabNavOptions("PatientList", [
+const DoctorTabNavOptions = genTabNavOptions("Account", [
   "Inbox",
   "PatientList",
   "Account"

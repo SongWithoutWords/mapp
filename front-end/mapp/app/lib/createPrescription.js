@@ -13,7 +13,9 @@ function createPrescription({
   startDateTime = null,
   patientID = null,
   doctorID = null, // TODO
-  navigation = null
+  navigation = null,
+  email = "",
+  password = ""
 }) {
   if (
     validatePrescription({
@@ -34,7 +36,7 @@ function createPrescription({
     schedule.minutesBetweenDoses = minutesBetweenDoses;
     dosageSchedule.push(schedule);
 
-    const json = {
+    const data = {
       patient: patientID,
       doctor: doctorID,
       medication: medication,
@@ -43,8 +45,8 @@ function createPrescription({
       dosageSchedule: dosageSchedule
     };
 
-    console.log(JSON.stringify(json));
-    return postData(url, json)
+    console.log(JSON.stringify(data));
+    return postData(url, data, email, password)
       .then(response => {
         genAlert("A new prescription created!");
         navigation.goBack();

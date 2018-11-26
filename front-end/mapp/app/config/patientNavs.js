@@ -14,7 +14,6 @@ import EditPrescriptionView from "../screens/EditPrescriptionView";
 import MakePrescriptionView from "../screens/MakePrescriptionView";
 import NotificationScreen from "../screens/PatientNotificationsView";
 import DoctorListScreen from "../screens/DoctorListScreen";
-import DoctorInfoScreen from "../screens/DoctorInfoScreen";
 import { genTabNavOptions } from "../lib/genNavOptions";
 
 // stack navigators
@@ -47,13 +46,6 @@ const DoctorStackNavigator = createStackNavigator({
     screen: DoctorListScreen,
     navigationOptions: {
       header: null,
-      headerForceInset: { top: "never", bottom: "never" }
-    }
-  },
-  DoctorInfo: {
-    screen: DoctorInfoScreen,
-    navigationOptions: {
-      title: "Doctor Info",
       headerForceInset: { top: "never", bottom: "never" }
     }
   }
