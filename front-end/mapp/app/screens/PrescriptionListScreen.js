@@ -12,6 +12,7 @@ import {
   Dimensions,
   TouchableOpacity
 } from "react-native";
+import { FREQUENCY, DOSAGE_UNIT } from "../config/constants";
 import { Card, CardItem, Body } from "native-base";
 import settings from "../config/settings";
 import ActionButton from "react-native-action-button";
@@ -20,7 +21,7 @@ import { setupPushNotification } from "../lib/setupPushNotification";
 import { scheduleNotifications } from "../lib/scheduleNotifications";
 import { sendNotification } from "../lib/sendNotification";
 import { convertMinsToFreqString } from "../lib/frequencyMinsConversion";
-
+import createPrescription from "../lib/createPrescription";
 import ProgressBarAnimated from "react-native-progress-bar-animated";
 class PrescriptionListScreen extends Component {
   // polling on server
@@ -84,6 +85,25 @@ class PrescriptionListScreen extends Component {
     });
   };
 
+  onRenewPress = prescription => {
+    let amountRemaining =
+      prescription.amountInitial -
+      prescription.dosesTaken.length * prescription.dosageSchedule[0].dosage;
+    if(prescription.doctor !== null && amountRemaining<=0){
+      createPrescription({
+        medication : prescription.medication,
+        dosage : prescription.dosageSchedule[0].dosage,
+        dosageUnit : prescription.dosageUnit,
+        frequency : FREQUENCY.EVERY_WEEK,
+        minutesBetweenDoses : prescription.dosageSchedule[0].minutesBetweenDoses,
+        amountInitial : prescription.amountInitial,
+        startDateTime : prescription.dosageSchedule[0].firstDose,
+        patientID : prescription.patient,
+        doctorID : prescription.doctor, // TODO
+        navigation : this.props.navigation
+      });
+    }
+  }
   onEditPress = prescription => {
     if (prescription.dosesTaken.length !== 0) {
       genAlert("You have already started this prescription.");
@@ -103,7 +123,7 @@ class PrescriptionListScreen extends Component {
       prescription.dosesTaken.length * prescription.dosageSchedule[0].dosage;
     var doctor;
     var doctorField;
-
+    if(amountRemaining < 0) return;
     if (prescription.doctor !== null) {
       doctor = this.props.screenProps.doctors.byId[prescription.doctor];
       doctorField = (
@@ -177,7 +197,9 @@ class PrescriptionListScreen extends Component {
           }}
         >
           <View style={{ width: "40%" }}>
-            <TouchableOpacity style={styles.RenewButton}>
+            <TouchableOpacity
+            style={styles.RenewButton}
+            onPress={this.onRenewPress.bind(this, prescription)}>
               <Text style={styles.buttonText}>Renew</Text>
             </TouchableOpacity>
           </View>
