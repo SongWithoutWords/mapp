@@ -88,7 +88,7 @@ export default class PatientNotificationsView extends React.Component  {
     return (
       <ScrollView>
       {requestIDs.map(id => {
-        
+
         console.log( prescriptions.byId[id].dosesTaken);
         console.log( prescriptions.byId[id].dosesTaken[prescriptions.byId[id].dosesTaken.length-1]);
 
