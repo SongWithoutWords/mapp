@@ -226,8 +226,10 @@ recurringDoseToDb pid (PostRecurringDose first minutesBetween dosage) =
 insertSchedule :: PrescriptionId -> [PostRecurringDose] -> Handler ()
 insertSchedule pid schedule = runDB $ mapM_ (insert_ . recurringDoseToDb pid) schedule
 
-deleteSchedule :: PrescriptionId -> Handler ()
-deleteSchedule pid = runDB $ deleteWhere [RecurringDosePrescription ==. pid]
+deleteScheduleAndDosesTaken :: PrescriptionId -> Handler ()
+deleteScheduleAndDosesTaken pid = do
+  runDB $ deleteWhere [RecurringDosePrescription ==. pid]
+  runDB $ deleteWhere [DoseTakenPrescription ==. pid]
 
 postPrescriptionsR :: Handler Value
 postPrescriptionsR = do
@@ -245,13 +247,16 @@ patchPrescriptionR id = do
   PostPrescription did pid med unit amount schedule <- requireJsonBody
 
   runDB $ replace prescriptionId $ Prescription did pid med unit amount
-  deleteSchedule prescriptionId
+  deleteScheduleAndDosesTaken prescriptionId
   insertSchedule prescriptionId schedule
 
   getPrescription prescriptionId >>= returnJson
 
 deletePrescriptionR :: Int -> Handler ()
-deletePrescriptionR = runDB . delete . prescriptionKey
+deletePrescriptionR id = do
+  let pid = prescriptionKey id
+  deleteScheduleAndDosesTaken pid
+  runDB $ delete pid
 
 postDosesTakenR :: Handler Value
 postDosesTakenR = do
