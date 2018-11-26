@@ -152,16 +152,14 @@ const styles = StyleSheet.create({
     fontWeight: "200",
     fontFamily: 'Poppins',
     color: 'black',
-    marginLeft: 5
+    marginLeft: 5,
+    fontFamily: 'Poppins-Regular'
   },
   medfield: {
     fontSize: 16,
     fontWeight: '600',
-    //textAlign: 'center',
     color: '#009CC6',
-    //marginTop: 40,
     marginLeft: 24,
-    //marginRight: 24,
   },
   button: {
     margin: 14,
@@ -172,14 +170,14 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color : 'white',
-    fontWeight:'500',
-    fontSize: 15
+    fontSize: 15,
+    fontFamily: 'lineto-circular-pro-medium'
   },
   EditButton: { alignItems: 'center',
-    backgroundColor: '#C60000',padding: 6, borderRadius:10 ,margin: 10,
+    backgroundColor: '#C60000',padding: 6, borderRadius:10 , marginTop: 5, marginLeft: 10
   },
   RenewButton: { alignItems: 'center',
-    backgroundColor: '#50BB75',padding: 6, borderRadius:10
+    backgroundColor: '#50BB75',padding: 6, borderRadius:10 , marginTop: 5
   },
 
 });

@@ -6,15 +6,18 @@ import { TouchableOpacity } from "react-native";
 import genAlert from "../components/generalComponents/genAlert";
 import postData from "../lib/postData";
 import getDoctorData from "../lib/getDoctorData";
-
+import settings from "../config/settings";
 export default class PatientInboxScreen extends React.Component {
   mapRequestToCard = request => (
     <Card key={request.id}>
       <Text style={styles.text}>
-        {"Sent Request to Dr. " +
-          request.doctor.firstName +
+        Sent Request to
+        <Text style={styles.DrText>
+        {
+          " Dr. " + request.doctor.firstName +
           " " +
           request.doctor.lastName}
+        </Text>
       </Text>
     </Card>
   );
@@ -56,6 +59,12 @@ const styles = StyleSheet.create({
     backgroundColor: "#ecf0f1"
   },
   text: {
+    fontSize: 20,
+    fontFamily: 'Poppins-Light'
+  },
+  DrText: {
+    color: settings.THEME_COLOR,
+    fontFamily: 'Poppins-Medium',
     fontSize: 20
   },
   buttonGroup: {

@@ -98,7 +98,7 @@ class DoctorListScreen extends Component {
           style={styles.submitButton1}
           onPress={this.requestDoctor.bind(this, item)}
         >
-          <Text style={{color:'white'}}> Send Request</Text>
+          <Text style={styles.buttonText}> Send Request</Text>
         </TouchableOpacity>
     </View>
     </Card>
@@ -118,7 +118,7 @@ class DoctorListScreen extends Component {
           style={styles.submitButton2}
           onPress={this.requestDoctor}
         >
-          <Text style={{color:'white'}}> Delete</Text>
+          <Text style={styles.buttonText}> Delete</Text>
         </TouchableOpacity>
     </View>
     </Card>
@@ -181,7 +181,13 @@ const styles = StyleSheet.create({
     height: 35,
     borderRadius: 10,
     alignItems: "center",
-    color: 'white'
+    color: 'white',
+  },
+  buttonText: {
+    color: "white",
+    //fontWeight: "500",
+    fontSize: 14,
+    fontFamily: 'lineto-circular-pro-medium'
   }
 });
 export default DoctorListScreen;
