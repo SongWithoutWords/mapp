@@ -54,6 +54,11 @@ class PatientListScreen extends Component {
 
   componentWillMount(){
     this.pushNotification = setupPushNotification(this.handleNotificationOpen);
+    if(Object.keys(this.props.screenProps.pendingRequests.allIds).length > 0)
+      sendNotification(
+        "You have a new Patient requesting to connect to your account. Press here to go to the inbox screen",
+        "You have a new Patient request!"
+      );
   }
 
   // every time props changes update internal state: patients to
@@ -69,8 +74,11 @@ class PatientListScreen extends Component {
         patients.push(nextProps.screenProps.patients.byId[id]);
       });
       this.setState({ patients: patients });
-      if(pendingRequests.allIds.length > 0)
-        sendNotification();
+      if(Object.keys(pendingRequests.allIds).length - Object.keys(this.props.screenProps.pendingRequests.allIds).length > 0)
+        sendNotification(
+          "You have a new Patient requesting to connect to your account. Press here to go to the inbox screen",
+          "You have a new Patient request!"
+        );
     }
   }
 

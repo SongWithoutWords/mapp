@@ -18,6 +18,7 @@ import ActionButton from "react-native-action-button";
 import genAlert from "../components/generalComponents/genAlert";
 import { setupPushNotification } from "../lib/setupPushNotification";
 import { scheduleNotifications } from "../lib/scheduleNotifications";
+import { sendNotification } from "../lib/sendNotification";
 import { convertMinsToFreqString } from "../lib/frequencyMinsConversion";
 
 import ProgressBarAnimated from "react-native-progress-bar-animated";
@@ -42,16 +43,33 @@ class PrescriptionListScreen extends Component {
     this.pushNotification = setupPushNotification(this.handleNotificationOpen);
     const prescriptions = this.props.screenProps.prescriptions;
     const prescriptionIDs = this.props.screenProps.user.myPrescriptions;
-    prescriptionIDs.map(id => scheduleNotifications(prescriptions.byId[id]));
+    prescriptionIDs.map(id => 
+    {
+      scheduleNotifications(prescriptions.byId[id]);
+      numberLeft = (prescriptions.byId[id].amountInitial / prescriptions.byId[id].dosageSchedule[0].dosage) - Object.keys(prescriptions.byId[id].dosesTaken).length;
+      if (((numberLeft * prescriptions.byId[id].dosageSchedule[0].dosage) / prescriptions.byId[id].amountInitial) < 0.2) 
+          sendNotification("You can renew prescription for " + prescriptions.byId[id].medication + " just go to the prescriptions page to do so",
+          "A prescription for is running low!");
+    });
   }
 
   componentDidUpdate(prevProps) {
-    const prescriptions = this.props.screenProps.prescriptions;
+    const newPrescriptions = this.props.screenProps.prescriptions;
+    const oldPrescriptions = prevProps.screenProps.prescriptions;
     const prescriptionIDs = this.props.screenProps.user.myPrescriptions;
-    if (_.isEqual(prevProps.screenProps.prescriptions, prescriptions))
+    if (_.isEqual(newPrescriptions, oldPrescriptions))
       console.log("they are equal!");
-    else
-      prescriptionIDs.map(id => scheduleNotifications(prescriptions.byId[id]));
+    else{
+      prescriptionIDs.map(id =>
+      { 
+        scheduleNotifications(newPrescriptions.byId[id]);
+        newNumberLeft = (newPrescriptions.byId[id].amountInitial / newPrescriptions.byId[id].dosageSchedule[0].dosage) - Object.keys(newPrescriptions.byId[id].dosesTaken).length;
+        oldNumberLeft = (oldPrescriptions.byId[id].amountInitial / oldPrescriptions.byId[id].dosageSchedule[0].dosage) - Object.keys(oldPrescriptions.byId[id].dosesTaken).length;
+        if ((newNumberLeft - oldNumberLeft) < 0 && ((newNumberLeft * newPrescriptions.byId[id].dosageSchedule[0].dosage ) / newPrescriptions.byId[id].amountInitial) < 0.2) 
+          sendNotification("You can renew prescription for " + newPrescriptions.byId[id].medication + ". Just go to the prescriptions page to do so",
+          "A prescription is running low!");
+      });  
+    }
   }
 
   handleNotificationOpen = notification => {
