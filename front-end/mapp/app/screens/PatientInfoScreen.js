@@ -128,9 +128,6 @@ class PatientInfoScreen extends Component {
           <Text style={styles.medfield}>
             Patient ID: <Text style ={styles.fieldValue}>{patient.id}</Text>
           </Text>
-          <Text style={styles.medfield}>
-            Date of Birth: <Text style ={styles.fieldValue}>{patient.dateOfBirth}</Text>
-          </Text>
           {prescriptions.map(prescription => this.mapPrescriptionToCard(prescription, user.id))
           }
         </ScrollView>

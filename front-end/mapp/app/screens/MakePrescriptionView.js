@@ -26,7 +26,7 @@ export default class MakePrescriptionView extends React.Component {
       dosage: 0,
       dosageUnit: DOSAGE_UNIT.GRAM,
       frequency: FREQUENCY.EVERY_DAY, // used to compute minutes between doses
-      minutesBetweenDoses: 0,
+      minutesBetweenDoses: convertFrequencyToMins(FREQUENCY.EVERY_DAY),
       amountInitial: 0,
       startDateTime: null
     };
