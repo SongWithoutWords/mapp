@@ -73,10 +73,10 @@ authenticateAsDoctorOrPatient :: DoctorId -> PatientId -> Handler ()
 authenticateAsDoctorOrPatient did pid =
   authenticateEither (userMustBeDoctor did) (userMustBePatient pid)
 
-authenticateAsDoctorOrElsePatient :: Maybe DoctorId -> PatientId -> Handler ()
-authenticateAsDoctorOrElsePatient mdid pid =
+authenticateAsDoctorOfPatientOrElsePatient :: Maybe DoctorId -> PatientId -> Handler ()
+authenticateAsDoctorOfPatientOrElsePatient mdid pid =
   case mdid of
-    Just did -> authenticateAsDoctor did
+    Just did -> authenticateAsDoctor did >> userMustBeDoctorOf pid did
     Nothing -> authenticateAsPatient pid
 
 authenticateAsPatientOrDoctorOf :: PatientId -> Handler ()
@@ -320,7 +320,7 @@ postPrescriptionsR :: Handler Value
 postPrescriptionsR = do
   PostPrescription did pid med unit amount schedule <- requireJsonBody
 
-  authenticateAsDoctorOrElsePatient did pid
+  authenticateAsDoctorOfPatientOrElsePatient did pid
 
   prescriptionId <- runDB $ insert $ Prescription did pid med unit amount
 
@@ -337,7 +337,7 @@ patchPrescriptionR id = do
   case mPrescription of
     Nothing -> notFound
     Just (Prescription did pid _ _ _) -> do
-      authenticateAsDoctorOrElsePatient did pid
+      authenticateAsDoctorOfPatientOrElsePatient did pid
 
       PatchPrescription med unit amount schedule <- requireJsonBody
 
@@ -356,7 +356,7 @@ deletePrescriptionR id = do
   case mPrescription of
     Nothing -> notFound
     Just (Prescription did pid _ _ _) -> do
-      authenticateAsDoctorOrElsePatient did pid
+      authenticateAsDoctorOfPatientOrElsePatient did pid
 
       deleteScheduleAndDosesTaken prescriptionId
       runDB $ delete prescriptionId
