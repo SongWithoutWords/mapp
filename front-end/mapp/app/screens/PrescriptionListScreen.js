@@ -21,7 +21,7 @@ import { setupPushNotification } from "../lib/setupPushNotification";
 import { scheduleNotifications } from "../lib/scheduleNotifications";
 import { sendNotification } from "../lib/sendNotification";
 import { convertMinsToFreqString } from "../lib/frequencyMinsConversion";
-import createPrescription from "../lib/createPrescription";
+import createPrescription, { renewPrescription} from "../lib/createPrescription";
 import deletePrescription from "../lib/deletePrescription";
 import ProgressBarAnimated from "react-native-progress-bar-animated";
 import { getLocalDateTimeString } from "../lib/dateTime";
@@ -97,6 +97,10 @@ class PrescriptionListScreen extends Component {
     let amountRemaining =
       prescription.amountInitial -
       prescription.dosesTaken.length * prescription.dosageSchedule[0].dosage;
+    if(prescription.doctor !== null) {
+      alert('You cannot renew this prescription. You are not the prescribing doctor.');
+      return
+    }
     if (amountRemaining <= 0) {
       createPrescription({
         medication: prescription.medication,
@@ -110,11 +114,12 @@ class PrescriptionListScreen extends Component {
         doctorID: prescription.doctor, // TODO
         navigation: this.props.navigation,
         email: this.props.screenProps.user.email,
-        password: this.props.screenProps.user.password
+        password: this.props.screenProps.user.password,
       });
-      console.log("from renew" + JSON.stringify({ prescriptionID: prescription.id , navigation: null , email: this.props.screenProps.user.email, password: this.props.screenProps.user.password}));
-      deletePrescription({ prescriptionID: prescription.id , navigation: null , email: this.props.screenProps.user.email, password: this.props.screenProps.user.password});
-    }
+      //alert('eyval');
+      //deletePrescription({ prescriptionID: prescription.id , navigation: null , email: this.props.screenProps.user.email, password: this.props.screenProps.user.password});
+      console.log("FROM RENEWWWWWWWW" + JSON.stringify({ prescriptionID: prescription.id , navigation: null , email: this.props.screenProps.user.email, password: this.props.screenProps.user.password}));
+      }
   };
   onEditPress = prescription => {
     if (prescription.dosesTaken.length !== 0) {

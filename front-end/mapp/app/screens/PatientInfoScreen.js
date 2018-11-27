@@ -13,6 +13,7 @@ import {
   TouchableOpacity
 } from "react-native";
 import { Card } from "react-native-elements";
+import { FREQUENCY, DOSAGE_UNIT } from "../config/constants";
 import genAlert from "../components/generalComponents/genAlert";
 import { setupPushNotification } from "../lib/setupPushNotification";
 import { scheduleNotifications } from "../lib/scheduleNotifications";
@@ -60,11 +61,12 @@ class PatientInfoScreen extends Component {
         startDateTime: prescription.dosageSchedule[0].firstDose,
         patientID: prescription.patient,
         doctorID: prescription.doctor, // TODO
-        navigation: this.props.navigation,
+        navigation: null,
         email: this.props.screenProps.user.email,
-        password: this.props.screenProps.user.password
+        password: this.props.screenProps.user.password,
       });
-      deletePrescription({ prescriptionID: prescription.id , navigation: null , email: this.props.screenProps.user.email, password: this.props.screenProps.user.password});
+      console.log("FROM RENEWWWWWWWW" + JSON.stringify({ prescriptionID: prescription.id , navigation: null , email: this.props.screenProps.user.email, password: this.props.screenProps.user.password}));
+
     }
   };
   onEditPress = prescription => {

@@ -17,7 +17,8 @@ function deletePrescription({
   return fetchAuth({url, method, email, password})
     .then(response => {
       genAlert("Prescription deleted!");
-      navigation.goBack();
+      if(navigation !== null)
+        navigation.goBack();
     })
     .catch(error => {
       genAlert("Failed to delete a prescription", error.message);
