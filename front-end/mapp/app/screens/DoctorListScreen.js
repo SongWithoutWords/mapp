@@ -80,6 +80,7 @@ class DoctorListScreen extends Component {
   searchFilterFunction = text => {
     const doctorIDs = this.props.screenProps.doctors.allIds;
     const doctors = [];
+
     doctorIDs.forEach(id => {
       doctors.push(this.props.screenProps.doctors.byId[id]);
     });
@@ -92,6 +93,9 @@ class DoctorListScreen extends Component {
   };
   render() {
     const doctors = this.props.screenProps.doctors;
+    const pendingRequests = this.props.screenProps.pendingRequests;
+    const requestIDs = this.props.screenProps.user.myPendingRequests;
+    const requestDoctors = requestIDs.map(id => pendingRequests.byId[id].doctor.id);
     const renderAllDoctors = ({ item, index, section: { title, data } }) => <Card flexDirection= 'row'>
     <View style={{width: '50%', justifyContent:'center'}}>
     <Text style = {styles.doctorName}>{"Dr. " +
@@ -108,7 +112,7 @@ class DoctorListScreen extends Component {
           style={styles.submitButton1}
           onPress={this.requestDoctor.bind(this, item)}
         >
-          <Text style={styles.buttonText}> Send Request</Text>
+          <Text style={styles.buttonText}> {requestDoctors.indexOf(item.id) != -1 ? 'Request Sent' : 'Send Request'}</Text>
         </TouchableOpacity>
     </View>
     </Card>
@@ -148,6 +152,7 @@ class DoctorListScreen extends Component {
             renderItem={({ item, index, section }) => (
               <Text key={index}>{item}</Text>
             )}
+            keyExtractor={item => item.id.toString()}
             renderSectionHeader={({ section: { title } }) => (
               <View
                 style={{
@@ -179,7 +184,7 @@ class DoctorListScreen extends Component {
               },
               {
                 title: "All Doctors",
-                data: this.state.doctors,
+                data: this.state.doctors.filter(doctor => this.props.screenProps.user.myDoctors.indexOf(doctor.id)==-1),
                 renderItem: renderAllDoctors
               }
             ]}
