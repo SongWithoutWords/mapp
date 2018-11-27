@@ -7,9 +7,9 @@ import TestImport
 spec :: Spec
 spec = withApp $ do
 
-  describe "patients and doctors can connect in the app" $ do
+  describe "POST /reequests and POST /relations" $ do
 
-    it "patient accounts can be created with POST /patients" $ do
+    it "patients and doctors can connect in the app" $ do
 
       -- Create patient account
       postJson PatientsR $ PostPatient
