@@ -139,17 +139,20 @@ class PrescriptionListScreen extends Component {
     else return calc.toString(16);
   };
   mapPrescriptionToCard = prescription => {
-    console.log(prescription);
+    console.log("from map to card: " + JSON.stringify(prescription));
+    console.log("from prescription list doctors obj: " + JSON.stringify(this.props.screenProps.doctors));
     let amountRemaining =
       prescription.amountInitial -
       prescription.dosesTaken.length * prescription.dosageSchedule[0].dosage;
     var doctor;
     var doctorField;
     if (amountRemaining < 0) return;
-    if (prescription.doctor !== null) {
+
+    const doctorID = prescription.doctor;
+    // if (doctorID !== null && this.props.screenProps.user.myDoctors.includes(doctorID)) {
+    if (doctorID !== null) {
     console.log("from prescription list doctor id: " + prescription.doctor);
-    doctor = this.props.screenProps.doctors.byId[prescription.doctor];
-    console.log("from prescription list doctors obj: " + JSON.stringify(this.props.screenProps.doctors));
+    doctor = this.props.screenProps.doctors.byId[prescription.doctor.toString()];
     console.log("from prescription list doctor obj: " + JSON.stringify(doctor));
       doctorField = (
         <Text style={styles.medfield}>

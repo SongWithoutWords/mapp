@@ -4,8 +4,7 @@ import { Button, Text } from "react-native-elements";
 import { StyleSheet, AppRegistry } from "react-native";
 import { View } from "react-native";
 import { USER_TYPE } from "../config/constants";
-import Spinner from 'react-native-loading-spinner-overlay';
-
+import Spinner from "react-native-loading-spinner-overlay";
 
 class AccountScreen extends Component {
   state = {
@@ -17,6 +16,11 @@ class AccountScreen extends Component {
     const { email, password, userType } = this.props.screenProps.user;
     const form = { email, password };
     const url = settings.REMOTE_SERVER_URL + settings.LOGIN_RES;
+
+    if (userType === USER_TYPE.PATIENT) {
+      this.props.screenProps.fetchDoctors(email, password);
+    }
+
     this.timer = setInterval(() => {
       this.props.screenProps.onSignIn(url, form);
       if (userType === USER_TYPE.PATIENT) {
