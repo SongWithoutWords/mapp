@@ -130,14 +130,14 @@ class PrescriptionListScreen extends Component {
     }
   };
   valToGreen = val => {
-    if(val >= 50) return 'ff';
-    let calc = Math.round(255/50*val);
+    if(val >= 50) return 'cc';
+    let calc = Math.round(204/50*val);
     if(calc <= 15) return '0' + calc.toString(16);
     else return calc.toString(16);
   };
   valToRed = val => {
-    if(val <= 50) return 'ff';
-    let calc = Math.round(255/50*(100-val))
+    if(val <= 50) return 'cc';
+    let calc = Math.round(204/50*(100-val))
     if(calc <= 15) return '0' + calc.toString(16);
     else return calc.toString(16);
   };
