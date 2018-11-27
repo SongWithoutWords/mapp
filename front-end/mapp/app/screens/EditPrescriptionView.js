@@ -14,7 +14,7 @@ import genAlert from "../components/generalComponents/genAlert";
 import DateTimePicker from "react-native-modal-datetime-picker";
 import { Picker, Header, Icon, Button, Text } from "native-base";
 import { FREQUENCY, DOSAGE_UNIT } from "../config/constants";
-import { convertFrequencyToMins } from "../lib/frequencyMinsConversion";
+import { convertFrequencyToMins, convertMinsToFreqString } from "../lib/frequencyMinsConversion";
 import validatePrescription from "../lib/validatePrescription";
 import modifyPrescription from "../lib/modifyPrescription";
 import deletePrescription from "../lib/deletePrescription";
@@ -27,9 +27,9 @@ export default class EditPrescriptionView extends React.Component {
       isStartDateTimePickerVisible: false,
       medication: prescription.medication,
       dosage: prescription.dosageSchedule[0].dosage,
-      dosageUnit: "",
-      frequency: "", // used to compute minutes between doses
-      minutesBetweenDoses: 0,
+      dosageUnit: prescription.dosageUnit,
+      frequency: convertMinsToFreqString(prescription.dosageSchedule[0].minutesBetweenDoses), // used to compute minutes between doses
+      minutesBetweenDoses: prescription.dosageSchedule[0].minutesBetweenDoses,
       amountInitial: prescription.amountInitial,
       startDateTime: null
     };
