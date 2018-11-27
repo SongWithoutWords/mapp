@@ -165,18 +165,13 @@ class PatientInfoScreen extends Component {
     const user = this.props.navigation.getParam("user", {});
 
     const prescriptions = this.props.screenProps.patients.byId[patient.id].prescriptions;
-/*          <Text style={styles.medfield}>
-            Patient Name: <Text style ={styles.fieldValue}>{patient.firstName} {patient.lastName}</Text>
-          </Text>
-          <Text style={styles.medfield}>
-            Patient ID: <Text style ={styles.fieldValue}>{patient.id}</Text>
-          </Text>*/
+
     return (
       <View style={{ flex: 1 }}>
         <ScrollView style={styles.container}>
           <Card flexDirection= 'row'>
           <View style={{width: '50%', justifyContent:'center'}}>
-          <Text style = {styles.doctorName}>{"Dr. " +
+          <Text style = {styles.medfield}>{
                         patient.firstName +
                         " " +
                         patient.lastName}</Text>
