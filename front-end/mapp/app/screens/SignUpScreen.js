@@ -2,7 +2,7 @@ import settings from "../config/settings";
 import { USER_TYPE } from "../config/constants";
 import React, { Component } from "react";
 import { StyleSheet, View, ScrollView, AppRegistry } from "react-native";
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import genAlert from "../components/generalComponents/genAlert";
 import validate from "validate.js";
 import {
@@ -12,6 +12,11 @@ import {
   FormInput,
   FormValidationMessage
 } from "react-native-elements";
+
+// GUI testing
+import toClass from "recompose/toClass";
+import { hook } from "cavy";
+const WrappedButton = toClass(Button);
 
 class SignUpScreen extends Component {
   constructor(props) {
@@ -49,15 +54,12 @@ class SignUpScreen extends Component {
         passwordValidateMsg: null,
         confirmPasswordValidateMsg: null
       };
-      Object.keys(result).forEach(
-        function(key) {
-          msg = result[key].join(", ");
-          key = key + "ValidateMsg";
-          newState[key] = msg;
-        }
-      );
+      Object.keys(result).forEach(function(key) {
+        msg = result[key].join(", ");
+        key = key + "ValidateMsg";
+        newState[key] = msg;
+      });
       this.setState(newState);
-
     } else {
       const { firstName, lastName, email, password } = this.state;
       const form = { firstName, lastName, email, password };
@@ -84,6 +86,7 @@ class SignUpScreen extends Component {
       <>
         <FormLabel>{itemLabel}</FormLabel>
         <FormInput
+          ref={this.props.generateTestHook("SignUp.TextInput." + itemLabel)}
           autoCapitalize="none"
           secureTextEntry={isSecureEntry}
           placeholder={itemLabel}
@@ -127,13 +130,15 @@ class SignUpScreen extends Component {
               isSecureEntry: true,
               validationMsg: this.state.confirmPasswordValidateMsg
             })}
-            <Button
+            <WrappedButton
+              ref={this.props.generateTestHook("SignUp.Button.SignUp")}
               buttonStyle={{ marginTop: 20 }}
               backgroundColor={settings.THEME_COLOR}
               title="SIGN UP"
               onPress={() => this.onSignUp(userTypeString)}
             />
-            <Button
+            <WrappedButton
+              ref={this.props.generateTestHook("SignUp.Button.SignIn")}
               buttonStyle={{ marginTop: 20 }}
               backgroundColor="transparent"
               textStyle={{ color: "#bcbec1" }}
@@ -151,7 +156,9 @@ class SignUpScreen extends Component {
   }
 }
 
-export default SignUpScreen;
+export default hook(SignUpScreen);
+// export default SignUpScreen;
+
 AppRegistry.registerComponent("SignUpScreen", () => SignUpScreen);
 
 var constraints = {

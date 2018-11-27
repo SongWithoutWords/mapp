@@ -16,6 +16,11 @@ import NotificationScreen from "../screens/PatientNotificationsView";
 import DoctorListScreen from "../screens/DoctorListScreen";
 import { genTabNavOptions } from "../lib/genNavOptions";
 
+// GUI testing
+import { hook } from 'cavy'
+import IconWithRef from "../lib/IconWithRef";
+const TestableIcon = hook(IconWithRef);
+
 // stack navigators
 const PrescriptionStackNavigator = createStackNavigator({
   PrescriptionList: {
@@ -114,29 +119,41 @@ const PatientTabNavigator = createMaterialBottomTabNavigator(
     },
     DoctorList: {
       screen: DoctorStackNavigator,
-      navigationOptions: {
+      navigationOptions: ({ navigation }) => ({
         tabBarLabel: "Doctors",
-        tabBarIcon: ({ tintColor }) => (
-          <MaterialCommunityIcons
-            name="stethoscope"
-            size={25}
-            color={tintColor}
-          />
-        )
-      }
+        tabBarIcon: ({ tintColor }) => {
+          const { routeName } = navigation.state;
+          return (
+            <TestableIcon
+              name="stethoscope"
+              size={25}
+              color={tintColor}
+              navigation={navigation}
+              routeName={routeName}
+              iconType={MaterialCommunityIcons}
+            />
+          );
+        } 
+      })
     },
     Account: {
       screen: AccountScreen,
-      navigationOptions: {
+      navigationOptions: ({ navigation }) => ({
         tabBarLabel: "Account",
-        tabBarIcon: ({ tintColor }) => (
-          <MaterialCommunityIcons
-            name="account-circle"
-            size={25}
-            color={tintColor}
-          />
-        )
-      }
+        tabBarIcon: ({ tintColor }) => {
+          const { routeName } = navigation.state;
+          return (
+            <TestableIcon
+              name="account-circle"
+              size={25}
+              color={tintColor}
+              navigation={navigation}
+              routeName={routeName}
+              iconType={MaterialCommunityIcons}
+            />
+          );
+        }
+      })
     }
   },
   PatientTabNavOptions

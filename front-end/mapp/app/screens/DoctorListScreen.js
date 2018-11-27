@@ -16,6 +16,9 @@ import postData from "../lib/postData";
 import { FETCHING_USER_FULFILLED } from "../config/constants";
 import _ from "lodash";
 
+//GUI testing
+import { hook } from 'cavy';
+
 class DoctorListScreen extends Component {
   constructor(props) {
     super(props);
@@ -109,6 +112,7 @@ class DoctorListScreen extends Component {
     </View>
     <View>
     <TouchableOpacity
+          ref={this.props.generateTestHook('DoctorList.SendRequest.' + item.firstName)}
           style={styles.submitButton1}
           onPress={this.requestDoctor.bind(this, item)}
         >
@@ -139,6 +143,7 @@ class DoctorListScreen extends Component {
     return (
       <View style={{ flex: 1 }}>
         <SearchBar
+          ref={this.props.generateTestHook('DoctorList.SearchBar')}
           round
           placeholder="Type Here..."
           lightTheme
@@ -234,5 +239,6 @@ const styles = StyleSheet.create({
     // fontFamily: 'lineto-circular-pro-medium'
   }
 });
-export default DoctorListScreen;
+// export default DoctorListScreen;
+export default hook(DoctorListScreen);
 AppRegistry.registerComponent("DoctorListScreen", () => DoctorListScreen);

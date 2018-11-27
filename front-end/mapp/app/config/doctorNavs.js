@@ -14,6 +14,11 @@ import { genTabNavOptions } from "../lib/genNavOptions";
 
 import MakePrescriptionView from "../screens/MakePrescriptionView";
 
+// GUI testing
+import { hook } from 'cavy'
+import IconWithRef from "../lib/IconWithRef";
+const TestableIcon = hook(IconWithRef);
+
 const PatientStackNavigator = createStackNavigator({
   PatientList: {
     screen: PatientListScreen,
@@ -49,34 +54,60 @@ const DoctorTabNavigator = createMaterialBottomTabNavigator(
     // screens and their navigation options
     PatientList: {
       screen: PatientStackNavigator,
-      navigationOptions: {
+      navigationOptions: ({ navigation }) => ({
         tabBarLabel: "Patients",
-        tabBarIcon: ({ tintColor }) => (
-          <MaterialIcons name="people" size={25} color={tintColor} />
-        )
-      }
+        tabBarIcon: ({ tintColor }) =>{
+          const { routeName } = navigation.state;
+          return (
+            <TestableIcon
+              name="people"
+              size={25}
+              color={tintColor}
+              navigation={navigation}
+              routeName={routeName}
+              iconType={MaterialIcons}
+            />
+          );
+        } 
+      })
     },
     Inbox: {
       screen: DoctorInboxScreen,
-      navigationOptions: {
+      navigationOptions: ({ navigation }) => ({
         tabBarLabel: "Inbox",
-        tabBarIcon: ({ tintColor }) => (
-          <MaterialCommunityIcons name="inbox" size={25} color={tintColor} />
-        )
-      }
+        tabBarIcon: ({ tintColor }) => {
+          const { routeName } = navigation.state;
+          return (
+            <TestableIcon
+              name="inbox"
+              size={25}
+              color={tintColor}
+              navigation={navigation}
+              routeName={routeName}
+              iconType={MaterialCommunityIcons}
+            />
+          );
+        }
+      })
     },
     Account: {
       screen: AccountScreen,
-      navigationOptions: {
+      navigationOptions: ({ navigation }) => ({
         tabBarLabel: "Account",
-        tabBarIcon: ({ tintColor }) => (
-          <MaterialCommunityIcons
-            name="account-circle"
-            size={25}
-            color={tintColor}
-          />
-        )
-      }
+        tabBarIcon: ({ tintColor }) => {
+          const { routeName } = navigation.state;
+          return (
+            <TestableIcon
+              name="account-circle"
+              size={25}
+              color={tintColor}
+              navigation={navigation}
+              routeName={routeName}
+              iconType={MaterialCommunityIcons}
+            />
+          );
+        }
+      })
     }
   },
   DoctorTabNavOptions

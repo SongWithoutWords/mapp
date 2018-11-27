@@ -12,6 +12,7 @@ import { fetchUser, fetchDoctors, clearUser } from "./app/actions/actions";
 import { USER_TYPE } from "./app/config/constants";
 import genAlert from "./app/components/generalComponents/genAlert";
 
+
 type Props = {};
 class App extends Component<Props> {
   render() {

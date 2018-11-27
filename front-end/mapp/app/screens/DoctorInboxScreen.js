@@ -6,7 +6,7 @@ import {
   StyleSheet,
   AppRegistry,
   RefreshControl,
-  ScrollView,
+  ScrollView
 } from "react-native";
 import { Card, Button } from "react-native-elements"; //0.19.1
 import { TouchableOpacity } from "react-native";
@@ -15,7 +15,10 @@ import postData from "../lib/postData";
 import checkRequestErrors from "../lib/errors";
 import fetchAuth from "../lib/fetchAuth";
 
-export default class DoctorInboxScreen extends React.Component {
+//GUI testing
+import { hook } from "cavy";
+
+class DoctorInboxScreen extends React.Component {
   acceptOnPress = patientID => {
     const url = settings.REMOTE_SERVER_URL + settings.RELAITON_RES;
     const data = { patient: patientID, doctor: this.props.screenProps.user.id };
@@ -54,24 +57,34 @@ export default class DoctorInboxScreen extends React.Component {
       <Text style={styles.fieldValue}>
         You have a new request from
         <Text style={styles.medfield}>
-          { " " + request.patient.firstName +
-            " " +
-            request.patient.lastName}
+          {" " + request.patient.firstName + " " + request.patient.lastName}
         </Text>
       </Text>
-      <View style={{
-        alignItems : 'center',
-        justifyContent : 'center',
-        flexDirection: 'row',
-      }}>
-        <View style={{width: '40%'}}>
-          <TouchableOpacity title="Accept" onPress={() => this.acceptOnPress(request.patient.id)} style={styles.RenewButton}>
-            <Text style = {styles.buttonText}>Accept</Text>
+      <View
+        style={{
+          alignItems: "center",
+          justifyContent: "center",
+          flexDirection: "row"
+        }}
+      >
+        <View style={{ width: "40%" }}>
+          <TouchableOpacity
+            ref={this.props.generateTestHook(
+              "DoctorInbox.AcceptRequest." + request.patient.firstName
+            )}
+            title="Accept"
+            onPress={() => this.acceptOnPress(request.patient.id)}
+            style={styles.RenewButton}
+          >
+            <Text style={styles.buttonText}>Accept</Text>
           </TouchableOpacity>
         </View>
-        <View style={{width: '40%'}}>
-          <TouchableOpacity onPress={this.declinePatientRequest} style={styles.EditButton}>
-            <Text style = {styles.buttonText}>Decline</Text>
+        <View style={{ width: "40%" }}>
+          <TouchableOpacity
+            onPress={this.declinePatientRequest}
+            style={styles.EditButton}
+          >
+            <Text style={styles.buttonText}>Decline</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -114,8 +127,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#ecf0f1"
   },
   text: {
-    fontSize: 20,
-
+    fontSize: 20
   },
   buttonGroup: {
     flex: 1,
@@ -125,28 +137,38 @@ const styles = StyleSheet.create({
   fieldValue: {
     fontSize: 16,
     fontWeight: "200",
-    fontFamily: 'Poppins',
-    color: 'black',
+    fontFamily: "Poppins",
+    color: "black",
     marginLeft: 5,
-    fontFamily: 'Poppins-Light'
+    fontFamily: "Poppins-Light"
   },
   medfield: {
     fontSize: 18,
-    fontWeight: '600',
-    color: '#009CC6',
+    fontWeight: "600",
+    color: "#009CC6",
     marginLeft: 24,
-    fontFamily: 'Poppins-Medium'
+    fontFamily: "Poppins-Medium"
   },
   buttonText: {
-    color : 'white',
-    fontSize: 15,
+    color: "white",
+    fontSize: 15
     // fontFamily: 'lineto-circular-pro-medium'
   },
-  EditButton: { alignItems: 'center',
-    backgroundColor: '#009CC6',padding: 6, borderRadius:10 ,margin: 14,              //display : state.reacted
+  EditButton: {
+    alignItems: "center",
+    backgroundColor: "#009CC6",
+    padding: 6,
+    borderRadius: 10,
+    margin: 14 //display : state.reacted
   },
-  RenewButton: { alignItems: 'center',
-    backgroundColor: '#50BB75',padding: 6, borderRadius:10,
+  RenewButton: {
+    alignItems: "center",
+    backgroundColor: "#50BB75",
+    padding: 6,
+    borderRadius: 10
     //display : state.reacted
-  },
+  }
 });
+
+// export default DoctorInboxScreen;
+export default hook(DoctorInboxScreen);

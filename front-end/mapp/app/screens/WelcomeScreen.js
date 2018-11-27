@@ -6,11 +6,17 @@ import { View, Text } from "react-native";
 import settings from "../config/settings";
 import { USER_TYPE } from "../config/constants";
 
+// GUI testing
+import toClass from 'recompose/toClass'
+import { hook } from 'cavy';
+const WrappedButton = toClass(Button);
+
 class WelcomeScreen extends Component {
 
   button = ({ title, userType}) => (
-      <Button
-        buttonStyle={{ marginTop: 20}}
+      <WrappedButton
+        ref={this.props.generateTestHook('Welcome.' + title)}
+        buttonStyle={{ marginTop: 20 }}
         backgroundColor={settings.THEME_COLOR}
         title={title}
         onPress={() => {
@@ -62,5 +68,7 @@ const styles = StyleSheet.create({
   },
 });
 
-export default WelcomeScreen;
+// export default WelcomeScreen;
+export default hook(WelcomeScreen);
+
 AppRegistry.registerComponent("WelcomeScreen", () => WelcomeScreen);

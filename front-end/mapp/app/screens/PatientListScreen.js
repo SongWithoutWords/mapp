@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import settings from "../config/settings";
-import _ from "lodash"
+import _ from "lodash";
 import {
   Text,
   View,
@@ -9,11 +9,16 @@ import {
   RefreshControl,
   FlatList,
   PushNotificationIOS,
-  Platform,
+  Platform
 } from "react-native";
 import { List, ListItem, SearchBar } from "react-native-elements";
-import {setupPushNotification} from "../lib/setupPushNotification"
-import {sendNotification} from "../lib/sendNotification";
+import { setupPushNotification } from "../lib/setupPushNotification";
+import { sendNotification } from "../lib/sendNotification";
+
+//GUI testing
+import toClass from 'recompose/toClass'
+import { hook } from 'cavy';
+const WrappedListItem = toClass(ListItem);
 
 // note that this class now is actually "my patients" screen
 // cuz unlike doctor list screen, patients' info can only accessed
@@ -37,9 +42,9 @@ class PatientListScreen extends Component {
     };
   }
 
-  componentWillMount(){
+  componentWillMount() {
     this.pushNotification = setupPushNotification(this.handleNotificationOpen);
-    if(Object.keys(this.props.screenProps.pendingRequests.allIds).length > 0)
+    if (Object.keys(this.props.screenProps.pendingRequests.allIds).length > 0)
       sendNotification(
         "You have a new Patient requesting to connect to your account. Press here to go to the inbox screen",
         "You have a new Patient request!"
@@ -49,9 +54,14 @@ class PatientListScreen extends Component {
   // every time props changes update internal state: patients to
   // conform to the invariant
   componentWillReceiveProps(nextProps) {
-    if (_.isEqual(nextProps.screenProps.user.myPatients, this.props.screenProps.user.myPatients))
+    if (
+      _.isEqual(
+        nextProps.screenProps.user.myPatients,
+        this.props.screenProps.user.myPatients
+      )
+    )
       console.log("myPatients are equal");
-    else{
+    else {
       const myPatientIDs = nextProps.screenProps.user.myPatients;
       const patients = [];
       myPatientIDs.forEach(id => {
@@ -60,14 +70,28 @@ class PatientListScreen extends Component {
       this.setState({ patients: patients });
     }
   }
-   
+
   // if new patient request send notification
   componentDidUpdate(prevProps) {
-    if (_.isEqual(prevProps.screenProps.pendingRequests, this.props.screenProps.pendingRequests))
+    if (
+      _.isEqual(
+        prevProps.screenProps.pendingRequests,
+        this.props.screenProps.pendingRequests
+      )
+    )
       console.log("They are equal");
-    else{
-      console.log("DEBUG: " + Object.keys(this.props.screenProps.pendingRequests.allIds).length + " " + Object.keys(prevProps.screenProps.pendingRequests.allIds).length);
-      if(Object.keys(this.props.screenProps.pendingRequests.allIds).length - Object.keys(prevProps.screenProps.pendingRequests.allIds).length > 0)
+    else {
+      console.log(
+        "DEBUG: " +
+          Object.keys(this.props.screenProps.pendingRequests.allIds).length +
+          " " +
+          Object.keys(prevProps.screenProps.pendingRequests.allIds).length
+      );
+      if (
+        Object.keys(this.props.screenProps.pendingRequests.allIds).length -
+          Object.keys(prevProps.screenProps.pendingRequests.allIds).length >
+        0
+      )
         sendNotification(
           "You have a new Patient requesting to connect to your account. Press here to go to the inbox screen",
           "You have a new Patient request!"
@@ -83,15 +107,16 @@ class PatientListScreen extends Component {
     });
   };
 
-  handleNotificationOpen = (notification) => {
+  handleNotificationOpen = notification => {
     this.props.navigation.navigate("Inbox");
-    if(Platform.OS === 'ios')
+    if (Platform.OS === "ios")
       notification.finish(PushNotificationIOS.FetchResult.NoData);
-  }
+  };
 
   renderHeader = () => {
     return (
       <SearchBar
+        ref={this.props.generateTestHook("PatientList.SearchBar")}
         round
         placeholder="Type Here..."
         lightTheme
@@ -118,7 +143,8 @@ class PatientListScreen extends Component {
   renderItem = ({ item }) => {
     return (
       <View style={{ backgroundColor: "white" }}>
-        <ListItem
+        <WrappedListItem
+          ref={this.props.generateTestHook("PatientList.patient." + item.firstName)}
           roundAvatar
           title={`${item.firstName} ${item.lastName}`}
           subtitle={item.email}
@@ -167,5 +193,6 @@ const styles = StyleSheet.create({
   }
 });
 
-export default PatientListScreen;
+// export default PatientListScreen;
+export default hook(PatientListScreen);
 AppRegistry.registerComponent("PatientListScreen", () => PatientListScreen);

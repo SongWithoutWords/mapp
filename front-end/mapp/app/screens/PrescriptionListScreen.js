@@ -25,6 +25,9 @@ import createPrescription from "../lib/createPrescription";
 import ProgressBarAnimated from "react-native-progress-bar-animated";
 import { getLocalDateTimeString } from "../lib/dateTime";
 
+// GUI testing
+import { hook } from 'cavy'
+
 class PrescriptionListScreen extends Component {
   componentWillMount() {
     this.pushNotification = setupPushNotification(this.handleNotificationOpen);
@@ -326,7 +329,10 @@ const styles = StyleSheet.create({
     borderRadius: 10
   }
 });
-export default PrescriptionListScreen;
+
+// export default PrescriptionListScreen;
+export default hook(PrescriptionListScreen);
+
 AppRegistry.registerComponent(
   "PrescriptionListScreen",
   () => PrescriptionListScreen

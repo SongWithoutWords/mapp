@@ -5,6 +5,11 @@ import validate from "validate.js";
 import settings from "../config/settings";
 import genAlert from "../components/generalComponents/genAlert";
 
+// GUI testing
+import toClass from "recompose/toClass";
+import { hook } from "cavy";
+const WrappedButton = toClass(Button);
+
 class SignInScreen extends Component {
   constructor(props) {
     super(props);
@@ -33,6 +38,7 @@ class SignInScreen extends Component {
     <>
       <FormLabel>{itemLabel}</FormLabel>
       <FormInput
+        ref={this.props.generateTestHook("SignIn.TextInput." + itemLabel)}
         autoCapitalize="none"
         secureTextEntry={isSecureEntry}
         placeholder={itemLabel}
@@ -53,7 +59,8 @@ class SignInScreen extends Component {
               key: "password",
               isSecureEntry: true
             })}
-            <Button
+            <WrappedButton
+              ref={this.props.generateTestHook("SignIn.Button.SignIn")}
               buttonStyle={{ marginTop: 20 }}
               backgroundColor={settings.THEME_COLOR}
               title="SIGN IN"
@@ -76,7 +83,7 @@ var constraints = {
 };
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flex: 1
   },
   button: {
     flex: 1,
@@ -88,5 +95,6 @@ const styles = StyleSheet.create({
   }
 });
 
-export default SignInScreen;
+// export default SignInScreen;
+export default hook(SignInScreen);
 AppRegistry.registerComponent("SignInScreen", () => SignInScreen);

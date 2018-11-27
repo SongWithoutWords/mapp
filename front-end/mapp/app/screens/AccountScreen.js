@@ -5,6 +5,11 @@ import { StyleSheet, AppRegistry } from "react-native";
 import { View } from "react-native";
 import { USER_TYPE } from "../config/constants";
 
+// GUI testing
+import toClass from "recompose/toClass";
+import { hook } from "cavy";
+const WrappedButton = toClass(Button);
+
 class AccountScreen extends Component {
   // polling on server
   componentDidMount() {
@@ -24,6 +29,7 @@ class AccountScreen extends Component {
     this.timer = null; // here...
   }
 
+
   render() {
     const firstName = this.props.screenProps.user.firstName;
     const lastName = this.props.screenProps.user.lastName;
@@ -35,7 +41,8 @@ class AccountScreen extends Component {
           {firstName} {lastName}
         </Text>
         <Text style={styles.subtitle}>id: {id}</Text>
-        <Button
+        <WrappedButton
+          ref={this.props.generateTestHook("Account.Button.SignOut")}
           buttonStyle={styles.bottomButton}
           backgroundColor={settings.THEME_COLOR}
           title="SIGN OUT"
@@ -66,5 +73,6 @@ const styles = StyleSheet.create({
   }
 });
 
-export default AccountScreen;
+// export default AccountScreen;
+export default hook(AccountScreen);
 AppRegistry.registerComponent("AccountScreen", () => AccountScreen);
