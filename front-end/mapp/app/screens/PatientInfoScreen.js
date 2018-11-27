@@ -32,7 +32,8 @@ class PatientInfoScreen extends Component {
     } else {
       this.props.navigation.navigate("DoctorEditPrescription", {
         prescription: prescription,
-        patient: this.props.screenProps.patients.byId[prescription.patient]
+        patient: this.props.navigation.getParam("patient", {}),
+        user: this.props.navigation.getParam("user", {})
       });
     }
   };
