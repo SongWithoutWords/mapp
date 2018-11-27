@@ -18,6 +18,7 @@ import { setupPushNotification } from "../lib/setupPushNotification";
 import { scheduleNotifications } from "../lib/scheduleNotifications";
 import { convertMinsToFreqString } from "../lib/frequencyMinsConversion";
 import ProgressBarAnimated from "react-native-progress-bar-animated";
+import { getLocalDateTimeString } from "../lib/dateTime";
 
 class PatientInfoScreen extends Component {
   onEditPress = prescription => {
@@ -41,9 +42,7 @@ class PatientInfoScreen extends Component {
     console.log('nnananannaddan');
     if(amountRemaining < 0) return
     if(prescription.doctor != user_id) return
-    const firstDoseString = prescription.dosageSchedule[0].firstDose
-      .toString()
-      .slice(0, 10);
+    const firstDoseString = getLocalDateTimeString(prescription.dosageSchedule[0].firstDose.toString());
     const frequency = convertMinsToFreqString(
       prescription.dosageSchedule[0].minutesBetweenDoses
     );
@@ -128,9 +127,6 @@ class PatientInfoScreen extends Component {
           </Text>
           <Text style={styles.medfield}>
             Patient ID: <Text style ={styles.fieldValue}>{patient.id}</Text>
-          </Text>
-          <Text style={styles.medfield}>
-            Date of Birth: <Text style ={styles.fieldValue}>{patient.dateOfBirth}</Text>
           </Text>
           {prescriptions.map(prescription => this.mapPrescriptionToCard(prescription, user.id))
           }

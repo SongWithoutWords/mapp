@@ -24,9 +24,9 @@ export default class MakePrescriptionView extends React.Component {
       isStartDateTimePickerVisible: false,
       medication: "",
       dosage: 0,
-      dosageUnit: "",
-      frequency: "", // used to compute minutes between doses
-      minutesBetweenDoses: 0,
+      dosageUnit: DOSAGE_UNIT.GRAM,
+      frequency: FREQUENCY.EVERY_DAY, // used to compute minutes between doses
+      minutesBetweenDoses: convertFrequencyToMins(FREQUENCY.EVERY_DAY),
       amountInitial: 0,
       startDateTime: null
     };
@@ -63,6 +63,9 @@ export default class MakePrescriptionView extends React.Component {
       amountInitial,
       startDateTime
     };
+
+    // console.log("raw string from make prescription: " + startDateTime.toString());
+    // console.log("iso string from make prescription: " + startDateTime.toISOString());
 
     const user = this.props.navigation.getParam("user", {});
     var patient;

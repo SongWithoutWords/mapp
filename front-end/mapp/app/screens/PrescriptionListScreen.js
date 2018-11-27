@@ -23,6 +23,8 @@ import { sendNotification } from "../lib/sendNotification";
 import { convertMinsToFreqString } from "../lib/frequencyMinsConversion";
 import createPrescription from "../lib/createPrescription";
 import ProgressBarAnimated from "react-native-progress-bar-animated";
+import { getLocalDateTimeString } from "../lib/dateTime";
+
 class PrescriptionListScreen extends Component {
   componentWillMount() {
     this.pushNotification = setupPushNotification(this.handleNotificationOpen);
@@ -95,7 +97,7 @@ class PrescriptionListScreen extends Component {
     let amountRemaining =
       prescription.amountInitial -
       prescription.dosesTaken.length * prescription.dosageSchedule[0].dosage;
-    if (prescription.doctor !== null && amountRemaining <= 0) {
+    if (amountRemaining <= 0) {
       createPrescription({
         medication: prescription.medication,
         dosage: prescription.dosageSchedule[0].dosage,
@@ -108,8 +110,9 @@ class PrescriptionListScreen extends Component {
         doctorID: prescription.doctor, // TODO
         navigation: this.props.navigation,
         email: this.props.screenProps.user.email,
-        password:this.props.screenProps.user.password
+        password: this.props.screenProps.user.password
       });
+      deletePrescription({ prescriptionID: prescription.id , navigation :null , email: this.props.screenProps.user.email, password: this.props.screenProps.user.password});
     }
   };
   onEditPress = prescription => {
@@ -124,7 +127,18 @@ class PrescriptionListScreen extends Component {
       });
     }
   };
-
+  valToGreen = val => {
+    if(val >= 50) return 'cc';
+    let calc = Math.round(204/50*val);
+    if(calc <= 15) return '0' + calc.toString(16);
+    else return calc.toString(16);
+  };
+  valToRed = val => {
+    if(val <= 50) return 'cc';
+    let calc = Math.round(204/50*(100-val))
+    if(calc <= 15) return '0' + calc.toString(16);
+    else return calc.toString(16);
+  };
   mapPrescriptionToCard = prescription => {
     console.log(prescription);
     let amountRemaining =
@@ -148,9 +162,11 @@ class PrescriptionListScreen extends Component {
       doctor = null;
     }
 
-    const firstDoseString = prescription.dosageSchedule[0].firstDose
-      .toString()
-      .slice(0, 10);
+    const firstDoseString = getLocalDateTimeString(prescription.dosageSchedule[0].firstDose.toString());
+
+    console.log(
+      "from prescription list" + prescription.dosageSchedule[0].firstDose
+    );
     const frequency = convertMinsToFreqString(
       prescription.dosageSchedule[0].minutesBetweenDoses
     );
@@ -190,13 +206,7 @@ class PrescriptionListScreen extends Component {
             height={20}
             backgroundColor={
               "#" +
-              Math.round(((0xc6 - 0x6c) / 100) * (100 - val) + 0x6c).toString(
-                16
-              ) +
-              Math.round(((0x00 - 0xc6) / 100) * (100 - val) + 0xc6).toString(
-                16
-              ) +
-              "00"
+              this.valToRed(val) + this.valToGreen(val) + "00"
             }
             barAnimationDuration={0}
           />
@@ -274,7 +284,7 @@ const styles = StyleSheet.create({
     fontWeight: "200",
     textAlign: "center",
     color: "black",
-    fontFamily: 'Poppins-Medium'
+    fontFamily: "Poppins-Medium"
   },
   medfield: {
     fontSize: 16,
@@ -284,14 +294,14 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     marginLeft: 24,
     marginRight: 24,
-    fontFamily: 'Poppins-SemiBold'
+    fontFamily: "Poppins-SemiBold"
   },
   remainingPills: {
     textAlign: "center",
     fontSize: 20,
     fontWeight: "400",
     color: "black",
-    fontFamily: 'lineto-circular-pro-book'
+    // fontFamily: "lineto-circular-pro-book"
   },
   button: {
     margin: 24,
@@ -304,7 +314,7 @@ const styles = StyleSheet.create({
     color: "white",
     //fontWeight: "500",
     fontSize: 16,
-    fontFamily: 'lineto-circular-pro-medium'
+    // fontFamily: "lineto-circular-pro-medium"
   },
   EditButton: {
     alignItems: "center",

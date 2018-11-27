@@ -102,8 +102,11 @@ export default class PatientNotificationsView extends React.Component {
           let startDate = new Date(
             prescriptions.byId[id].dosageSchedule[0].firstDose
           );
-          let freq =
-            prescriptions.byId[id].dosageSchedule[0].minutesBetweenDoses;
+          //Has the prescription started yet?
+          if((new Date() - startDate) <= 0) return;
+          //Right now freq seems to be 0, change it to 1 for testing
+          let freq = 1;
+            //prescriptions.byId[id].dosageSchedule[0].minutesBetweenDoses;
           let lastDose = undefined;
           if (prescriptions.byId[id].dosesTaken.length != 0)
             lastDose =
@@ -122,6 +125,10 @@ export default class PatientNotificationsView extends React.Component {
 
           if (numOfLastDose != numOfDose) {
             let mins = (new Date() - startDate) / one_min - numOfDose * freq;
+            console.log('baaadddh');
+            console.log(startDate);
+            console.log('freq: ' + id + '' + prescriptions.byId[id].dosageSchedule[0]);
+            console.log('nomofdose: ' + numOfDose);
             return this.mapNotificationToCard(
               prescriptions.byId[id],
               Math.round(mins)
