@@ -19,8 +19,30 @@ import { scheduleNotifications } from "../lib/scheduleNotifications";
 import { convertMinsToFreqString } from "../lib/frequencyMinsConversion";
 import ProgressBarAnimated from "react-native-progress-bar-animated";
 import { getLocalDateTimeString } from "../lib/dateTime";
-
+import fetchAuth from "../lib/fetchAuth";
+import settings from "../config/settings";
 class PatientInfoScreen extends Component {
+  deletePatientRelation = patient => {
+
+    const url =
+      settings.REMOTE_SERVER_URL +
+      settings.RELAITON_RES +
+      "/" +
+      patient.relationId;
+    console.log('bekhoda khari');
+    console.log(patient);
+    const { email, password } = this.props.screenProps.user;
+    const method = "DELETE";
+    return fetchAuth({url, method, email, password})
+      .then(response => {
+        genAlert("Patient deleted!");
+        this.props.navigation.goBack();
+      })
+      .catch(error => {
+        genAlert("Failed to Patient the relationship", error.message);
+    });
+  }
+
   onEditPress = prescription => {
     console.log('baba goh nakhor');
     console.log(prescription);
@@ -120,16 +142,35 @@ class PatientInfoScreen extends Component {
     const user = this.props.navigation.getParam("user", {});
 
     const prescriptions = this.props.screenProps.patients.byId[patient.id].prescriptions;
-
-    return (
-      <View style={{ flex: 1 }}>
-        <ScrollView style={styles.container}>
-          <Text style={styles.medfield}>
+/*          <Text style={styles.medfield}>
             Patient Name: <Text style ={styles.fieldValue}>{patient.firstName} {patient.lastName}</Text>
           </Text>
           <Text style={styles.medfield}>
             Patient ID: <Text style ={styles.fieldValue}>{patient.id}</Text>
-          </Text>
+          </Text>*/
+    return (
+      <View style={{ flex: 1 }}>
+        <ScrollView style={styles.container}>
+          <Card flexDirection= 'row'>
+          <View style={{width: '50%', justifyContent:'center'}}>
+          <Text style = {styles.doctorName}>{"Dr. " +
+                        patient.firstName +
+                        " " +
+                        patient.lastName}</Text>
+          </View>
+          <View style={{width: '15%', justifyContent:'center'}}>
+          <Text style = {styles.doctorName}>
+                      ID: {patient.id}</Text>
+          </View>
+          <View style={{width: '35%', justifyContent:'center', alignItems: 'center', flex:1}}>
+          <TouchableOpacity
+                style={styles.submitButton}
+                onPress={this.deletePatientRelation.bind(this, this.props.screenProps.patients.byId[patient.id])}
+              >
+                <Text style={styles.buttonText}> Delete</Text>
+              </TouchableOpacity>
+          </View>
+          </Card>
           {prescriptions.map(prescription => this.mapPrescriptionToCard(prescription, user.id))
           }
         </ScrollView>
@@ -209,6 +250,14 @@ const styles = StyleSheet.create({
     backgroundColor: "#50BB75",
     padding: 6,
     borderRadius: 10
+  },
+  submitButton: {
+    backgroundColor: "#C60000",
+    padding: 8,
+    height: 35,
+    borderRadius: 10,
+    alignItems: "center",
+    color: 'white',
   }
 });
 
