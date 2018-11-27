@@ -4,8 +4,14 @@ import { Button, Text } from "react-native-elements";
 import { StyleSheet, AppRegistry } from "react-native";
 import { View } from "react-native";
 import { USER_TYPE } from "../config/constants";
+import Spinner from 'react-native-loading-spinner-overlay';
+
 
 class AccountScreen extends Component {
+  state = {
+    spinner: false
+  };
+
   // polling on server
   componentDidMount() {
     const { email, password, userType } = this.props.screenProps.user;
@@ -31,6 +37,10 @@ class AccountScreen extends Component {
 
     return (
       <View style={styles.buttonContainer}>
+        <Spinner
+          visible={this.state.spinner}
+          textStyle={styles.spinnerTextStyle}
+        />
         <Text style={styles.subtitle}>
           {firstName} {lastName}
         </Text>
@@ -40,9 +50,15 @@ class AccountScreen extends Component {
           backgroundColor={settings.THEME_COLOR}
           title="SIGN OUT"
           onPress={() => {
+            this.setState({ spinner: true });
             clearInterval(this.timer);
             this.timer = null; // here...
-            setTimeout(this.props.screenProps.onSignOut, 2000);
+            setTimeout(() => {
+              this.setState(
+                { spinner: false },
+                this.props.screenProps.onSignOut
+              );
+            }, 2000);
           }}
         />
       </View>
@@ -63,6 +79,9 @@ const styles = StyleSheet.create({
     color: settings.THEME_COLOR,
     fontSize: 20,
     padding: 10
+  },
+  spinnerTextStyle: {
+    color: "#FFF"
   }
 });
 

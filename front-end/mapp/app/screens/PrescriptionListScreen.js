@@ -147,7 +147,10 @@ class PrescriptionListScreen extends Component {
     var doctorField;
     if (amountRemaining < 0) return;
     if (prescription.doctor !== null) {
-      doctor = this.props.screenProps.doctors.byId[prescription.doctor];
+    console.log("from prescription list doctor id: " + prescription.doctor);
+    doctor = this.props.screenProps.doctors.byId[prescription.doctor];
+    console.log("from prescription list doctors obj: " + JSON.stringify(this.props.screenProps.doctors));
+    console.log("from prescription list doctor obj: " + JSON.stringify(doctor));
       doctorField = (
         <Text style={styles.medfield}>
           Doctor:{" "}
