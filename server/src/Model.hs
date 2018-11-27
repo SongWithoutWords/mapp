@@ -173,6 +173,10 @@ relationKey = DoctorPatientRelationKey . fromIntegral
 prescriptionKey :: Int -> PrescriptionId
 prescriptionKey = PrescriptionKey . fromIntegral
 
+doseTakenKey :: Int -> DoseTakenId
+doseTakenKey = DoseTakenKey . fromIntegral
+
+
 doctorPatientRequest :: Int -> Int -> DoctorPatientRequest
 doctorPatientRequest did pid =
   DoctorPatientRequest (doctorKey did) (patientKey pid)

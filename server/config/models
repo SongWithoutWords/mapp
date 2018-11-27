@@ -25,7 +25,7 @@ Patient json
 DoctorPatientRequest json
     doctor DoctorId
     patient PatientId
-    UniqueRequest patient doctor
+    UniqueRequest doctor patient
     deriving Eq
     deriving Show
 
@@ -33,7 +33,7 @@ DoctorPatientRequest json
 DoctorPatientRelation json
     doctor DoctorId
     patient PatientId
-    UniqueRelation patient doctor
+    UniqueRelation doctor patient
     deriving Eq
     deriving Show
 

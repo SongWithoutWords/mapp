@@ -11,7 +11,7 @@ spec = withApp $ do
   describe "Accounts made with POST /doctors or POST /patients can be accessed with POST /logins" $ do
 
     it "POST /logins with wrong email returns 403 (forbidden)" $ do
-      postPatientBob
+      postPatientBobbyLee
       postJson LoginsR $ PostLogin
         { email = "rob@lee.com"
         , password = "rlee"
@@ -19,17 +19,17 @@ spec = withApp $ do
       statusIs 403
 
     it "POST /logins with wrong password return 403 (forbidden)" $ do
-      postPatientBob
+      postPatientBobbyLee
       postJson LoginsR $ PostLogin
-        { email = "boby@lee.com"
+        { email = "bobby@lee.com"
         , password = "wrong-password"
         }
       statusIs 403
 
     it "POST /logins with correct credentials return correct patient info" $ do
-      postPatientBob
+      postPatientBobbyLee
       postJson LoginsR $ PostLogin
-        { email = "boby@lee.com"
+        { email = "bobby@lee.com"
         , password = "blee"
         }
       jsonResponseIs $ PatientWithDoctors
@@ -43,7 +43,7 @@ spec = withApp $ do
         }
 
     it "POST /logins with correct credentials return correct doctor info" $ do
-      postDoctorJim
+      postDoctorJamesHill
       postJson LoginsR $ PostLogin
         { email = "james@hill.com"
         , password = "jhill"
