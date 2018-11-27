@@ -105,7 +105,7 @@ class PrescriptionListScreen extends Component {
         frequency: FREQUENCY.EVERY_WEEK,
         minutesBetweenDoses: prescription.dosageSchedule[0].minutesBetweenDoses,
         amountInitial: prescription.amountInitial,
-        startDateTime: prescription.dosageSchedule[0].firstDose,
+        startDateTime: new Date(Date.now() + 3000),
         patientID: prescription.patient,
         doctorID: prescription.doctor, // TODO
         navigation: this.props.navigation,

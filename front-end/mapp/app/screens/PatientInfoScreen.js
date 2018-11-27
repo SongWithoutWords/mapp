@@ -225,18 +225,18 @@ const styles = StyleSheet.create({
   },
   fieldValue: {
     fontSize: 16,
-    fontWeight: "200",
     textAlign: "center",
-    color: "black"
+    color: "black",
+    fontFamily: "Poppins-Regular"
   },
   medfield: {
     fontSize: 16,
-    fontWeight: "600",
     color: "#009CC6",
     marginTop: 10,
     marginBottom: 20,
     marginLeft: 24,
-    marginRight: 24
+    marginRight: 24,
+    fontFamily: "Poppins-SemiBold"
   },
   remainingPills: {
     textAlign: "center",
