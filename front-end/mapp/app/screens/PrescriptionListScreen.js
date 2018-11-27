@@ -67,9 +67,7 @@ class PrescriptionListScreen extends Component {
           Object.keys(oldPrescriptions.byId[id].dosesTaken).length;
         if (
           newNumberLeft - oldNumberLeft < 0 &&
-          (newNumberLeft * newPrescriptions.byId[id].dosageSchedule[0].dosage) /
-            newPrescriptions.byId[id].amountInitial <
-            0.2
+          newNumberLeft <= 2
         )
           sendNotification(
             "You can renew prescription for " +
