@@ -31,4 +31,4 @@ hashEqual :: Text -> HashedPasswordAndSalt -> Bool
 hashEqual plainText (HashedPasswordAndSalt hashedPassword salt) =
   case A2.hash A2.defaultOptions (encodeUtf8 plainText) salt hashLengthBytes of
     CryptoPassed hash -> hash == hashedPassword
-    CryptoFailed e -> error $ "Pw: " ++ (show plainText) ++ "Salt: " ++ show salt ++ " " ++ show e
+    CryptoFailed e -> error $ show e
