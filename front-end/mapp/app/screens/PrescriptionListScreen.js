@@ -25,6 +25,7 @@ import createPrescription from "../lib/createPrescription";
 import deletePrescription from "../lib/deletePrescription";
 import ProgressBarAnimated from "react-native-progress-bar-animated";
 import { getLocalDateTimeString } from "../lib/dateTime";
+import {round2decimal} from "../lib/validatePrescription";
 
 class PrescriptionListScreen extends Component {
   componentWillMount() {
@@ -111,6 +112,7 @@ class PrescriptionListScreen extends Component {
         email: this.props.screenProps.user.email,
         password: this.props.screenProps.user.password
       });
+      console.log("from renew" + JSON.stringify({ prescriptionID: prescription.id , navigation: null , email: this.props.screenProps.user.email, password: this.props.screenProps.user.password}));
       deletePrescription({ prescriptionID: prescription.id , navigation: null , email: this.props.screenProps.user.email, password: this.props.screenProps.user.password});
     }
   };
@@ -218,7 +220,7 @@ class PrescriptionListScreen extends Component {
           <View style={styles.buttonContainer}>
             <View style={styles.buttonInner}>
               <Text style={styles.remainingPills}>
-                {amountRemaining}/{prescription.amountInitial}{" "}
+                {round2decimal(amountRemaining)}/{round2decimal(prescription.amountInitial)}{" "}
                 {prescription.dosageUnit}s
               </Text>
             </View>

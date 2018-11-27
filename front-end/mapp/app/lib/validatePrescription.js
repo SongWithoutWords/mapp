@@ -1,5 +1,5 @@
 import genAlert from "../components/generalComponents/genAlert";
-export default validatePrescription = ({
+export default (validatePrescription = ({
   dosage,
   dosageUnit,
   frequency,
@@ -20,6 +20,8 @@ export default validatePrescription = ({
     msg = "Invalid frequency";
   } else if (startDateTime === null || startDateTime < new Date()) {
     msg = "Invalid start date";
+  } else if (!divisible(round2decimal(amountInitial), round2decimal(dosage))) {
+    msg = "Initial amount is not divisible by dosage";
   }
 
   if (msg !== null) {
@@ -28,4 +30,12 @@ export default validatePrescription = ({
   } else {
     return true;
   }
-};
+});
+
+export function round2decimal(a) {
+  return Math.round(a * 100) / 100;
+}
+
+function divisible(a, b) {
+  return ((a * 100) % (b * 100)) / 100 === 0;
+}

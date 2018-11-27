@@ -28,7 +28,7 @@ export default class PatientNotificationsView extends React.Component {
     const data = {
       prescription: prescription.id,
       time: new Date(Date.now()),
-      amount: 3
+      amount: prescription.dosageSchedule[0].dosage
     };
     const { email, password } = this.props.screenProps.user;
     return postData(url, data, email, password)
