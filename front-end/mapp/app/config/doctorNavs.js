@@ -10,6 +10,7 @@ import DoctorInboxScreen from "../screens/DoctorInboxScreen";
 import AccountScreen from "../screens/AccountScreen";
 import PatientListScreen from "../screens/PatientListScreen";
 import PatientInfoScreen from "../screens/PatientInfoScreen";
+import EditPrescriptionView from "../screens/EditPrescriptionView";
 import { genTabNavOptions } from "../lib/genNavOptions";
 
 import MakePrescriptionView from "../screens/MakePrescriptionView";
@@ -26,6 +27,13 @@ const PatientStackNavigator = createStackNavigator({
     screen: PatientInfoScreen,
     navigationOptions: {
       title: "Patient Info",
+      headerForceInset: { top: "never", bottom: "never" }
+    }
+  },
+  DoctorEditPrescription: {
+    screen: EditPrescriptionView,
+    navigationOptions: {
+      title: "Edit Prescription",
       headerForceInset: { top: "never", bottom: "never" }
     }
   },

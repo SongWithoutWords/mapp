@@ -105,8 +105,7 @@ export default class PatientNotificationsView extends React.Component {
           //Has the prescription started yet?
           if((new Date() - startDate) <= 0) return;
           //Right now freq seems to be 0, change it to 1 for testing
-          let freq = 1;
-            //prescriptions.byId[id].dosageSchedule[0].minutesBetweenDoses;
+          let freq = prescriptions.byId[id].dosageSchedule[0].minutesBetweenDoses;
           let lastDose = undefined;
           if (prescriptions.byId[id].dosesTaken.length != 0)
             lastDose =
