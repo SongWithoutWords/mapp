@@ -65,11 +65,11 @@ class PatientListScreen extends Component {
    
   // if new patient request send notification
   componentDidUpdate(prevProps) {
-    if (_.isEqual(prevProps.screenProps.pendingRequests, this.props.screenProps.pendingRequests))
+    if (_.isEqual(prevProps.screenProps.user.myPendingRequests, this.props.screenProps.user.myPendingRequests))
       console.log("Pending requests are equal");
     else{
-      console.log("DEBUG: " + Object.keys(this.props.screenProps.pendingRequests.allIds).length + " " + Object.keys(prevProps.screenProps.pendingRequests.allIds).length);
-      if(Object.keys(this.props.screenProps.pendingRequests.allIds).length - Object.keys(prevProps.screenProps.pendingRequests.allIds).length > 0)
+      console.log("DEBUG: " + prevProps.screenProps.user.myPendingRequests.length + " " + this.props.screenProps.user.myPendingRequests.length);
+      if(this.props.screenProps.user.myPendingRequests.length - prevProps.screenProps.user.myPendingRequests.length > 0)
         sendNotification(
           "You have a new Patient requesting to connect to your account. Press here to go to the inbox screen",
           "You have a new Patient request!",
