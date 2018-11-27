@@ -15,7 +15,7 @@ spec = withApp $ do
       postJson PatientsR $ PostPatient
         { firstName = "Bobby"
         , lastName = "Lee"
-        , email = "boby@lee.com"
+        , email = "bobby@lee.com"
         , password = "blee"
         , dateOfBirth = Nothing
         }
@@ -29,8 +29,10 @@ spec = withApp $ do
         , prescriptions = []
         }
 
+      let bobbyCreds = ("bobby@lee.com", "blee")
+
       -- Verify that the patient account exists
-      get $ PatientR 1
+      getAuth bobbyCreds (PatientR 1)
       jsonResponseIs $ PatientWithDoctors
         { id = patientKey 1
         , firstName = "Bobby"
@@ -56,8 +58,10 @@ spec = withApp $ do
         , pendingRequests = []
         }
 
+      let jamesCreds = ("james@hill.com", "jhill")
+
       -- Verify that the doctor account exists
-      get $ DoctorR 1
+      getAuth jamesCreds $ DoctorR 1
       jsonResponseIs $ DoctorWithPatients
         { id = doctorKey 1
         , firstName = "James"
@@ -66,12 +70,16 @@ spec = withApp $ do
         , pendingRequests = []
         }
 
-      -- Attempt to create a relationship without a request
+      -- Attempt a relation without credentials
       postJson RelationsR $ doctorPatientRelation 1 1
+      statusIs 403
+
+      -- Attempt a relation without a request
+      postJsonAuth jamesCreds RelationsR $ doctorPatientRelation 1 1
       statusIs 400
 
       -- Check the doctor account, ensure they do not have the patient
-      get $ DoctorR 1
+      getAuth jamesCreds $ DoctorR 1
       jsonResponseIs $ DoctorWithPatients
         { id = doctorKey 1
         , firstName = "James"
@@ -80,12 +88,20 @@ spec = withApp $ do
         , pendingRequests = []
         }
 
-      -- Add a request from the patient for the doctor
+      -- Attempt a request without credentials
       postJson RequestsR $ doctorPatientRequest 1 1
+      statusIs 403
+
+      -- Attempt a request from doctor to patient
+      postJsonAuth jamesCreds RequestsR $ doctorPatientRequest 1 1
+      statusIs 403
+
+      -- Add a request from the patient for the doctor
+      postJsonAuth bobbyCreds RequestsR $ doctorPatientRequest 1 1
       jsonResponseIs $ Entity (requestKey 1) $ doctorPatientRequest 1 1
 
       -- Ensure that the doctor has the request
-      get $ DoctorR 1
+      getAuth jamesCreds $ DoctorR 1
       jsonResponseIs $ DoctorWithPatients
         { id = doctorKey 1
         , firstName = "James"
@@ -103,8 +119,8 @@ spec = withApp $ do
           ]
         }
 
-      -- Ensure that the patient has the request
-      get $ PatientR 1
+      -- -- Ensure that the patient has the request
+      getAuth bobbyCreds $ PatientR 1
       jsonResponseIs $ PatientWithDoctors
         { id = patientKey 1
         , firstName = "Bobby"
@@ -123,12 +139,16 @@ spec = withApp $ do
         , prescriptions = []
         }
 
+      -- Attempt the confirm the relation as the patient
+      postJsonAuth bobbyCreds RelationsR $ doctorPatientRelation 1 1
+      statusIs 403
+
       -- Confirm the patient's request
-      postJson RelationsR $ doctorPatientRelation 1 1
+      postJsonAuth jamesCreds RelationsR $ doctorPatientRelation 1 1
       jsonResponseIs $ Entity (relationKey 1) $ doctorPatientRelation 1 1
 
       -- Ensure that the doctor has the patient
-      get $ DoctorR 1
+      getAuth jamesCreds $ DoctorR 1
       jsonResponseIs $ DoctorWithPatients
         { id = doctorKey 1
         , firstName = "James"
@@ -147,7 +167,7 @@ spec = withApp $ do
         }
 
       -- Ensure that the patient has the doctor
-      get $ PatientR 1
+      getAuth bobbyCreds $ PatientR 1
       jsonResponseIs $ PatientWithDoctors
         { id = patientKey 1
         , firstName = "Bobby"
