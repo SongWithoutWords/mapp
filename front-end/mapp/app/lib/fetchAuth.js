@@ -8,6 +8,8 @@ function fetchAuth({
   email = "",
   password = ""
 }) {
+  console.log(email);
+  console.log(password);
   const requestOptions = {
     method: method,
     headers: {
@@ -17,7 +19,7 @@ function fetchAuth({
     },
     body: JSON.stringify(data)
   };
-
+  console.log("fetchAuth" + JSON.stringify(requestOptions));
   if(method.toUpperCase() === "GET" || method.toUpperCase() == "DELETE" ){
     delete requestOptions.body;
   }

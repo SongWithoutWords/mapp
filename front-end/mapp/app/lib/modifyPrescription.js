@@ -13,7 +13,9 @@ function modifyPrescription({
   startDateTime = null,
   patientID = null,
   prescriptionID = null,
-  navigation = null
+  navigation = null,
+  email = "",
+  password = ""
 }) {
   if (
     validatePrescription({
@@ -25,37 +27,37 @@ function modifyPrescription({
       medication
     })
   ) {
-      const url =
-        settings.REMOTE_SERVER_URL +
-        settings.PRESCRIPTION_RES +
-        "/" +
-        prescriptionID;
-      const dosageSchedule = [];
+    const url =
+      settings.REMOTE_SERVER_URL +
+      settings.PRESCRIPTION_RES +
+      "/" +
+      prescriptionID;
+    const dosageSchedule = [];
 
-      var schedule = {};
-      schedule.firstDose = startDateTime;
-      schedule.dosage = dosage;
-      schedule.minutesBetweenDoses = minutesBetweenDoses;
-      dosageSchedule.push(schedule);
+    var schedule = {};
+    schedule.firstDose = startDateTime;
+    schedule.dosage = dosage;
+    schedule.minutesBetweenDoses = minutesBetweenDoses;
+    dosageSchedule.push(schedule);
 
-      const json = {
-        patient: patientID,
-        medication: medication,
-        dosageUnit: dosageUnit,
-        amountInitial: amountInitial,
-        dosageSchedule: dosageSchedule
-      };
+    const data = {
+      patient: patientID,
+      medication: medication,
+      dosageUnit: dosageUnit,
+      amountInitial: amountInitial,
+      dosageSchedule: dosageSchedule
+    };
 
-      console.log(JSON.stringify(json));
+    console.log(JSON.stringify(data));
 
-      return patchData(url, json)
-        .then(response => {
-          genAlert("Prescription updated!");
-          navigation.goBack();
-        })
-        .catch(error => {
-          genAlert("Failed to modify a prescription", error.message);
-        });
+    return patchData(url, data, email, password)
+      .then(response => {
+        genAlert("Prescription updated!");
+        navigation.goBack();
+      })
+      .catch(error => {
+        genAlert("Failed to modify a prescription", error.message);
+      });
   }
 }
 

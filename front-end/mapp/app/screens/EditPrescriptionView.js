@@ -47,9 +47,13 @@ export default class EditPrescriptionView extends React.Component {
   };
 
   deletePrescriptionOnPress = () => {
-    const prescriptionID = this.props.navigation.getParam("prescription", {}).id;
+    const user = this.props.navigation.getParam("user", {});
+    const email = user.email
+    const password = user.password;
+    const prescriptionID = this.props.navigation.getParam("prescription", {})
+      .id;
     const navigation = this.props.navigation;
-    deletePrescription({prescriptionID, navigation});
+    deletePrescription({ prescriptionID, navigation, email, password});
   };
 
   editPrescriptionOnPress = () => {
@@ -93,6 +97,9 @@ export default class EditPrescriptionView extends React.Component {
     localState.patientID = patientID;
     localState.prescriptionID = prescriptionID;
     localState.navigation = this.props.navigation;
+    localState.email = user.email;
+    localState.password = user.password;
+
     modifyPrescription(localState);
   };
 
