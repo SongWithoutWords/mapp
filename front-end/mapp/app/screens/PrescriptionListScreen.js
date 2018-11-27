@@ -51,7 +51,7 @@ class PrescriptionListScreen extends Component {
   componentDidUpdate(prevProps) {
     const newPrescriptions = this.props.screenProps.prescriptions;
     const oldPrescriptions = prevProps.screenProps.prescriptions;
-    const prescriptionIDs = this.props.screenProps.user.myPrescriptions;
+    const prescriptionIDs = prevProps.screenProps.user.myPrescriptions;
     if (_.isEqual(newPrescriptions, oldPrescriptions))
       console.log("they are equal!");
     else {
@@ -62,8 +62,8 @@ class PrescriptionListScreen extends Component {
             newPrescriptions.byId[id].dosageSchedule[0].dosage -
           Object.keys(newPrescriptions.byId[id].dosesTaken).length;
         oldNumberLeft =
-          oldPrescriptions.byId[id].amountInitial /
-            oldPrescriptions.byId[id].dosageSchedule[0].dosage -
+          newPrescriptions.byId[id].amountInitial /
+            newPrescriptions.byId[id].dosageSchedule[0].dosage -
           Object.keys(oldPrescriptions.byId[id].dosesTaken).length;
         if (
           newNumberLeft - oldNumberLeft < 0 &&

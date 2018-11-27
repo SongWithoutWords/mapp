@@ -50,16 +50,24 @@ class PatientListScreen extends Component {
   // conform to the invariant
   componentWillReceiveProps(nextProps) {
     if (_.isEqual(nextProps.screenProps.user.myPatients, this.props.screenProps.user.myPatients))
-      console.log("They are equal");
+      console.log("myPatients are equal");
     else{
       const myPatientIDs = nextProps.screenProps.user.myPatients;
       const patients = [];
-      const pendingRequests = nextProps.screenProps.pendingRequests;
       myPatientIDs.forEach(id => {
         patients.push(nextProps.screenProps.patients.byId[id]);
       });
       this.setState({ patients: patients });
-      if(Object.keys(pendingRequests.allIds).length - Object.keys(this.props.screenProps.pendingRequests.allIds).length > 0)
+    }
+  }
+   
+  // if new patient request send notification
+  componentDidUpdate(prevProps) {
+    if (_.isEqual(prevProps.screenProps.pendingRequests, this.props.screenProps.pendingRequests))
+      console.log("They are equal");
+    else{
+      console.log("DEBUG: " + Object.keys(this.props.screenProps.pendingRequests.allIds).length + " " + Object.keys(prevProps.screenProps.pendingRequests.allIds).length);
+      if(Object.keys(this.props.screenProps.pendingRequests.allIds).length - Object.keys(prevProps.screenProps.pendingRequests.allIds).length > 0)
         sendNotification(
           "You have a new Patient requesting to connect to your account. Press here to go to the inbox screen",
           "You have a new Patient request!"
