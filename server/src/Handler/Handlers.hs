@@ -17,6 +17,9 @@ dbLookup404 key = do
     Just value -> pure value
     Nothing -> notFound
 
+doctorPatientRelationExists :: DoctorId -> PatientId -> Handler Bool
+doctorPatientRelationExists did pid = isJust <$> runDB (getBy $ UniqueRelation did pid)
+
 authenticateHeader :: Handler (Either DoctorId PatientId)
 authenticateHeader = do
   mAuth <- lookupBasicAuth
@@ -52,11 +55,9 @@ userMustBeADoctor _ = permissionDenied "User must be a doctor"
 
 userMustBeDoctorOf :: PatientId -> DoctorId -> Handler ()
 userMustBeDoctorOf pid did = do
-      doctorPatientRelationExists <- runDB $ (> 0) <$> count
-        [ DoctorPatientRelationDoctor ==. did
-        , DoctorPatientRelationPatient ==. pid]
-      unless doctorPatientRelationExists $
-        permissionDenied "User must be a doctor of the patient"
+  relationExists <- doctorPatientRelationExists did pid
+  unless relationExists $
+    permissionDenied "User must be a doctor of the patient"
 
 authenticateEither :: (DoctorId -> Handler ()) -> (PatientId -> Handler ()) -> Handler ()
 authenticateEither fa fb = authenticateHeader >>= either fa fb
