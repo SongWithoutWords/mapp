@@ -10,6 +10,8 @@ dependencies:
 # See: https://ghc.haskell.org/trac/ghc/ticket/12130
 - base >=4.8.2.0 && <4.9 || >=4.9.1.0 && <5
 
+- cryptonite
+
 - yesod >=1.6 && <1.7
 - yesod-core >=1.6 && <1.7
 - yesod-auth >=1.6 && <1.7
