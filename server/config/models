@@ -3,8 +3,8 @@
 
 User
     email Text
-    passwordHash Text
-    salt Text
+    passwordHash ByteString
+    salt ByteString
     doctorOrPatientId (Either (Key Doctor) (Key Patient))
     UniqueUser email
 

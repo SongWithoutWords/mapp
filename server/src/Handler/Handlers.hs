@@ -9,6 +9,8 @@ module Handler.Handlers where
 import Import
 import Control.Monad.Extra(mapMaybeM)
 
+import Hash
+
 dbLookup key = runDB $ getEntity key
 
 dbLookup404 key = do
@@ -32,10 +34,10 @@ authenticate emailRec passwordRec = do
   maybeUser <- runDB $ getBy $ UniqueUser emailRec
   case maybeUser of
     Nothing -> permissionDenied "No account for this email address"
-    Just (Entity _ (User _ userPassword _ doctorOrPatientId')) ->
-      if passwordRec /= userPassword
-        then permissionDenied "Incorrect password"
-        else pure doctorOrPatientId'
+    Just (Entity _ (User _ hashedPassword salt doctorOrPatientId')) ->
+      if hashEqual passwordRec $ HashedPasswordAndSalt hashedPassword salt
+        then pure doctorOrPatientId'
+        else permissionDenied "Incorrect password"
 
 userMustBePatient :: PatientId -> PatientId -> Handler ()
 userMustBePatient patientRequired patientFound =
@@ -208,7 +210,6 @@ getDoctorsR :: Handler Value
 getDoctorsR = do
   docs :: [Entity Doctor] <- runDB $ selectList [] []
   returnJson docs
-
 postDoctorsR :: Handler Value
 postDoctorsR = do
   -- No authentication required: creating a new account
@@ -217,7 +218,10 @@ postDoctorsR = do
     { doctorFirstName = firstName'
     , doctorLastName = lastName'
     }
-  let user = User email' password' "" (Left doctorId)
+
+  HashedPasswordAndSalt hashedPassword salt <- hashNew password'
+
+  let user = User email' hashedPassword salt (Left doctorId)
   userInserted <- runDB $ insertUniqueEntity user
 
   case userInserted of
@@ -236,8 +240,11 @@ postPatientsR =  do
     , patientDateOfBirth = bd
     }
 
-  let user = User email' password' "" (Right patientId)
+  HashedPasswordAndSalt hashedPassword salt <- hashNew password'
+
+  let user = User email' hashedPassword salt (Right patientId)
   userInserted <- runDB $ insertUniqueEntity user
+
   case userInserted of
     Nothing -> do
       runDB $ delete patientId
