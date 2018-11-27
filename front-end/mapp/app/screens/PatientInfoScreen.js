@@ -22,14 +22,18 @@ import { getLocalDateTimeString } from "../lib/dateTime";
 
 class PatientInfoScreen extends Component {
   onEditPress = prescription => {
+    console.log('baba goh nakhor');
+    console.log(prescription);
+    console.log(this.props.screenProps.user.id);
     if (prescription.dosesTaken.length !== 0) {
       genAlert("Patient has already started this prescription.");
     } else if (prescription.doctor === null) {
       genAlert("You can edit only the prescriptions you created.");
     } else {
-      this.props.navigation.navigate("PatientEditPrescription", {
+      this.props.navigation.navigate("DoctorEditPrescription", {
         prescription: prescription,
-        user: this.props.screenProps.user
+        patient: this.props.navigation.getParam("patient", {}),
+        user: this.props.navigation.getParam("user", {})
       });
     }
   };
@@ -114,11 +118,9 @@ class PatientInfoScreen extends Component {
   render() {
     const patient = this.props.navigation.getParam("patient", {});
     const user = this.props.navigation.getParam("user", {});
-    console.log('salam');
-    //console.log(this.props.screenProps.patients.byId[patient.id]);
-    //console.log(this.props.screenProps.patients.byId[patient.id].prescriptions);
+
     const prescriptions = this.props.screenProps.patients.byId[patient.id].prescriptions;
-    //alert(this.props.screenProps.user.myPrescriptions);
+
     return (
       <View style={{ flex: 1 }}>
         <ScrollView style={styles.container}>

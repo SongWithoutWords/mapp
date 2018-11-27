@@ -13,6 +13,7 @@ import settings from "../config/settings";
 import genAlert from "../components/generalComponents/genAlert";
 import checkRequestErrors from "../lib/errors";
 import postData from "../lib/postData";
+import fetchAuth from "../lib/fetchAuth";
 import { FETCHING_USER_FULFILLED } from "../config/constants";
 import _ from "lodash";
 
@@ -52,7 +53,25 @@ class DoctorListScreen extends Component {
         genAlert("Failed to send the request", error.message);
       });
   };
+  deleteDoctorRelation = doctor => {
 
+    const url =
+      settings.REMOTE_SERVER_URL +
+      settings.RELAITON_RES +
+      "/" +
+      doctor.relationId;
+    console.log('bekhoda khari');
+    console.log(doctor);
+    const { email, password } = this.props.screenProps.user;
+    const method = "DELETE";
+    return fetchAuth({url, method, email, password})
+      .then(response => {
+        genAlert("Doctor deleted!");
+      })
+      .catch(error => {
+        genAlert("Failed to delete the relationship", error.message);
+    });
+  }
   onPress = id => {
     this.props.navigation.navigate("DoctorInfo", {
       doctor: this.props.screenProps.doctors.byId[id],
@@ -130,7 +149,7 @@ class DoctorListScreen extends Component {
     <View style={{width: '35%', justifyContent:'center', alignItems: 'center', flex:1}}>
     <TouchableOpacity
           style={styles.submitButton2}
-          onPress={this.requestDoctor}
+          onPress={this.deleteDoctorRelation.bind(this, item)}
         >
           <Text style={styles.buttonText}> Delete</Text>
         </TouchableOpacity>

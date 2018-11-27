@@ -110,7 +110,7 @@ class PrescriptionListScreen extends Component {
         email: this.props.screenProps.user.email,
         password: this.props.screenProps.user.password
       });
-      deletePrescription({ prescriptionID: prescription.id , navigation :null , email: this.props.screenProps.user.email, password: this.props.screenProps.user.password});
+      deletePrescription({ prescriptionID: prescription.id , navigation: null , email: this.props.screenProps.user.email, password: this.props.screenProps.user.password});
     }
   };
   onEditPress = prescription => {
