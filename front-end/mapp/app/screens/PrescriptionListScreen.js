@@ -23,6 +23,8 @@ import { sendNotification } from "../lib/sendNotification";
 import { convertMinsToFreqString } from "../lib/frequencyMinsConversion";
 import createPrescription from "../lib/createPrescription";
 import ProgressBarAnimated from "react-native-progress-bar-animated";
+import { getLocalDateTimeString } from "../lib/dateTime";
+
 class PrescriptionListScreen extends Component {
   componentWillMount() {
     this.pushNotification = setupPushNotification(this.handleNotificationOpen);
@@ -110,7 +112,7 @@ class PrescriptionListScreen extends Component {
         doctorID: prescription.doctor, // TODO
         navigation: this.props.navigation,
         email: this.props.screenProps.user.email,
-        password:this.props.screenProps.user.password
+        password: this.props.screenProps.user.password
       });
     }
   };
@@ -150,9 +152,11 @@ class PrescriptionListScreen extends Component {
       doctor = null;
     }
 
-    const firstDoseString = prescription.dosageSchedule[0].firstDose
-      .toString()
-      .slice(0, 10);
+    const firstDoseString = getLocalDateTimeString(prescription.dosageSchedule[0].firstDose.toString());
+
+    console.log(
+      "from prescription list" + prescription.dosageSchedule[0].firstDose
+    );
     const frequency = convertMinsToFreqString(
       prescription.dosageSchedule[0].minutesBetweenDoses
     );
@@ -276,7 +280,7 @@ const styles = StyleSheet.create({
     fontWeight: "200",
     textAlign: "center",
     color: "black",
-    fontFamily: 'Poppins-Medium'
+    fontFamily: "Poppins-Medium"
   },
   medfield: {
     fontSize: 16,
@@ -286,14 +290,14 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     marginLeft: 24,
     marginRight: 24,
-    fontFamily: 'Poppins-SemiBold'
+    fontFamily: "Poppins-SemiBold"
   },
   remainingPills: {
     textAlign: "center",
     fontSize: 20,
     fontWeight: "400",
     color: "black",
-    fontFamily: 'lineto-circular-pro-book'
+    fontFamily: "lineto-circular-pro-book"
   },
   button: {
     margin: 24,
@@ -306,7 +310,7 @@ const styles = StyleSheet.create({
     color: "white",
     //fontWeight: "500",
     fontSize: 16,
-    fontFamily: 'lineto-circular-pro-medium'
+    fontFamily: "lineto-circular-pro-medium"
   },
   EditButton: {
     alignItems: "center",

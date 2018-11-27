@@ -64,6 +64,9 @@ export default class MakePrescriptionView extends React.Component {
       startDateTime
     };
 
+    // console.log("raw string from make prescription: " + startDateTime.toString());
+    // console.log("iso string from make prescription: " + startDateTime.toISOString());
+
     const user = this.props.navigation.getParam("user", {});
     var patient;
 
