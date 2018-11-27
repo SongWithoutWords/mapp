@@ -22,8 +22,8 @@ import ProgressBarAnimated from "react-native-progress-bar-animated";
 class PatientInfoScreen extends Component {
   onEditPress = prescription => {
     if (prescription.dosesTaken.length !== 0) {
-      genAlert("You have already started this prescription.");
-    } else if (prescription.doctor !== null) {
+      genAlert("Patient has already started this prescription.");
+    } else if (prescription.doctor === null) {
       genAlert("You can edit only the prescriptions you created.");
     } else {
       this.props.navigation.navigate("PatientEditPrescription", {

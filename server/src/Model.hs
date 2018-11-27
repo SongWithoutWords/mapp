@@ -127,6 +127,15 @@ data PostPrescription = PostPrescription
 instance FromJSON PostPrescription
 instance ToJSON PostPrescription
 
+data PatchPrescription = PatchPrescription
+  { medication :: Text
+  , dosageUnit :: DosageUnit
+  , amountInitial :: Double
+  , dosageSchedule :: [PostRecurringDose]
+  } deriving(Generic)
+instance FromJSON PatchPrescription
+instance ToJSON PatchPrescription
+
 data PostRecurringDose = PostRecurringDose
   { firstDose :: UTCTime
   , minutesBetweenDoses :: Int
@@ -163,6 +172,10 @@ relationKey = DoctorPatientRelationKey . fromIntegral
 
 prescriptionKey :: Int -> PrescriptionId
 prescriptionKey = PrescriptionKey . fromIntegral
+
+doseTakenKey :: Int -> DoseTakenId
+doseTakenKey = DoseTakenKey . fromIntegral
+
 
 doctorPatientRequest :: Int -> Int -> DoctorPatientRequest
 doctorPatientRequest did pid =
