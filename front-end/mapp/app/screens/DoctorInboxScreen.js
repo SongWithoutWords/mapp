@@ -140,7 +140,7 @@ const styles = StyleSheet.create({
   buttonText: {
     color : 'white',
     fontSize: 15,
-    fontFamily: 'lineto-circular-pro-medium'
+    // fontFamily: 'lineto-circular-pro-medium'
   },
   EditButton: { alignItems: 'center',
     backgroundColor: '#009CC6',padding: 6, borderRadius:10 ,margin: 14,              //display : state.reacted

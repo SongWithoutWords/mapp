@@ -231,7 +231,7 @@ const styles = StyleSheet.create({
     color: "white",
     //fontWeight: "500",
     fontSize: 14,
-    fontFamily: 'lineto-circular-pro-medium'
+    // fontFamily: 'lineto-circular-pro-medium'
   }
 });
 export default DoctorListScreen;

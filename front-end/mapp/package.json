@@ -46,7 +46,7 @@
   },
   "rnpm": {
     "assets": [
-      "./assets/fonts/Poppins"
+      "./assets/fonts/"
     ]
   }
 }

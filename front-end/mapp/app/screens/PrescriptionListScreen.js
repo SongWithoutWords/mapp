@@ -297,7 +297,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "400",
     color: "black",
-    fontFamily: "lineto-circular-pro-book"
+    // fontFamily: "lineto-circular-pro-book"
   },
   button: {
     margin: 24,
@@ -310,7 +310,7 @@ const styles = StyleSheet.create({
     color: "white",
     //fontWeight: "500",
     fontSize: 16,
-    fontFamily: "lineto-circular-pro-medium"
+    // fontFamily: "lineto-circular-pro-medium"
   },
   EditButton: {
     alignItems: "center",
