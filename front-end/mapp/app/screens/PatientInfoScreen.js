@@ -19,8 +19,54 @@ import { scheduleNotifications } from "../lib/scheduleNotifications";
 import { convertMinsToFreqString } from "../lib/frequencyMinsConversion";
 import ProgressBarAnimated from "react-native-progress-bar-animated";
 import { getLocalDateTimeString } from "../lib/dateTime";
+import fetchAuth from "../lib/fetchAuth";
+import settings from "../config/settings";
+import createPrescription from "../lib/createPrescription";
+import deletePrescription from "../lib/deletePrescription";
 
 class PatientInfoScreen extends Component {
+  deletePatientRelation = patient => {
+
+    const url =
+      settings.REMOTE_SERVER_URL +
+      settings.RELAITON_RES +
+      "/" +
+      patient.relationId;
+    console.log('bekhoda khari');
+    console.log(patient);
+    const { email, password } = this.props.screenProps.user;
+    const method = "DELETE";
+    return fetchAuth({url, method, email, password})
+      .then(response => {
+        genAlert("Patient deleted!");
+        this.props.navigation.goBack();
+      })
+      .catch(error => {
+        genAlert("Failed to Patient the relationship", error.message);
+    });
+  }
+  onRenewPress = prescription => {
+    let amountRemaining =
+      prescription.amountInitial -
+      prescription.dosesTaken.length * prescription.dosageSchedule[0].dosage;
+    if (amountRemaining <= 0) {
+      createPrescription({
+        medication: prescription.medication,
+        dosage: prescription.dosageSchedule[0].dosage,
+        dosageUnit: prescription.dosageUnit,
+        frequency: FREQUENCY.EVERY_WEEK,
+        minutesBetweenDoses: prescription.dosageSchedule[0].minutesBetweenDoses,
+        amountInitial: prescription.amountInitial,
+        startDateTime: prescription.dosageSchedule[0].firstDose,
+        patientID: prescription.patient,
+        doctorID: prescription.doctor, // TODO
+        navigation: this.props.navigation,
+        email: this.props.screenProps.user.email,
+        password: this.props.screenProps.user.password
+      });
+      deletePrescription({ prescriptionID: prescription.id , navigation: null , email: this.props.screenProps.user.email, password: this.props.screenProps.user.password});
+    }
+  };
   onEditPress = prescription => {
     console.log('baba goh nakhor');
     console.log(prescription);
@@ -99,14 +145,13 @@ class PatientInfoScreen extends Component {
           }}
         >
           <View style={{ width: "40%" }}>
-            <TouchableOpacity style={styles.RenewButton}>
+            <TouchableOpacity style={styles.RenewButton} onPress={this.onRenewPress.bind(this, prescription)}>
               <Text style={styles.buttonText}>Renew</Text>
             </TouchableOpacity>
           </View>
           <View style={{ width: "40%" }}>
             <TouchableOpacity
-              style={styles.EditButton}
-              onPress={this.onEditPress.bind(this, prescription)}
+              style={styles.EditButton} onPress={this.onEditPress.bind(this, prescription)}
             >
               <Text style={styles.buttonText}>Edit</Text>
             </TouchableOpacity>
@@ -124,12 +169,26 @@ class PatientInfoScreen extends Component {
     return (
       <View style={{ flex: 1 }}>
         <ScrollView style={styles.container}>
-          <Text style={styles.medfield}>
-            Patient Name: <Text style ={styles.fieldValue}>{patient.firstName} {patient.lastName}</Text>
-          </Text>
-          <Text style={styles.medfield}>
-            Patient ID: <Text style ={styles.fieldValue}>{patient.id}</Text>
-          </Text>
+          <Card flexDirection= 'row'>
+          <View style={{width: '50%', justifyContent:'center'}}>
+          <Text style = {styles.medfield}>{
+                        patient.firstName +
+                        " " +
+                        patient.lastName}</Text>
+          </View>
+          <View style={{width: '15%', justifyContent:'center'}}>
+          <Text style = {styles.doctorName}>
+                      ID: {patient.id}</Text>
+          </View>
+          <View style={{width: '35%', justifyContent:'center', alignItems: 'center', flex:1}}>
+          <TouchableOpacity
+                style={styles.submitButton}
+                onPress={this.deletePatientRelation.bind(this, this.props.screenProps.patients.byId[patient.id])}
+              >
+                <Text style={styles.buttonText}> Delete</Text>
+              </TouchableOpacity>
+          </View>
+          </Card>
           {prescriptions.map(prescription => this.mapPrescriptionToCard(prescription, user.id))
           }
         </ScrollView>
@@ -209,6 +268,14 @@ const styles = StyleSheet.create({
     backgroundColor: "#50BB75",
     padding: 6,
     borderRadius: 10
+  },
+  submitButton: {
+    backgroundColor: "#C60000",
+    padding: 8,
+    height: 35,
+    borderRadius: 10,
+    alignItems: "center",
+    color: 'white',
   }
 });
 

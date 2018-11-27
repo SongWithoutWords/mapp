@@ -22,6 +22,7 @@ import { scheduleNotifications } from "../lib/scheduleNotifications";
 import { sendNotification } from "../lib/sendNotification";
 import { convertMinsToFreqString } from "../lib/frequencyMinsConversion";
 import createPrescription from "../lib/createPrescription";
+import deletePrescription from "../lib/deletePrescription";
 import ProgressBarAnimated from "react-native-progress-bar-animated";
 import { getLocalDateTimeString } from "../lib/dateTime";
 
@@ -36,16 +37,13 @@ class PrescriptionListScreen extends Component {
         prescriptions.byId[id].amountInitial /
           prescriptions.byId[id].dosageSchedule[0].dosage -
         Object.keys(prescriptions.byId[id].dosesTaken).length;
-      if (
-        (numberLeft * prescriptions.byId[id].dosageSchedule[0].dosage) /
-          prescriptions.byId[id].amountInitial <
-        0.2
-      )
+      if ( numberLeft < 2 && numberLeft > 0 )
         sendNotification(
           "You can renew prescription for " +
             prescriptions.byId[id].medication +
             " just go to the prescriptions page to do so",
-          "A prescription for is running low!"
+            "A prescription is running low!",
+            id + "" + this.props.screenProps.user.id + ""
         );
     });
   }
@@ -67,24 +65,23 @@ class PrescriptionListScreen extends Component {
           newPrescriptions.byId[id].amountInitial /
             newPrescriptions.byId[id].dosageSchedule[0].dosage -
           Object.keys(oldPrescriptions.byId[id].dosesTaken).length;
-        if (
-          newNumberLeft - oldNumberLeft < 0 &&
-          (newNumberLeft * newPrescriptions.byId[id].dosageSchedule[0].dosage) /
-            newPrescriptions.byId[id].amountInitial <
-            0.2
-        )
+        if ( newNumberLeft - oldNumberLeft < 0 && newNumberLeft < 2 && newNumberLeft > 0)
           sendNotification(
             "You can renew prescription for " +
               newPrescriptions.byId[id].medication +
               ". Just go to the prescriptions page to do so",
-            "A prescription is running low!"
+            "A prescription is running low!",
+            id + "" + this.props.screenProps.user.id + ""
           );
       });
     }
   }
 
   handleNotificationOpen = notification => {
-    this.props.navigation.navigate("Inbox");
+    if(notification.title === "A prescription is running low!")
+      this.props.navigation.navigate("PrescriptionList");
+    else
+      this.props.navigation.navigate("Inbox");
     if (Platform.OS === "ios")
       notification.finish(PushNotificationIOS.FetchResult.NoData);
   };
