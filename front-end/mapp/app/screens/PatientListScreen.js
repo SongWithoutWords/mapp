@@ -42,8 +42,10 @@ class PatientListScreen extends Component {
     if(Object.keys(this.props.screenProps.pendingRequests.allIds).length > 0)
       sendNotification(
         "You have a new Patient requesting to connect to your account. Press here to go to the inbox screen",
-        "You have a new Patient request!"
+        "You have a new Patient request!",
+        this.props.screenProps.user.id + ""
       );
+    this.sendRenewalNotifications();
   }
 
   // every time props changes update internal state: patients to
@@ -64,15 +66,38 @@ class PatientListScreen extends Component {
   // if new patient request send notification
   componentDidUpdate(prevProps) {
     if (_.isEqual(prevProps.screenProps.pendingRequests, this.props.screenProps.pendingRequests))
-      console.log("They are equal");
+      console.log("Pending requests are equal");
     else{
       console.log("DEBUG: " + Object.keys(this.props.screenProps.pendingRequests.allIds).length + " " + Object.keys(prevProps.screenProps.pendingRequests.allIds).length);
       if(Object.keys(this.props.screenProps.pendingRequests.allIds).length - Object.keys(prevProps.screenProps.pendingRequests.allIds).length > 0)
         sendNotification(
           "You have a new Patient requesting to connect to your account. Press here to go to the inbox screen",
-          "You have a new Patient request!"
+          "You have a new Patient request!",
+          this.props.screenProps.user.id + ""
         );
     }
+
+    if (_.isEqual(prevProps.screenProps.patients, this.props.screenProps.patients))
+      console.log("Patients are equal");
+    else
+      this.sendRenewalNotifications();
+  }
+
+  sendRenewalNotifications = () => {
+    this.props.screenProps.user.myPatients.map( id => {
+      this.props.screenProps.patients.byId[id].prescriptions.forEach( prescription => {
+        numberLeft = prescription.amountInitial / prescription.dosageSchedule[0].dosage -
+        Object.keys(prescription.dosesTaken).length;
+        if(numberLeft < 2 && prescription.doctor === this.props.screenProps.user.id)
+          sendNotification(
+            "Your patient " + this.props.screenProps.patients.byId[prescription.patient].firstName + " " + 
+            this.props.screenProps.patients.byId[prescription.patient].lastName + " is running low on " + 
+            prescription.medication + ". please go to the patients page if you want to renew the prescription.",
+            "You might need to renew a prescription",
+            id + "" + this.props.screenProps.user.id + ""
+          );
+      });
+    });
   }
 
   onPress = id => {
@@ -84,7 +109,10 @@ class PatientListScreen extends Component {
   };
 
   handleNotificationOpen = (notification) => {
-    this.props.navigation.navigate("Inbox");
+    if(notification.title === "You might need to renew a prescription")
+      this.props.navigation.navigate("PatientList");
+    else
+      this.props.navigation.navigate("Inbox");
     if(Platform.OS === 'ios')
       notification.finish(PushNotificationIOS.FetchResult.NoData);
   }

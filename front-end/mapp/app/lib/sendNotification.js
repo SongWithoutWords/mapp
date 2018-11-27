@@ -1,10 +1,10 @@
 import PushNotification from 'react-native-push-notification';
 import settings from "../config/settings";
 
-export function sendNotification(message, subject) {
+export function sendNotification(message, subject, id) {
     PushNotification.localNotification({
         /* Android Only Properties */
-        id: "1", 
+        id: id, 
         ticker: "Notification for new request",
         autoCancel: true, 
         largeIcon: "ic_launcher", 
@@ -21,7 +21,7 @@ export function sendNotification(message, subject) {
         visibility: "public", // (optional) set notification visibility, default: private
         importance: "high", // (optional) set notification importance, default: high
         /* ios only */
-        userInfo: {id : "1"},
+        userInfo: {id : id},
         /* iOS and Android properties */
         title: subject, 
         message: message, 
