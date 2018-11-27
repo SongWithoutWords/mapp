@@ -82,10 +82,6 @@ authenticateAsDoctorOfPatientOrElsePatient mdid pid =
     Just did -> authenticateAsDoctor did >> userMustBeDoctorOf pid did
     Nothing -> authenticateAsPatient pid
 
-authenticateAsPatientOrDoctorOf :: PatientId -> Handler ()
-authenticateAsPatientOrDoctorOf pid =
-  authenticateEither (userMustBeDoctorOf pid) (userMustBePatient pid)
-
 getDoctorWithPatients :: DoctorId -> Handler DoctorWithPatients
 getDoctorWithPatients did = do
   Doctor fn ln <- runDB $ get404 did

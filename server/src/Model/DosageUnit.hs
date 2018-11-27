@@ -3,7 +3,7 @@
 module Model.DosageUnit where
 
 -- import Import
-import ClassyPrelude.Yesod hiding(id)
+import ClassyPrelude.Yesod
 
 data DosageUnit
   = Gram
