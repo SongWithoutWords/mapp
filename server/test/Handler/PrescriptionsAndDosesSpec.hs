@@ -20,7 +20,6 @@ spec = withApp $ describe "POST /prescriptions and POST /doses-taken" $ do
     postDoctorJamesHill
     makeRelation (doctorKey 1) jamesHillCreds (patientKey 1) bobbyLeeCreds
     postJsonAuth jamesHillCreds PrescriptionsR $ postAmoxicillin (Just $ doctorKey 1) (patientKey 1)
-    printBody
     jsonResponseIs $ getAmoxicillin (prescriptionKey 1) (Just $ DoctorKey 1) (patientKey 1) []
 
   it "medication cannot be prescribe without credentials" $ do
