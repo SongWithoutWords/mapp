@@ -3,86 +3,33 @@
 module Handler.LoginSpec(spec) where
 
 import TestImport
+import TestSetup
 
 spec :: Spec
 spec = withApp $ do
 
-  describe "users can create accounts and log back in using their email and password" $ do
+  describe "Accounts made with POST /doctors or POST /patients can be accessed with POST /logins" $ do
 
-    it "logins with unmatched email return invalid args" $ do
-
-      -- Create patient account
-      postJson PatientsR $ PostPatient
-        { firstName = "Bobby"
-        , lastName = "Lee"
-        , email = "boby@lee.com"
-        , password = "blee"
-        , dateOfBirth = Nothing
-        }
-      jsonResponseIs $ PatientWithDoctors
-        { id = patientKey 1
-        , firstName = "Bobby"
-        , lastName = "Lee"
-        , dateOfBirth = Nothing
-        , doctors = []
-        , pendingRequests = []
-        , prescriptions = []
-        }
-
+    it "POST /logins with wrong email returns 403 (forbidden)" $ do
+      postPatientBobbyLee
       postJson LoginsR $ PostLogin
         { email = "rob@lee.com"
         , password = "rlee"
         }
-      statusIs 400 -- bad arguments
+      statusIs 403
 
-    it "logins with wrong password return permission denied" $ do
-
-      -- Create patient account
-      postJson PatientsR $ PostPatient
-        { firstName = "Bobby"
-        , lastName = "Lee"
-        , email = "boby@lee.com"
-        , password = "blee"
-        , dateOfBirth = Nothing
-        }
-      jsonResponseIs $ PatientWithDoctors
-        { id = patientKey 1
-        , firstName = "Bobby"
-        , lastName = "Lee"
-        , dateOfBirth = Nothing
-        , doctors = []
-        , pendingRequests = []
-        , prescriptions = []
-        }
-
+    it "POST /logins with wrong password return 403 (forbidden)" $ do
+      postPatientBobbyLee
       postJson LoginsR $ PostLogin
-        { email = "boby@lee.com"
+        { email = "bobby@lee.com"
         , password = "wrong-password"
         }
-      statusIs 403 -- bad arguments
+      statusIs 403
 
-    it "patient account logins with correct password and email return correct info" $ do
-
-      -- Create patient account
-      postJson PatientsR $ PostPatient
-        { firstName = "Bobby"
-        , lastName = "Lee"
-        , email = "boby@lee.com"
-        , password = "blee"
-        , dateOfBirth = Nothing
-        }
-      jsonResponseIs $ PatientWithDoctors
-        { id = patientKey 1
-        , firstName = "Bobby"
-        , lastName = "Lee"
-        , dateOfBirth = Nothing
-        , doctors = []
-        , pendingRequests = []
-        , prescriptions = []
-        }
-
+    it "POST /logins with correct credentials return correct patient info" $ do
+      postPatientBobbyLee
       postJson LoginsR $ PostLogin
-        { email = "boby@lee.com"
+        { email = "bobby@lee.com"
         , password = "blee"
         }
       jsonResponseIs $ PatientWithDoctors
@@ -95,25 +42,16 @@ spec = withApp $ do
         , prescriptions = []
         }
 
-    it "doctor account logins with correct password and email return correct info" $ do
-
-      -- Create patient account
-      postJson DoctorsR $ PostDoctor
-        { firstName = "Bobby"
-        , lastName = "Lee"
-        , email = "boby@lee.com"
-        , password = "blee"
-        }
-      jsonResponseIs $ Entity (doctorKey 1) $ Doctor "Bobby" "Lee"
-
+    it "POST /logins with correct credentials return correct doctor info" $ do
+      postDoctorJamesHill
       postJson LoginsR $ PostLogin
-        { email = "boby@lee.com"
-        , password = "blee"
+        { email = "james@hill.com"
+        , password = "jhill"
         }
       jsonResponseIs $ DoctorWithPatients
         { id = doctorKey 1
-        , firstName = "Bobby"
-        , lastName = "Lee"
+        , firstName = "James"
+        , lastName = "Hill"
         , patients = []
         , pendingRequests = []
         }

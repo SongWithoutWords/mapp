@@ -4,44 +4,60 @@ module Handler.GetDoctorSpec (spec) where
 
 import TestImport
 
+setupDB :: SIO (YesodExampleData App) ()
+setupDB = runDB $ do
+  -- Patients
+  mapM_ insert_
+    [ Patient "Tom" "Cruise" $ Just $ fromGregorian 1961 2 3
+    , Patient "May" "West"   $ Just $ fromGregorian 1962 3 4
+    , Patient "Spike" "Lee"  $ Just $ fromGregorian 1963 4 5
+    , Patient "Mel" "Brooks" $ Just $ fromGregorian 1964 5 6
+    ]
+  mapM_ insert_
+    [ User "tom@cruise.com" "tcruise" "" $ Right $ patientKey 1
+    , User "may@west.com" "mwest" ""     $ Right $ patientKey 2
+    , User "spike@lee.com" "slee" ""     $ Right $ patientKey 3
+    , User "mel@brooks.com" "mbrooks" "" $ Right $ patientKey 4
+    ]
+
+  -- Doctors
+  mapM_ insert_
+    [ Doctor "Brad" "Pitt"
+    , Doctor "Jude" "Law"
+    , Doctor "Jet" "Li"
+    , Doctor "John" "Wayne"
+    ]
+  mapM_ insert_
+    [ User "brad@pitt.com" "bpitt" ""   $ Left $ doctorKey 1
+    , User "jude@law.com" "jlaw" ""     $ Left $ doctorKey 2
+    , User "jet@li.com" "jli" ""        $ Left $ doctorKey 3
+    , User "john@wayne.com" "jwayne" "" $ Left $ doctorKey 4
+    ]
+
+  -- Doctor patient relations
+  mapM_ insert_
+    [ doctorPatientRelation 1 1
+    , doctorPatientRelation 1 2
+    , doctorPatientRelation 1 4
+
+    , doctorPatientRelation 2 3
+
+    , doctorPatientRelation 3 1
+    , doctorPatientRelation 3 2
+    , doctorPatientRelation 3 3
+    , doctorPatientRelation 3 4
+    ]
+
 spec :: Spec
 spec = withApp $ do
 
-  describe "valid request" $ do
-    it "returns a 200 when the doctor exists" $ do
+  describe "GET /doctors/id" $ do
 
-      -- Patients
-      runDB $ mapM_ insert_
-        [ Patient "Tom" "Cruise" $ Just $ fromGregorian 1961 2 3
-        , Patient "May" "West"   $ Just $ fromGregorian 1962 3 4
-        , Patient "Spike" "Lee"  $ Just $ fromGregorian 1963 4 5
-        , Patient "Mel" "Brooks" $ Just $ fromGregorian 1964 5 6
-        ]
+    it "GET /doctors/1 returns 200 and correct data with correct credentials" $ do
 
-      -- Doctors
-      runDB $ mapM_ insert_
-        [ Doctor "Brad" "Pitt"
-        , Doctor "Jude" "Law"
-        , Doctor "Jet" "Li"
-        , Doctor "John" "Wayne"
-        ]
+      setupDB
 
-      -- Doctor patient relations
-      runDB $ mapM_ insert_
-        [ doctorPatientRelation 1 1
-        , doctorPatientRelation 1 2
-        , doctorPatientRelation 1 4
-
-        , doctorPatientRelation 2 3
-
-        , doctorPatientRelation 3 1
-        , doctorPatientRelation 3 2
-        , doctorPatientRelation 3 3
-        , doctorPatientRelation 3 4
-        ]
-
-      -- Actual http get request
-      get $ DoctorR 1
+      getAuth ("brad@pitt.com", "bpitt") $ DoctorR 1
       jsonResponseIs $ DoctorWithPatients
         { id = doctorKey 1
         , firstName = "Brad"
@@ -75,7 +91,11 @@ spec = withApp $ do
         , pendingRequests = []
         }
 
-      get $ DoctorR 2
+    it "GET /doctors/2 returns 200 and correct data with correct credentials" $ do
+
+      setupDB
+
+      getAuth ("jude@law.com", "jlaw") $ DoctorR 2
       jsonResponseIs $ DoctorWithPatients
         { id = doctorKey 2
         , firstName = "Jude"
@@ -93,7 +113,11 @@ spec = withApp $ do
         , pendingRequests = []
         }
 
-      get $ DoctorR 3
+    it "GET /doctors/3 returns 200 and correct data with correct credentials" $ do
+
+      setupDB
+
+      getAuth ("jet@li.com", "jli") $ DoctorR 3
       jsonResponseIs $ DoctorWithPatients
         { id = doctorKey 3
         , firstName = "Jet"
@@ -135,7 +159,11 @@ spec = withApp $ do
         , pendingRequests = []
         }
 
-      get $ DoctorR 4
+    it "GET /doctors/4 returns 200 and correct data with correct credentials" $ do
+
+      setupDB
+
+      getAuth ("john@wayne.com", "jwayne") $ DoctorR 4
       jsonResponseIs $ DoctorWithPatients
         { id = doctorKey 4
         , firstName = "John"
@@ -144,23 +172,23 @@ spec = withApp $ do
         , pendingRequests = []
         }
 
+    it "GET /doctors/4 returns 403 without credentials" $ do
+      setupDB
+      get $ DoctorR 4
+      statusIs 403
 
-  describe "invalid requests" $ do
-    it "it returns a 404 when the doctor does not exist" $ do
+    it "GET /doctors/4 returns 403 with wrong credentials" $ do
+      setupDB
+      getAuth ("jet@li.com", "jli") $ DoctorR 4
+      statusIs 403
 
+    it "GET /doctors/7 returns 403 without credentials" $ do
+      setupDB
       get $ DoctorR 5
-      statusIs 404 -- not found
+      statusIs 403
 
-      get $ DoctorR 7
-      statusIs 404 -- not found
-
-
-  -- where
-  --   mapPatient :: Entity Patient -> DoctorViewOfPatient
-  --   mapPatient (Entity id (Patient fn ln bd)) = DoctorViewOfPatient
-  --     { id = id
-  --     , firstName = fn
-  --     , lastName = ln
-  --     , dateOfBirth = bd
-  --     , prescriptions = []
-  --     }
+    it "GET /doctors/7 returns 403 with wrong credentials" $ do
+      setupDB
+      -- get $ DoctorR 5
+      getAuth ("jet@li.com", "jli") $ DoctorR 7
+      statusIs 403
