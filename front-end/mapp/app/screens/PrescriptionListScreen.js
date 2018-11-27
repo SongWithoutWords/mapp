@@ -99,7 +99,7 @@ class PrescriptionListScreen extends Component {
     let amountRemaining =
       prescription.amountInitial -
       prescription.dosesTaken.length * prescription.dosageSchedule[0].dosage;
-    if (prescription.doctor !== null && amountRemaining <= 0) {
+    if (amountRemaining <= 0) {
       createPrescription({
         medication: prescription.medication,
         dosage: prescription.dosageSchedule[0].dosage,
@@ -114,6 +114,7 @@ class PrescriptionListScreen extends Component {
         email: this.props.screenProps.user.email,
         password: this.props.screenProps.user.password
       });
+      deletePrescription({ prescriptionID: prescription.id , navigation :null , email: this.props.screenProps.user.email, password: this.props.screenProps.user.password});
     }
   };
   onEditPress = prescription => {
@@ -128,7 +129,18 @@ class PrescriptionListScreen extends Component {
       });
     }
   };
-
+  valToGreen = val => {
+    if(val >= 50) return 'ff';
+    let calc = Math.round(255/50*val);
+    if(calc <= 15) return '0' + calc.toString(16);
+    else return calc.toString(16);
+  };
+  valToRed = val => {
+    if(val <= 50) return 'ff';
+    let calc = Math.round(255/50*(100-val))
+    if(calc <= 15) return '0' + calc.toString(16);
+    else return calc.toString(16);
+  };
   mapPrescriptionToCard = prescription => {
     console.log(prescription);
     let amountRemaining =
@@ -196,13 +208,7 @@ class PrescriptionListScreen extends Component {
             height={20}
             backgroundColor={
               "#" +
-              Math.round(((0xc6 - 0x6c) / 100) * (100 - val) + 0x6c).toString(
-                16
-              ) +
-              Math.round(((0x00 - 0xc6) / 100) * (100 - val) + 0xc6).toString(
-                16
-              ) +
-              "00"
+              this.valToRed(val) + this.valToGreen(val) + "00"
             }
             barAnimationDuration={0}
           />
