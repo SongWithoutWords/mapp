@@ -21,6 +21,9 @@ import ProgressBarAnimated from "react-native-progress-bar-animated";
 import { getLocalDateTimeString } from "../lib/dateTime";
 import fetchAuth from "../lib/fetchAuth";
 import settings from "../config/settings";
+import createPrescription from "../lib/createPrescription";
+import deletePrescription from "../lib/deletePrescription";
+
 class PatientInfoScreen extends Component {
   deletePatientRelation = patient => {
 
@@ -42,7 +45,28 @@ class PatientInfoScreen extends Component {
         genAlert("Failed to Patient the relationship", error.message);
     });
   }
-
+  onRenewPress = prescription => {
+    let amountRemaining =
+      prescription.amountInitial -
+      prescription.dosesTaken.length * prescription.dosageSchedule[0].dosage;
+    if (amountRemaining <= 0) {
+      createPrescription({
+        medication: prescription.medication,
+        dosage: prescription.dosageSchedule[0].dosage,
+        dosageUnit: prescription.dosageUnit,
+        frequency: FREQUENCY.EVERY_WEEK,
+        minutesBetweenDoses: prescription.dosageSchedule[0].minutesBetweenDoses,
+        amountInitial: prescription.amountInitial,
+        startDateTime: prescription.dosageSchedule[0].firstDose,
+        patientID: prescription.patient,
+        doctorID: prescription.doctor, // TODO
+        navigation: this.props.navigation,
+        email: this.props.screenProps.user.email,
+        password: this.props.screenProps.user.password
+      });
+      deletePrescription({ prescriptionID: prescription.id , navigation: null , email: this.props.screenProps.user.email, password: this.props.screenProps.user.password});
+    }
+  };
   onEditPress = prescription => {
     console.log('baba goh nakhor');
     console.log(prescription);
@@ -121,14 +145,13 @@ class PatientInfoScreen extends Component {
           }}
         >
           <View style={{ width: "40%" }}>
-            <TouchableOpacity style={styles.RenewButton}>
+            <TouchableOpacity style={styles.RenewButton} onPress={this.onRenewPress.bind(this, prescription)}>
               <Text style={styles.buttonText}>Renew</Text>
             </TouchableOpacity>
           </View>
           <View style={{ width: "40%" }}>
             <TouchableOpacity
-              style={styles.EditButton}
-              onPress={this.onEditPress.bind(this, prescription)}
+              style={styles.EditButton} onPress={this.onEditPress.bind(this, prescription)}
             >
               <Text style={styles.buttonText}>Edit</Text>
             </TouchableOpacity>

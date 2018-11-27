@@ -22,6 +22,7 @@ import { scheduleNotifications } from "../lib/scheduleNotifications";
 import { sendNotification } from "../lib/sendNotification";
 import { convertMinsToFreqString } from "../lib/frequencyMinsConversion";
 import createPrescription from "../lib/createPrescription";
+import deletePrescription from "../lib/deletePrescription";
 import ProgressBarAnimated from "react-native-progress-bar-animated";
 import { getLocalDateTimeString } from "../lib/dateTime";
 

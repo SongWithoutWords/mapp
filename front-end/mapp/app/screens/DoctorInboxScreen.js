@@ -70,7 +70,7 @@ export default class DoctorInboxScreen extends React.Component {
           </TouchableOpacity>
         </View>
         <View style={{width: '40%'}}>
-          <TouchableOpacity onPress={this.declinePatientRequest} style={styles.EditButton}>
+          <TouchableOpacity onPress={this.declineOnPress(request.id) } style={styles.EditButton}>
             <Text style = {styles.buttonText}>Decline</Text>
           </TouchableOpacity>
         </View>
